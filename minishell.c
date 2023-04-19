@@ -14,9 +14,16 @@
 
 int main()
 {
+	int execFlag = 0;
+	char input[MAXCOM];
+	char *parsedArgs[MAXLIST];
 	while (1)
 	{
-		prompt();
+		takeInput(input);
+		execFlag = process_input(input, parsedArgs);
+		if (execFlag == 1)
+		execArgs(parsedArgs);
 	}
+	// get_path(envp);
 	return EXIT_SUCCESS;
 }

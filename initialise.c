@@ -12,10 +12,32 @@
 
 #include "minishell.h"
 
-void prompt(void)
+int takeInput(char *str)
 {
-	char *prompt;
+	char *input;
+	char *username;
+	char *temp;
 	
-	prompt = ">>$ ";
-	readline(prompt);
+	username = getenv("USER");
+	temp = ft_strjoin(username, "@>>$ ");
+	input = readline(temp);
+	if (!input) 
+		{
+            printf("\n%s exit\n", temp);
+            exit(1);
+        }
+		if (ft_strlen(input) != 0)
+		{
+			add_history(input);
+			strcpy(str, input);
+			return (0);
+		}
+		else
+		{
+			return (1);
+		}
+	free(input);
+	free(temp);
 }
+
+

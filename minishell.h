@@ -22,7 +22,18 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "libft.h"
 
-void prompt(void);
+#define MAXCOM 1000 // max number of letters to be supported
+#define MAXLIST 100 // max number of commands to be supported
+
+int takeInput(char *str);
+char	*find_cmd_path(char *cmd, char **path);
+void	execute_cmd(char *cmd, char **envp);
+char	**get_path(char **envp);
+int builtins(char** token);
+void execArgs(char** token);
+void parse_input(char* str, char** token);
+int process_input(char* str, char** token);
 
 #endif
