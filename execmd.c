@@ -54,15 +54,21 @@ char	*find_cmd_path(char *cmd, char **path)
 	return (NULL);
 }
 
-void	execute_cmd(char *cmd, char **envp)
-{
-	char	**args;
-	char	*exe_path;
+void execmd(char **argv){
+    char *command = NULL, *actual_command = NULL;
 
-	args = ft_split(cmd, ' ');
-	exe_path = find_cmd_path(args[0], envp);
-	execve(exe_path, args, envp);
-	exit(127);
+    if (argv){
+        /* get the command */
+        command = argv[0];
+
+        /* generate the path to this command before passing it to execve */
+        actual_command = get_location(command);
+
+        /* execute the actual command with execve */
+        if (execve(actual_command, argv, NULL) == -1){
+            perror("Error:");
+        }
+    } 
 }
 
 
