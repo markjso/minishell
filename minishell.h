@@ -20,20 +20,21 @@
 # include <signal.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <limits.h>
 # include "libft.h"
 
 #define MAXCOM 1000 // max number of letters to be supported
 #define MAXLIST 100 // max number of commands to be supported
 
 int takeInput(char *str);
-char	*find_cmd_path(char *cmd, char **path);
-void	execute_cmd(char *cmd, char **envp);
-char	**get_path(char **envp);
+char *get_location(char *commands);
+void execmd(char **argv);
 int builtins(char** token);
-void execArgs(char** token);
 void parse_input(char* str, char** token);
 int process_input(char* str, char** token);
+char	*ft_strcpy(char *s1, char *s2);
 
 #endif

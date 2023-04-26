@@ -22,7 +22,7 @@ int main()
 		takeInput(input);
 		execFlag = process_input(input, parsedArgs);
 		if (execFlag == 1)
-		execArgs(parsedArgs);
+		execmd(parsedArgs);
 	}
 	// get_path(envp);
 	return EXIT_SUCCESS;
