@@ -15,6 +15,7 @@ NAME=minishell
 SRCS=minishell.c \
 	builtins.c \
 	execmd.c \
+	utils.c \
 	initialise.c
 
 INCLUDE=-I$(LIBFT)
