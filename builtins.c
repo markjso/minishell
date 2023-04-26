@@ -36,37 +36,37 @@ int builtins(char** token)
     builtin_ID[5] = "env";
     builtin_ID[6] = "exit";
 
-	while (i < no_of_builtins && strcmp(token[0], builtin_ID[i]) != 0) 
+	while (i < no_of_builtins && ft_strncmp(token[0], builtin_ID[i], 6) != 0) 
     {
 		i++;
     }
-
     if (i == 2) 
         printpwd();
     else if (i == 6)
         exit(0);
-
     return (0);
 }
 
 void parse_input(char* str, char** token)
 {
     int i;
+    char **split;
 
+    split = ft_split(str, ' ');
+    if (!split)
+    {
+        printf("empty string\n");
+    }
     i = 0;
-    while (i < MAXLIST) {
-        token[i] = strsep(&str, " ");
-
-        if (token[i] == NULL) {
-            break;
-        }
-
-        if (ft_strlen(token[i]) == 0) {
-            i--;
-        }
+    while (split[i])
+    {
+        token[i] = split[i];
         i++;
     }
+    token[i] = NULL;
+    free(split);
 }
+
 
 int process_input(char *str, char **token)
 {
