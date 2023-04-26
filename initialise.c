@@ -29,7 +29,7 @@ int takeInput(char *str)
 		if (ft_strlen(input) != 0)
 		{
 			add_history(input);
-			strcpy(str, input);
+			ft_strcpy(str, input);
 			return (0);
 		}
 		else
