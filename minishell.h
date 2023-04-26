@@ -30,11 +30,12 @@
 #define MAXLIST 100 // max number of commands to be supported
 
 int takeInput(char *str);
-char *get_location(char *commands);
+char *get_location(char *cmd);
 void execmd(char **argv);
 int builtins(char** token);
 void parse_input(char* str, char** token);
 int process_input(char* str, char** token);
 char	*ft_strcpy(char *s1, char *s2);
+void	ft_free_array(char **arr);
 
 #endif
