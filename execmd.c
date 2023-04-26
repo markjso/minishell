@@ -12,72 +12,44 @@
 
 #include "minishell.h"
 
-char *get_location(char *command)
+char	*get_location(char *cmd)
 {
-    char *path, *path_copy, *path_token, *file_path;
-    int command_length, directory_length;
-    struct stat buffer;
+	char	**path_tokens;
+	char	*path;
+	char	*location;
+	int		i;
 
-    path = getenv("PATH");
-
-    if (path)
-    {
-        /* Duplicate the path string -> remember to free up memory for this because strdup allocates memory that needs to be freed*/ 
-        path_copy = ft_strdup(path);
-        /* Get length of the command that was passed */
-        command_length = ft_strlen(command);
-
-        /* Let's break down the path variable and get all the directories available*/
-        path_token = strtok(path_copy, ":");
-
-        while(path_token != NULL)
-        {
-            /* Get the length of the directory*/
-            directory_length = strlen(path_token);
-            /* allocate memory for storing the command name together with the directory name */
-            file_path = malloc(command_length + directory_length + 2); /* NB: we added 2 for the slash and null character we will introduce in the full command */
-            /* to build the path for the command, let's copy the directory path and concatenate the command to it */
-            strcpy(file_path, path_token);
-            strcat(file_path, "/");
-            strcat(file_path, command);
-            strcat(file_path, "\0");
-
-            /* let's test if this file path actually exists and return it if it does, otherwise try the next directory */
-            if (stat(file_path, &buffer) == 0){
-                /* return value of 0 means success implying that the file_path is valid*/
-
-                /* free up allocated memory before returning your file_path */
-                free(path_copy);
-
-                return (file_path);
-            }
-            else{
-                /* free up the file_path memory so we can check for another path*/
-                free(file_path);
-                path_token = strtok(NULL, ":");
-
-            }
-
-        }
-        /* if we don't get any file_path that exists for the command, we return NULL but we need to free up memory for path_copy */ 
-        free(path_copy);
-        /* before we exit without luck, let's see if the command itself is a file_path that exists */
-        if (stat(command, &buffer) == 0)
-        {
-            return (command);
-        }
-        return (NULL);
-    }
-    return (NULL);
+	path = getenv("PATH");
+    //split into directories
+	path_tokens = ft_split(path, ':');
+	i = 0;
+	while (path_tokens[i])
+	{
+		//append "/" to the directory
+        location = ft_strjoin(path_tokens[i], "/");
+        //append the command name 
+		location = ft_strjoin(location, cmd);
+        //check if the command exists and if it does return it
+		if (access(location, F_OK) == 0)
+		{
+			ft_free_array(path_tokens);
+			return (location);
+		}
+		free(location);
+		i++;
+	}
+	ft_free_array(path_tokens);
+	return (NULL);
 }
 
 void execmd(char **argv)
 {
     pid_t pid;
+    char *cmd;
+    char *actual_cmd;
 
     if (argv)
     {
-        /* fork a new process */
         pid = fork();
         if (pid < 0) 
         {
@@ -85,16 +57,15 @@ void execmd(char **argv)
         }
         else if (pid == 0) 
         {
-            /* this is the child process */
             /* execute the actual command with execve */
-            char *command = argv[0];
-            char *actual_command = get_location(command);
-            if (actual_command == NULL)
+            cmd = argv[0];
+            actual_cmd = get_location(cmd);
+            if (actual_cmd == NULL)
             {
-                printf("%s: command not found\n", command);
+                printf("%s: command not found\n", cmd);
                 exit(1);
             }
-            if (execve(actual_command, argv, NULL) == -1)
+            if (execve(actual_cmd, argv, NULL) == -1)
             {
                 perror("Error:");
                 exit(1);

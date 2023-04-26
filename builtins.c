@@ -12,24 +12,6 @@
 
 #include "minishell.h"
 
-void execArgs(char **token)
-{
-	pid_t pid = fork();
-
-	if (pid == -1) {
-		printf("\nFailed forking child..");
-		return;
-	} else if (pid == 0) {
-		if (execvp(token[0], token) < 0) {
-			printf("Could not execute command..\n");
-		}
-		exit(0);
-	} else {
-		wait(NULL);
-		return;
-	}
-}
-
 void printpwd()
 {
     char pwd[256];
