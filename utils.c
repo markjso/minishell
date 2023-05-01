@@ -6,7 +6,7 @@
 /*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:44:00 by jmarks            #+#    #+#             */
-/*   Updated: 2023/04/26 10:44:04 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/05/01 15:58:53 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	*ft_strcpy(char *s1, char *s2)
 {
-	int i;
+	int	i;
 
-    i = 0;
+	i = 0;
 	while (s2[i])
 	{
 		s1[i] = s2[i];
@@ -38,4 +38,3 @@ void	ft_free_array(char **arr)
 	}
 	free(arr);
 }
-

@@ -6,7 +6,7 @@
 /*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 15:30:25 by jmarks            #+#    #+#             */
-/*   Updated: 2023/04/17 15:30:28 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/05/01 15:52:57 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ char	*get_location(char *cmd)
 	int		i;
 
 	path = getenv("PATH");
-    //split into directories
+   	//split into directories
 	path_tokens = ft_split(path, ':');
 	i = 0;
 	while (path_tokens[i])
 	{
 		//append "/" to the directory
-        location = ft_strjoin(path_tokens[i], "/");
+		location = ft_strjoin(path_tokens[i], "/");
         //append the command name 
 		location = ft_strjoin(location, cmd);
         //check if the command exists and if it does return it
@@ -42,43 +42,39 @@ char	*get_location(char *cmd)
 	return (NULL);
 }
 
-void execmd(char **argv)
+void	execmd(char **argv)
 {
-    pid_t pid;
-    char *cmd;
-    char *actual_cmd;
+	pid_t	pid;
+	char	*cmd;
+	char	*actual_cmd;
 
-    if (argv)
-    {
-        pid = fork();
-        if (pid < 0) 
-        {
-            perror("Error: Fork failed");
-        }
-        else if (pid == 0) 
-        {
+	if (argv)
+	{
+		pid = fork();
+		if (pid < 0)
+		{
+			perror("Error: Fork failed");
+		}
+		else if (pid == 0)
+		{
             /* execute the actual command with execve */
-            cmd = argv[0];
-            actual_cmd = get_location(cmd);
-            if (actual_cmd == NULL)
-            {
-                printf("%s: command not found\n", cmd);
-                exit(1);
-            }
-            if (execve(actual_cmd, argv, NULL) == -1)
-            {
-                perror("Error:");
-                exit(1);
-            }
-        }
-        else 
-        {
-            /* this is the parent process */
-            /* wait for the child process to finish */
-            wait(NULL);
-            return;
-        }
-    }
+			cmd = argv[0];
+			actual_cmd = get_location(cmd);
+			if (actual_cmd == NULL)
+			{
+				printf("%s: command not found\n", cmd);
+				exit(1);
+			}
+			if (execve(actual_cmd, argv, NULL) == -1)
+			{
+				perror("Error:");
+				exit(1);
+			}
+		}
+		else
+		{
+			wait(NULL);
+			return ;
+		}
+	}
 }
-
-
