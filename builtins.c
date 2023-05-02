@@ -24,9 +24,10 @@ int	builtins(char **token)
 {
 	int		no_of_builtins;
 	int		i;
-	char	*builtin_ID[no_of_builtins];
-
+	
 	no_of_builtins = 7;
+
+	char	*builtin_ID[no_of_builtins];
 	i = 0;
 	builtin_ID[0] = "echo";
 	builtin_ID[1] = "cd";
@@ -51,8 +52,8 @@ void	parse_input(char *str, char **token)
 	int		i;
 	char	**split;
 
-	split = ft_split(str, ' ');
-	if (!split)
+	split = ft_split(str, ' '); // Returns MALLOC string
+	if (!split) // When does this get called?
 	{
 		printf("empty string\n");
 	}
