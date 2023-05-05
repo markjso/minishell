@@ -25,6 +25,7 @@
 # include <readline/history.h>
 # include <limits.h>
 # include "libft.h"
+# include <errno.h>
 
 # define MAXCOM 1000 // max number of letters to be supported
 # define MAXLIST 100 // max number of commands to be supported
@@ -37,5 +38,6 @@ void	parse_input(char *str, char **token);
 int		process_input(char *str, char **token);
 char	*ft_strcpy(char *s1, char *s2);
 void	ft_free_array(char **arr);
+void    sig_initialiser(void);
 
 #endif

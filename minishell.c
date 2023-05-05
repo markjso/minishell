@@ -21,12 +21,16 @@ int	main(int ac, char **av)
 	execFlag = 0;
 	(void)ac;
 	(void)av;
+	sig_initialiser();
 	while (1)
 	{
-		takeInput(input);
-		execFlag = process_input(input, parsedArgs);
-		if (execFlag == 1)
-			execmd(parsedArgs);
+		// IF statement stops else in function from segfaulting. char input becomes *str in function
+		if (takeInput(input) == 0)
+		{
+			execFlag = process_input(input, parsedArgs);
+			if (execFlag == 1)
+				execmd(parsedArgs);
+		}
 	}
 	return (EXIT_SUCCESS);
 }
