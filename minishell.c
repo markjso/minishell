@@ -21,6 +21,7 @@ int	main(int ac, char **av)
 	execFlag = 0;
 	(void)ac;
 	(void)av;
+	sig_initialiser();
 	while (1)
 	{
 		// IF statement stops else in function from segfaulting. char input becomes *str in function

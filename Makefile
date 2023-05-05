@@ -15,10 +15,13 @@ NAME=minishell
 SRCS=minishell.c \
 	builtins.c \
 	execmd.c \
-	utils.c \
+	utils.c	\
+	signal.c \
 	initialise.c
 
 INCLUDE=-I$(LIBFT)
+INCL_RL = /usr/local/opt/readline/include/
+LINK_RL = /usr/local/opt/readline/lib
 	
 OBJS=$(SRCS:.c=.o)
 
@@ -31,14 +34,14 @@ CFLAGS=-Wall -Wextra -Werror $(INCLUDE)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CLFAGS) -o $@ $^ -lreadline 
+	$(CC) $(CLFAGS) -L $(LINK_RL) -o $@ $^ -lreadline 
 	@echo minishell is compiled
 
 $(LIBFT):
 		$(MAKE) -C libft
 	
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) -c $< -o $@ -I $(INCL_RL)
 
 clean:
 	$(MAKE) clean -C libft
