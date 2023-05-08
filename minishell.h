@@ -39,5 +39,7 @@ int		process_input(char *str, char **token);
 char	*ft_strcpy(char *s1, char *s2);
 void	ft_free_array(char **arr);
 void    sig_initialiser(void);
+int		ft_stdout(char *command, char *out_file);
+
 
 #endif
