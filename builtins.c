@@ -65,6 +65,10 @@ int	builtins(char **token)
 	int		i;
 	
 	no_of_builtins = 7;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 019fc7ab69b95fe2c672a87c50356263faf67fd4
 	char	*builtin_ID[no_of_builtins];
 	i = 0;
 	builtin_ID[0] = "echo";
