@@ -17,11 +17,14 @@ SRCS=minishell.c \
 	execmd.c \
 	utils.c	\
 	signal.c \
+	cd_command.c \
 	initialise.c
 
 INCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
 LINK_RL = /usr/local/opt/readline/lib
+
+RM = rm -rf
 	
 OBJS=$(SRCS:.c=.o)
 
@@ -38,18 +41,18 @@ $(NAME): $(OBJS) $(LIBFT)
 	@echo minishell is compiled
 
 $(LIBFT):
-		$(MAKE) -C libft
+		@$(MAKE) -C libft
 	
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@ -I $(INCL_RL)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INCL_RL)
 
 clean:
-	$(MAKE) clean -C libft
-	rm -f $(OBJS)
+	@$(MAKE) clean -C libft
+	@rm -f $(OBJS)
 
 fclean:	clean
-	$(MAKE) fclean -C libft
-	rm -f $(NAME)
+	@$(MAKE) fclean -C libft
+	@rm -f $(NAME)
 
 re:	fclean all
 

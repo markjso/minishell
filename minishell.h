@@ -40,6 +40,7 @@ char	*ft_strcpy(char *s1, char *s2);
 void	ft_free_array(char **arr);
 void    sig_initialiser(void);
 int		ft_stdout(char *command, char *out_file);
-
+int     cd_command(char **token);
+int 	ft_strcmp(char *s1, char *s2);
 
 #endif
