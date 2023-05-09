@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	main(int ac, char **av)
+int	main(int ac, char **av, char **env)
 {
 	int		execFlag;
 	char	input[MAXCOM];
@@ -21,6 +21,7 @@ int	main(int ac, char **av)
 	execFlag = 0;
 	(void)ac;
 	(void)av;
+	(void)env;
 	sig_initialiser();
 	while (1)
 	{
