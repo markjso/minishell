@@ -6,7 +6,7 @@
 /*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:44:00 by jmarks            #+#    #+#             */
-/*   Updated: 2023/05/01 15:58:53 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/05/17 12:35:29 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_free_array(char **arr)
 	free(arr);
 }
 
-int 	ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;
 

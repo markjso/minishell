@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+t_envar *g_env_vars; 
+
 char	*get_location(char *cmd)
 {
 	char	**path_tokens;
@@ -50,6 +52,18 @@ void	execmd(char **argv)
 
 	if (argv)
 	{
+        // Check if the command is "export"
+        if (ft_strcmp(argv[0], "export") == 0)
+        {
+            export_cmd(argv);
+            return ;
+        }
+		// Check if the comman is "unset"
+		if (ft_strcmp(argv[0], "unset") == 0)
+        {
+            remove_env_var(argv[1]);
+            return ;
+        }		
 		pid = fork();
 		if (pid < 0)
 		{
