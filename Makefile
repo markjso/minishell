@@ -18,6 +18,7 @@ SRCS=minishell.c \
 	utils.c	\
 	signal.c \
 	cd_command.c \
+	environ.c \
 	initialise.c
 
 INCLUDE=-I$(LIBFT)
