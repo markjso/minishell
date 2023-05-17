@@ -81,27 +81,24 @@ int	builtins(char **token)
 	int		no_of_builtins;
 	int		i;
 
-	no_of_builtins = 5;
-	char	*builtin_ID[no_of_builtins];
+	no_of_builtins = 4
+	char	*builtin_id[4];
 	i = 0;
-	builtin_ID[0] = "echo";
-	builtin_ID[1] = "cd";
-	builtin_ID[2] = "pwd";
-	builtin_ID[3] = "env";
-	builtin_ID[4] = "exit";
-	while (i < no_of_builtins && ft_strcmp(token[0], builtin_ID[i]) != 0)
+	builtin_id[0] = "echo";
+	builtin_id[1] = "pwd";
+	builtin_id[2] = "env";
+	builtin_id[3] = "exit";
+	while (i < no_of_builtins && ft_strcmp(token[0], builtin_id[i]) != 0)
 	{
 		i++;
 	}
 	if (i == 0)
 		echo_cmd(token + 1);
 	else if (i == 1)
-		cd_command(token);
-	else if (i == 2)
 		printpwd();
-	else if (i == 3)
+	else if (i == 2)
 		print_env();
-	else if (i == 4)
+	else if (i == 3)
 		exit(0);
 	return (0);
 }

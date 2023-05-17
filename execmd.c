@@ -63,7 +63,12 @@ void	execmd(char **argv)
         {
             remove_env_var(argv[1]);
             return ;
-        }		
+        }
+		if (ft_strcmp(argv[0], "cd") == 0)
+		{
+			cd_command(argv);
+			return ;
+		}	
 		pid = fork();
 		if (pid < 0)
 		{

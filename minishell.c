@@ -16,11 +16,11 @@ t_envar	*g_env_vars;
 
 int	main(int ac, char **av, char **envp)
 {
-	int		execFlag;
+	int		exec_flag;
 	char	input[MAXCOM];
-	char	*parsedArgs[MAXLIST];
+	char	*parsed_args[MAXLIST];
 
-	execFlag = 0;
+	exec_flag = 0;
 	(void)ac;
 	(void)av;
 	// (void)envp;
@@ -31,10 +31,10 @@ int	main(int ac, char **av, char **envp)
 		// IF statement stops else in function from segfaulting. char input becomes *str in function
 		if (takeInput(input) == 0)
 		{
-			execFlag = process_input(input, parsedArgs);
+			exec_flag = process_input(input, parsed_args);
 			
-			if (execFlag == 1)
-				execmd(parsedArgs);
+			if (exec_flag == 1)
+				execmd(parsed_args);
 		}
 	}
 	return (EXIT_SUCCESS);

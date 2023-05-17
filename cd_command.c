@@ -12,64 +12,52 @@
 
 #include "minishell.h"
 
-int cd_absolute(char **token);
-int cd_relative(char **token);
+void change_dirs(t_envar *pwd, t_envar *oldpwd, char *cwd)
+{
+    free(oldpwd->value);
+    oldpwd->value = ft_strdup(pwd->value);
+    free(pwd->value);
+    pwd->value = ft_strdup(cwd);
+}
 
-  int cd_command(char **token)
-  {
-      if (token[1] == NULL)
-          return (1);
-      if (token[1][0] == '/')
-          return (cd_absolute(token));
-      else
-          return (cd_relative(token));
-  }
- 
-  int cd_absolute(char **token)
-  {
-      if (chdir(token[1]) != 0)
-      {
-          printf("%s: No such file or directory\n", token[1]);
-          return (1);
-      }
-      return (0);
-  }
- 
-  int cd_relative2(char *ext, char *cwdext, char **token)
-  {
-      int i;
- 
-      i = 0;
-      if (chdir(cwdext) != 0)
-      {
-          printf("%s: No such file or directory\n", token[1]);
-          i = 1;
-      }
-      free(ext);
-      free(cwdext);
-      return (i);
-  }
- 
-  int cd_relative(char **token)
-  {
-      char    *cwd;
-      char    *ext;
-      char    *cwdext;
-      int     returnval;
- 
-      returnval = 0;
-      cwd = malloc(PATH_MAX + 1);
-      if (getcwd(cwd, PATH_MAX + 1) != NULL)
-      {
-          ext = ft_strjoin("/", token[1]);
-          cwdext = ft_strjoin(cwd, ext);
-          returnval = cd_relative2(ext, cwdext, token);
-      }
-      else
-      {
-          printf("Error: could not get working directory\n");
-          returnval = 1;
-      }
-      free(cwd);
-      return (returnval);
-  }
+int cd_command(char **tokens)
+{
+    char cwd[256];
+    t_envar *pwd;
+    t_envar *oldpwd;
+
+    pwd = find_env_var("PWD");
+    oldpwd = find_env_var("OLDPWD");
+    if (tokens[1] == NULL)
+    {
+        // No directory specified, change to home directory
+        const char *home = getenv("HOME");
+        if (home == NULL)
+        {
+            printf("cd: HOME environment variable not set\n");
+            return 1;
+        }
+        if (chdir(home) != 0)
+        {
+            printf("cd: Failed to change directory\n");
+            return 1;
+        }
+    }
+    else if (chdir(tokens[1]) == 0)
+    {
+        if (getcwd(cwd, sizeof(cwd)) == NULL)
+        {
+            printf("cd: Failed to get current directory\n");
+            return 1;
+        }
+        change_dirs(pwd, oldpwd, cwd);
+    }
+    else
+    {
+        printf("cd: No such file or directory\n");
+        return 1;
+    }
+
+    return 0;
+}
+
