@@ -81,7 +81,7 @@ int	builtins(char **token)
 	int		no_of_builtins;
 	int		i;
 
-	no_of_builtins = 4
+	no_of_builtins = 4;
 	char	*builtin_id[4];
 	i = 0;
 	builtin_id[0] = "echo";
