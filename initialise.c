@@ -18,6 +18,7 @@ void	init_free(char *temp, char *input)
 		free(input);
 	if (temp)
 		free(temp);
+	
 }
 
 int	takeInput(char *str)

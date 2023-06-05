@@ -44,29 +44,31 @@ char	*get_location(char *cmd)
 	return (NULL);
 }
 
-void	execmd(char **argv)
+// void	execmd(char **argv)
+void	execmd(t_data *data)
 {
+	debugFunctionName("EXECMD");
 	pid_t	pid;
 	char	*cmd;
 	char	*actual_cmd;
 
-	if (argv)
+	if (data->token)
 	{
         // Check if the command is "export"
-        if (ft_strcmp(argv[0], "export") == 0)
+        if (ft_strcmp(data->token[0], "export") == 0)
         {
-            export_cmd(argv);
+            export_cmd(data->token);
             return ;
         }
-		// Check if the comman is "unset"
-		if (ft_strcmp(argv[0], "unset") == 0)
+		// Check if the command is "unset"
+		if (ft_strcmp(data->token[0], "unset") == 0)
         {
-            remove_env_var(argv[1]);
+            remove_env_var(data->token[1]);
             return ;
         }
-		if (ft_strcmp(argv[0], "cd") == 0)
+		if (ft_strcmp(data->token[0], "cd") == 0)
 		{
-			cd_command(argv);
+			cd_command(data->token);
 			return ;
 		}	
 		pid = fork();
@@ -77,14 +79,14 @@ void	execmd(char **argv)
 		else if (pid == 0)
 		{
             /* execute the actual command with execve */
-			cmd = argv[0];
+			cmd = data->token[0];
 			actual_cmd = get_location(cmd);
 			if (actual_cmd == NULL)
 			{
 				printf("%s: command not found\n", cmd);
 				exit(1);
 			}
-			if (execve(actual_cmd, argv, NULL) == -1)
+			if (execve(actual_cmd, data->token, NULL) == -1)
 			{
 				perror("Error:");
 				exit(1);
