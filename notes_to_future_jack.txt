@@ -1,0 +1,76 @@
+-------- No backslash and no open quotes --------
+
+
+A token is seperated by spaces unles space is inside quotes. 
+-> becomes ->
+A token is sepearated by quotes, spaces outside the quotes become tokens aswell.  
+
+
+
+int pointer array usage:
+	int main(void){
+
+		int *a = (int *)malloc(sizeof(int));
+
+		a[0] = 3;
+		a[1] = 6;
+
+		printf("a[0] is = %d\n", a[0]);
+		printf("a[1] is = %d\n", a[1]);
+		printf("\n\n");
+
+		while (*a)
+		{
+			printf("a pointer is %d\n", *a);
+			a++;
+		}
+		return 0;
+	}
+
+
+Int pointer array usage from struct:
+	typedef struct s_data {
+		int *a;
+	} t_data;
+
+	size_t	ft_strlen(const char *str)
+	{
+		size_t	i;
+
+		i = 0;
+		while (str[i])
+			i++;
+		return (i);
+	}
+
+
+	int main(void){
+		
+		t_data *data  = (t_data *)malloc(sizeof(t_data));
+		data->a = (int *)malloc(sizeof(int));
+
+		*data->a = 3;
+		
+		data->a++;
+		*data->a = 6;
+
+		//a[0] = 3;
+		//a[1] = 6;
+		
+		data->a--;
+
+		printf("a[0] is = %d\n", data->a[0]);
+		printf("a[1] is = %d\n", data->a[1]);
+		printf("\n\n");
+
+		while (*data->a)
+		{
+			printf("a pointer is %d\n", *data->a);
+			data->a++;		
+		}
+		free (data);
+		return 0;
+	}
+
+Complete:
+Rename data->token to data->tokens. 
