@@ -20,7 +20,8 @@ SRCS=minishell.c \
 	cd_command.c \
 	environ.c \
 	initialise.c \
-	debug.c 
+	debug.c \
+	process_input.c
 
 INCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
