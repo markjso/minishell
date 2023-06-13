@@ -42,35 +42,3 @@ Int pointer array usage from struct:
 			i++;
 		return (i);
 	}
-
-
-	int main(void){
-		
-		t_data *data  = (t_data *)malloc(sizeof(t_data));
-		data->a = (int *)malloc(sizeof(int));
-
-		*data->a = 3;
-		
-		data->a++;
-		*data->a = 6;
-
-		//a[0] = 3;
-		//a[1] = 6;
-		
-		data->a--;
-
-		printf("a[0] is = %d\n", data->a[0]);
-		printf("a[1] is = %d\n", data->a[1]);
-		printf("\n\n");
-
-		while (*data->a)
-		{
-			printf("a pointer is %d\n", *data->a);
-			data->a++;		
-		}
-		free (data);
-		return 0;
-	}
-
-Complete:
-Rename data->token to data->tokens. 

@@ -22,12 +22,11 @@ void	printpwd(void)
 	printf("\nDir: %s", pwd);
 }
 
-// void	echo_cmd(char **token)
 /*
 Write to screen the text folloing the command `echo`. 
 Checks for the -n flag. Must expand this description.
 */
-void	echo_cmd(t_data *data)
+void	echo_cmd(char **token)
 {
 	debugFunctionName("ECHO_CMD");
 	int	i;
@@ -35,29 +34,29 @@ void	echo_cmd(t_data *data)
 
 	i = 1;
 	no_newline = 0;
-	data->token++;
-	// printf("echo_cmd data_token 0: %s\n", *data->token); //this is `echo`
-	// printf("echo_cmd data_token 1: %s\n", *data->token); //this is the next item after `echo`
+	token++;
+	// printf("echo_cmd token 0: %s\n", token); //this is `echo`
+	// printf("echo_cmd token 1: %s\n", token); //this is the next item after `echo`
     // check if -n option was passed
-	if (data->token[i] && ft_strcmp(data->token[i], "-n") == 0)
+	if (token[i] && ft_strcmp(token[i], "-n") == 0)
 	{
 		no_newline++;
 		i++;
 	}
-	while (data->token[i])
+	while (token[i])
 	{
-		if (data->token[i] && ft_strcmp(data->token[i], "-n") == 0)
+		if (token[i] && ft_strcmp(token[i], "-n") == 0)
 		{
-			printf("%s", data->token[i]);
-			if (data->token[i + 1])
+			printf("%s", token[i]);
+			if (token[i + 1])
 				printf(" ");
 		}
 		i++;
 	}
     // print new line only if -n option was not passed and there are arguments
-	if (!data->token[1] && no_newline)
+	if (!token[1] && no_newline)
 		printf("\n");
-	data->token--;
+	token--;
 }
 
 int	export_cmd(char **token)
@@ -89,7 +88,7 @@ int	export_cmd(char **token)
 /*
 Always returns 0?
 */
-int	builtins(t_data *data)
+int	builtins(char **token)
 {
 	int		no_of_builtins;
 	int		i;
@@ -102,13 +101,12 @@ int	builtins(t_data *data)
 	builtin_id[1] = "pwd";
 	builtin_id[2] = "env";
 	builtin_id[3] = "exit";
-	while (i < no_of_builtins && ft_strcmp(data->token[0], builtin_id[i]) != 0)
+	while (i < no_of_builtins && ft_strcmp(token[0], builtin_id[i]) != 0)
 	{
 		i++;
 	}
 	if (i == 0)
-		echo_cmd(data);
-		// echo_cmd(data->token + 1);
+		echo_cmd(token + 1);
 	else if (i == 1)
 		printpwd();
 	else if (i == 2)

@@ -37,18 +37,12 @@ typedef struct s_envar
 	struct s_envar	*next;
 }	t_envar;
 
-typedef struct s_data
-{
-	char		**token;
-	// char		**token_sans_white_space;
-}				t_data;
-
 int		takeInput(char *str);
 char	*get_location(char *cmd);
-void	execmd(t_data *data);
-int		builtins(t_data *data);
-void	parse_input(char *str, t_data *data);
-int		process_input(char *str, t_data *data);
+void	execmd(char **argv);
+int		builtins(char **token);
+void	parse_input(char *str, char **token);
+int		process_input(char *str, char **token);
 char	*ft_strcpy(char *s1, char *s2);
 void	ft_free_array(char **arr);
 void	sig_initialiser(void);
@@ -62,6 +56,6 @@ void	add_env_var(t_envar *node);
 void	remove_env_var(char *name);
 void	print_env(void);
 int		export_cmd(char **token);
-void debugFunctionName(char* function_name);
+void	debugFunctionName(char* function_name);
 
 #endif
