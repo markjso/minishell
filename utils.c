@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+
+
 char	*ft_strcpy(char *s1, char *s2)
 {
 	int	i;
@@ -49,4 +51,18 @@ int	ft_strcmp(char *s1, char *s2)
 		i++;
 	}
 	return (s1[i] - s2[i]);
+}
+
+/*
+Returns the lengh of a word - alpha numeric characters only. 
+ft_alpha_word_len(char *string to use, int starting index of first char of word.)
+*/
+int	ft_alnum_word_len(char *str, int start)
+{
+	int i;
+
+	i = start;
+	while(ft_isalnum(str[i]) == 1)
+		i++;
+	return (i - start);
 }

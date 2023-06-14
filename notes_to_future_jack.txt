@@ -1,10 +1,13 @@
 -------- No backslash and no open quotes --------
 
+If var can't expand, it disappears
+echo a$HO"ME" will print aME
 
 A token is seperated by spaces unles space is inside quotes. 
 -> becomes ->
 A token is sepearated by quotes, spaces outside the quotes become tokens aswell.  
 
+ft_strdup will only work on small strings. It can't help split the user input string. 
 
 
 int pointer array usage:
