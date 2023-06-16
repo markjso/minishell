@@ -66,3 +66,11 @@ int	ft_alnum_word_len(char *str, int start)
 		i++;
 	return (i - start);
 }
+
+int	ft_is_not_white_space(int c)
+{
+	if (c >= 33 && c <= 126)
+		return (1);
+	else
+		return (0);
+}
