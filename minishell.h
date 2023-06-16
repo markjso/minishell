@@ -60,5 +60,6 @@ void	print_env(void);
 int		export_cmd(char **token);
 void	debugFunctionName(char* function_name);
 int		ft_alnum_word_len(char *str, int start);
+int		ft_is_not_white_space(int c);
 
 #endif
