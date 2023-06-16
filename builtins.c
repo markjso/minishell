@@ -88,30 +88,31 @@ int	export_cmd(char **token)
 /*
 Always returns 0?
 */
-int	builtins(char **token)
-{
-	int		no_of_builtins;
-	int		i;
 
-	debugFunctionName("BUILTINS");
-	no_of_builtins = 4;
-	char	*builtin_id[4];
-	i = 0;
-	builtin_id[0] = "echo";
-	builtin_id[1] = "pwd";
-	builtin_id[2] = "env";
-	builtin_id[3] = "exit";
-	while (i < no_of_builtins && ft_strcmp(token[0], builtin_id[i]) != 0)
-	{
-		i++;
-	}
-	if (i == 0)
-		echo_cmd(token + 1);
-	else if (i == 1)
-		printpwd();
-	else if (i == 2)
-		print_env();
-	else if (i == 3)
-		exit(0);
-	return (0);
-}
+// int	builtins(char **token)
+// {
+// 	int		check;
+// 	char	*builtin_name;
+
+// 	debugFunctionName("BUILTINS");
+// 	no_of_builtins = 4;
+// 	char	*builtin_id[4];
+// 	i = 0;
+// 	builtin_id[0] = "echo";
+// 	builtin_id[1] = "pwd";
+// 	builtin_id[2] = "env";
+// 	builtin_id[3] = "exit";
+// 	while (i < no_of_builtins && ft_strcmp(token[0], builtin_id[i]) != 0)
+// 	{
+// 		i++;
+// 	}
+// 	if (i == 0)
+// 		echo_cmd(token + 1);
+// 	else if (i == 1)
+// 		printpwd();
+// 	else if (i == 2)
+// 		print_env();
+// 	else if (i == 3)
+// 		exit(0);
+// 	return (0);
+// }

@@ -14,6 +14,7 @@ NAME=minishell
 
 SRCS=minishell.c \
 	builtins.c \
+	builtin_utils.c \
 	execmd.c \
 	utils.c	\
 	signal.c \

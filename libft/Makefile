@@ -51,12 +51,14 @@ CC=gcc
 
 CFLAGS=-Wall -Wextra -Werror
 
+DEBUG=-g -O0
+
 OBJS=$(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(SRC)
-	@$(CC) $(CFLAGS) -c $(SRC)
+	@$(CC) $(DEBUG) $(CFLAGS) -c $(SRC)
 	@ar rcs $(NAME) $(OBJS)
 	@ranlib $(NAME)
 
