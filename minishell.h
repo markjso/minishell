@@ -30,6 +30,10 @@
 # define MAXCOM 1000 // max number of letters to be supported
 # define MAXLIST 100 // max number of commands to be supported
 
+typedef struct s_shell {
+    	t_envar *envar;
+    // Other fields related to the shell's configuration and data
+} 	t_shell;
 typedef struct s_envar
 {
 	char			*name;
