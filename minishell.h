@@ -37,6 +37,14 @@ typedef struct s_envar
 	struct s_envar	*next;
 }	t_envar;
 
+typedef struct s_char_list
+{
+	int					index;
+	int					type;
+	int					amount;
+	struct s_char_list	*next;
+}	t_char_list;
+
 int		takeInput(char *str);
 char	*get_location(char *cmd);
 void	execmd(char **argv);
@@ -59,5 +67,9 @@ int		export_cmd(char **token);
 void	debugFunctionName(char* function_name);
 int		ft_alnum_word_len(char *str, int start);
 int		ft_is_not_white_space(int c);
+
+t_char_list	*char_list_new_node(int index, char type);
+void	char_list_insert_end(t_char_list **root, int index, char type);
+void	char_list_delete(t_char_list **root);
 
 #endif

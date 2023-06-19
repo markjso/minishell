@@ -21,7 +21,8 @@ SRCS=minishell.c \
 	environ.c \
 	initialise.c \
 	debug.c \
-	process_input.c
+	process_input.c \
+	char_list.c
 
 INCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
@@ -41,7 +42,7 @@ CFLAGS=-Wall -Wextra -Werror $(INCLUDE)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CLFAGS) -L $(LINK_RL) -o $@ $^ -lreadline 
+	$(CC) -g -O0 $(CLFAGS) -L $(LINK_RL) -o $@ $^ -lreadline 
 	mkdir -p $(OBJECT_FOLDER)
 	mv $(OBJS) $(OBJECT_FOLDER)
 	@echo minishell is compiled
@@ -50,7 +51,7 @@ $(LIBFT):
 		@$(MAKE) -C libft
 	
 %.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INCL_RL)
+	@$(CC) -g -O0 $(CFLAGS) -c $< -o $@ -I $(INCL_RL)
 
 clean:
 	@$(MAKE) clean -C libft

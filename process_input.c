@@ -14,10 +14,27 @@
 
 t_envar	*g_env_vars;
 
-int	find_token_number(char *str)
+// int	return_char_type(char c, char next)
+// {
+// 	if (c == '$' && ft_is_not_white_space(next) == 1)
+// 		return (1);
+// 	else if ((c == '~' || c == '|') && ft_is_not_white_space(next) == 1)
+// 		return (1);
+// 	else if ((c == '>' && next == '>') || (c == '<' && next == '<'))
+// 		return (2);
+// 	else if ((c = '>' && next == '=') || (c == '<' && next == '='))
+// 		return (2);
+// 	else if ((c = '>' && next == '<') || (c == '<' && next == '>'))
+// 		return (2);
+// 	else
+// 		return (0);
+// }
+
+int	find_token_number(char *str, t_char_list *root)
 {
-	int		i;
-	int		count;
+	int			i;
+	int			type;
+	int			count;
 
 	i = 0;
 	count = 0;
@@ -25,22 +42,36 @@ int	find_token_number(char *str)
 		count++;
 	while (str[i] != '\0')
 	{
-		if (str[i] == 34 && str[i + 1] != '\0') //IF index i is double quote and next exists. 
+		if ((str[i] == ' ' || str[i] == '\t') && str[i + 1] != '\0')
 		{
-			i++;
-			while (str[i] != '\0' && str[i] != 34) // WHILE index i exists and is not (matching/closing) double quote. 
+			while ((str[i] == ' ' || str[i] == '\t') && (str[i + 1] == ' ' || str[i] == '\t'))
 				i++;
+			i++;
 		}
-		else if (str[i] == 39 && str[i + 1] != '\0') //IF index i is single quote and next exists. 
+
+		type = 39;
+		if ((str[i] == 34 || str[i] == 39) && str[i + 1] != '\0') //IF index i is double or single quote and next exists. 
 		{
+			if (str[i] == 34) // Type is double quote, else default to single quote
+				type = 34;
+			char_list_insert_end(&root, i, type);
 			i++;
-			while (str[i] != '\0' && str[i] != 39) // WHILE index i exists and is not (matching/closing) single quote. 
+			while (str[i] != '\0' && str[i] != type) // WHILE index i exists and is not (matching/closing) double quote. 
 				i++;
+			char_list_insert_end(&root, i, type); // Matching close quote. 
 		}
+
+		// else if (str[i + 1] != '\0' && return_char_type(str[i], str[i + 1]) == 2)
+		// 	char_list_insert_end(&root, i, str[i], 2); // IF next item is special char too
+
+		// else if (str[i + 1] != '\0' && return_char_type(str[i], str[i + 1]) == 1)
+		// 	char_list_insert_end(&root, i, str[i], 1); // IF item is special char
+
 		else if (str[i + 1] != '\0' && (str[i] == 32 || str[i] == 9)) // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
 			count++;
-			// while (str[i] == 'sp' || str[i] == 'ht')
-			// 	i++;
+			char_list_insert_end(&root, i, ' '); // add space to linked list. 
+			while (str[i] == ' ' || str[i] == '\t')
+				i++;
 		i++;
 	}
 	return (count);
@@ -51,21 +82,33 @@ char	*make_token(char *str)
 	
 }
 
-void	make_tokens(char *str, char **split)
+void	make_tokens(char *str, char **split, t_char_list **root, int token_number)
 {
 	int 	i;
 	int 	start;
 	char 	q;
 	char	*token;
 	int		j;
+	t_char_list *curr;
 
+	curr = root;
 	i = 0;
 	j = 0;
 	start = 0;
+
+	while (curr->next != NULL)
+	{
+		if (curr->type == "\'" || curr->type == "\'")
+		split[j] = make_token(&str[i]);
+			j++;
+	}
+	split[j] = 
+
 	while(str[i] != '\0')
 	{
 		if (ft_is_not_white_space(str[i]))
 		{
+			
 			split[j] = make_token(&str[i]);
 			j++;
 			while (!ft_is_not_white_space(str[i]))
@@ -80,13 +123,14 @@ void	parse_input(char *str, char **token)
 	int		i;
 	char	**split;
 	int		token_number;
+	t_char_list *root = NULL;
 
 	debugFunctionName("PARSE_INPUT");
-	token_number = find_token_number(str);
+	token_number = find_token_number(str, root);
 	printf("token number is: %d\n", token_number);
 	split = malloc(sizeof(char*) * token_number + 1);
-	make_tokens(str, split);
-	split = ft_split(str, ' '); // Returns MALLOC string
+	make_tokens(str, split, root, token_number);
+	// split = ft_split(str, ' '); // Returns MALLOC string
 	if (!split) // When does this get called?
 		printf("empty string\n");
 	i = 0;
@@ -98,6 +142,7 @@ void	parse_input(char *str, char **token)
 	}
 	token[i] = NULL;
 	free(split);
+	char_list_delete(&root);
 }
 
 
