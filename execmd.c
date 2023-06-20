@@ -53,6 +53,22 @@ void	execmd(char **argv)
 
 	if (argv)
 	{
+		if (ft_strcmp(argv[0], "export") == 0)
+        {
+            export_cmd(argv);
+            return ;
+        }
+		// Check if the command is "unset"
+		if (ft_strcmp(argv[0], "unset") == 0)
+        {
+            remove_env_var(argv[1]);
+            return ;
+        }
+		if (ft_strcmp(argv[0], "cd") == 0)
+		{
+			cd_command(argv);
+			return ;
+		}	
 		pid = fork();
 		if (pid < 0)
 		{

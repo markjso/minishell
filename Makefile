@@ -6,7 +6,7 @@
 #    By: jmarks <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/12 14:11:20 by jmarks            #+#    #+#              #
-#    Updated: 2023/04/12 14:18:26 by jmarks           ###   ########.fr        #
+#    Updated: 2023/06/20 11:26:51 by jmarks           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,6 @@ NAME=minishell
 
 SRCS=minishell.c \
 	builtins.c \
-	builtin_utils.c \
 	execmd.c \
 	utils.c	\
 	signal.c \
@@ -24,7 +23,7 @@ SRCS=minishell.c \
 	debug.c \
 	process_input.c
 
-INCLUDE=-I$(LIBFT)
+dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
 LINK_RL = /usr/local/opt/readline/lib
 
@@ -42,7 +41,7 @@ CFLAGS=-Wall -Wextra -Werror $(INCLUDE)
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CLFAGS) -L $(LINK_RL) -o $@ $^ -lreadline 
+	$(CC) $(CFLAGS) -L $(LINK_RL) -o $@ $^ -lreadline 
 	mkdir -p $(OBJECT_FOLDER)
 	mv $(OBJS) $(OBJECT_FOLDER)
 	@echo minishell is compiled
