@@ -35,6 +35,7 @@ int	find_token_number(char *str, t_char_list *root)
 	int			i;
 	int			type;
 	int			count;
+	int			open_quote;
 
 	i = 0;
 	count = 0;
@@ -42,32 +43,23 @@ int	find_token_number(char *str, t_char_list *root)
 		count++;
 	while (str[i] != '\0')
 	{
-		if ((str[i] == ' ' || str[i] == '\t') && str[i + 1] != '\0')
-		{
-			while ((str[i] == ' ' || str[i] == '\t') && (str[i + 1] == ' ' || str[i] == '\t'))
-				i++;
-			i++;
-		}
-
-		type = 39;
+		type = 39; // Single quote by default. 
 		if ((str[i] == 34 || str[i] == 39) && str[i + 1] != '\0') //IF index i is double or single quote and next exists. 
 		{
 			if (str[i] == 34) // Type is double quote, else default to single quote
 				type = 34;
-			char_list_insert_end(&root, i, type);
+			open_quote = i;
 			i++;
 			while (str[i] != '\0' && str[i] != type) // WHILE index i exists and is not (matching/closing) double quote. 
 				i++;
-			char_list_insert_end(&root, i, type); // Matching close quote. 
+			if (str[i] == type) // Found the matching close quote. 
+			{
+				char_list_insert_end(&root, open_quote, type);
+				char_list_insert_end(&root, i, type); // Matching close quote.
+				count++;
+			}
 		}
-
-		// else if (str[i + 1] != '\0' && return_char_type(str[i], str[i + 1]) == 2)
-		// 	char_list_insert_end(&root, i, str[i], 2); // IF next item is special char too
-
-		// else if (str[i + 1] != '\0' && return_char_type(str[i], str[i + 1]) == 1)
-		// 	char_list_insert_end(&root, i, str[i], 1); // IF item is special char
-
-		else if (str[i + 1] != '\0' && (str[i] == 32 || str[i] == 9)) // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
+		else if ((str[i] == ' ' || str[i] == '\t') && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
 			count++;
 			char_list_insert_end(&root, i, ' '); // add space to linked list. 
 			while (str[i] == ' ' || str[i] == '\t')
@@ -77,44 +69,41 @@ int	find_token_number(char *str, t_char_list *root)
 	return (count);
 }
 
-char	*make_token(char *str)
+char	*make_token(char *str, int length)
 {
-	
+	int		i;
+	char	*return_token;
+
+	i = 0;
+	return_token = malloc(sizeof(char) * (length));
+	while (i < length - 1)
+	{
+		return_token[i] = str[i + 1];
+		i++;
+	}
+	return_token[i] = '\0';
+	return(return_token);
 }
 
-void	make_tokens(char *str, char **split, t_char_list **root, int token_number)
+void	make_tokens(char *str, char **split, t_char_list **root)
 {
+	debugFunctionName("MAKE_TOKEN");
 	int 	i;
 	int 	start;
-	char 	q;
-	char	*token;
 	int		j;
-	t_char_list *curr;
-
-	curr = root;
 	i = 0;
 	j = 0;
 	start = 0;
-
-	while (curr->next != NULL)
+	printf("HIHIHIHIHIHIHIHIHI");
+	t_char_list *curr;
+	curr = *root;
+	
+	while (curr->next->next != NULL) // While "current (open quote) -> next (close quote) -> next (open quote)" exists
 	{
-		if (curr->type == "\'" || curr->type == "\'")
-		split[j] = make_token(&str[i]);
-			j++;
-	}
-	split[j] = 
-
-	while(str[i] != '\0')
-	{
-		if (ft_is_not_white_space(str[i]))
-		{
-			
-			split[j] = make_token(&str[i]);
-			j++;
-			while (!ft_is_not_white_space(str[i]))
-				i++;
-		}
-		i++; 
+		printf("while");
+		split[j] = make_token(&str[curr->index], curr->next->index - curr->index ); //Send data inbetween the quotes. 
+		j++;
+		curr = curr->next->next;
 	}
 }
 
@@ -129,7 +118,7 @@ void	parse_input(char *str, char **token)
 	token_number = find_token_number(str, root);
 	printf("token number is: %d\n", token_number);
 	split = malloc(sizeof(char*) * token_number + 1);
-	make_tokens(str, split, root, token_number);
+	make_tokens(str, split, &root);
 	// split = ft_split(str, ' '); // Returns MALLOC string
 	if (!split) // When does this get called?
 		printf("empty string\n");
@@ -190,7 +179,6 @@ int	process_input(char *str, char **token)
 	printf("Builtins return value: %d\n", tempvar);
 	if (tempvar)
 		return (0);	
-	else
-		return (1);
+	return (1);
 }
 
