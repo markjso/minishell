@@ -33,7 +33,10 @@ int	main(int ac, char **av, char **envp)
 		{
 			// input is data from user, parsed_args is to be the tokenised string 
 			exec_flag = process_input(input, parsed_args);
-			printf("exec_flag: %d\n", exec_flag);
+			printf("Parsed args:\n");
+			printf("%s\n", parsed_args[0]);
+			printf("%s\n", parsed_args[1]);
+			printf("%s\n", parsed_args[2]);
 			if (exec_flag == 1) { // ?? Always 1 ??
 				execmd(parsed_args);
 			}

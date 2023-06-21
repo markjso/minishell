@@ -74,3 +74,11 @@ int	ft_is_not_white_space(int c)
 	else
 		return (0);
 }
+
+int	ft_is_quote(int c)
+{
+	if (c == 34 || c == 39)
+		return (1);
+	else
+		return (0);
+}

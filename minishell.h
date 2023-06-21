@@ -37,21 +37,13 @@ typedef struct s_envar
 	struct s_envar	*next;
 }	t_envar;
 
-typedef struct s_char_list
-{
-	int					index;
-	int					type;
-	int					amount;
-	struct s_char_list	*next;
-}	t_char_list;
-
 int		takeInput(char *str);
 char	*get_location(char *cmd);
 void	execmd(char **argv);
 int		builtins(char **token);
 // int 	child_builtins(int builtin_id, char **token);
 // int 	parent_builtins(int builtin_id, char **token);
-void	parse_input(char *str, char **token);
+char**	parse_input(char *str);
 int		process_input(char *str, char **token);
 char	*ft_strcpy(char *s1, char *s2);
 void	ft_free_array(char **arr);
@@ -69,9 +61,6 @@ int		export_cmd(char **token);
 void	debugFunctionName(char* function_name);
 int		ft_alnum_word_len(char *str, int start);
 int		ft_is_not_white_space(int c);
-
-t_char_list	*char_list_new_node(int index, char type);
-void	char_list_insert_end(t_char_list **root, int index, char type);
-void	char_list_delete(t_char_list **root);
+int		ft_is_quote(int c);
 
 #endif

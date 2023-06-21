@@ -30,108 +30,138 @@ t_envar	*g_env_vars;
 // 		return (0);
 // }
 
-int	find_token_number(char *str, t_char_list *root)
+int	find_token_number(char *str)
 {
 	int			i;
-	int			type;
+	char		type;
 	int			count;
-	int			open_quote;
 
 	i = 0;
 	count = 0;
 	if (ft_isprint(str[i]))
 		count++;
+	type = 39; // Single quote by default. 
 	while (str[i] != '\0')
 	{
-		type = 39; // Single quote by default. 
-		if ((str[i] == 34 || str[i] == 39) && str[i + 1] != '\0') //IF index i is double or single quote and next exists. 
+		if (ft_is_quote(str[i]) && str[i + 1] != '\0') //IF index i is double or single quote and next exists. 
 		{
 			if (str[i] == 34) // Type is double quote, else default to single quote
 				type = 34;
-			open_quote = i;
 			i++;
-			while (str[i] != '\0' && str[i] != type) // WHILE index i exists and is not (matching/closing) double quote. 
+			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
 				i++;
 			if (str[i] == type) // Found the matching close quote. 
-			{
-				char_list_insert_end(&root, open_quote, type);
-				char_list_insert_end(&root, i, type); // Matching close quote.
 				count++;
-			}
 		}
-		else if ((str[i] == ' ' || str[i] == '\t') && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
+		else if (ft_is_not_white_space(str[i] == 0) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
+		{
 			count++;
-			char_list_insert_end(&root, i, ' '); // add space to linked list. 
-			while (str[i] == ' ' || str[i] == '\t')
+			while (ft_is_not_white_space(str[i] == 0))
 				i++;
+		}
 		i++;
 	}
 	return (count);
 }
 
-char	*make_token(char *str, int length)
+int	find_end(char *str)
 {
+	int			i;
+	char		type;
+	int			count;
+
+	count = 0;
+	i = 0;
+	type = 39; // Single quote by default. 
+
+	while (str[i] != '\0')
+	{
+		if (ft_is_not_white_space(str[i]) == 0) // IF whitespace, stop. 
+		{
+			break ;
+		}
+		// IF quote, ignore white space
+		if (ft_is_quote(str[i]) == 1) //IF index i is double or single quote and next exists. 
+		{
+			if (str[i] == 34) // Type is double quote, else default to single quote
+				type = 34;
+			i++;
+			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
+				i++;
+		}
+		i++;
+	}
+	return (i);
+}
+
+char	*make_token(char *str)
+{
+	debugFunctionName("MAKE_TOKEN");
 	int		i;
 	char	*return_token;
 
 	i = 0;
-	return_token = malloc(sizeof(char) * (length));
-	while (i < length - 1)
+	int length = find_end(str);
+	return_token = malloc(sizeof(char) * length + 1); //JC MALLOC
+	while (i < length)
 	{
-		return_token[i] = str[i + 1];
+		return_token[i] = str[i];
 		i++;
 	}
 	return_token[i] = '\0';
 	return(return_token);
 }
 
-void	make_tokens(char *str, char **split, t_char_list **root)
+
+
+void	make_tokens(char *str, char **split)
 {
-	debugFunctionName("MAKE_TOKEN");
-	int 	i;
-	int 	start;
-	int		j;
-	i = 0;
-	j = 0;
-	start = 0;
-	printf("HIHIHIHIHIHIHIHIHI");
-	t_char_list *curr;
-	curr = *root;
-	
-	while (curr->next->next != NULL) // While "current (open quote) -> next (close quote) -> next (open quote)" exists
+	debugFunctionName("MAKE_TOKENS");
+	int split_index;
+	int input_index;
+
+	split_index = 0;
+	input_index = 0;
+	while (str[input_index] != '\0')
 	{
-		printf("while");
-		split[j] = make_token(&str[curr->index], curr->next->index - curr->index ); //Send data inbetween the quotes. 
-		j++;
-		curr = curr->next->next;
+		if (ft_is_not_white_space(str[input_index]) == 1)
+		{
+			split[split_index] = make_token(&str[input_index]);
+			input_index = ft_strlen(split[split_index]) - 1 + input_index;
+			split_index++;
+		}
+		input_index++; // if whitespace
 	}
+	split[split_index] = 0;
 }
 
-void	parse_input(char *str, char **token)
+char	**parse_input(char *str)
 {
-	int		i;
+	// int		i;
 	char	**split;
 	int		token_number;
-	t_char_list *root = NULL;
 
 	debugFunctionName("PARSE_INPUT");
-	token_number = find_token_number(str, root);
-	printf("token number is: %d\n", token_number);
+	token_number = find_token_number(str);
+	// printf("token number is: %d\n", token_number);
 	split = malloc(sizeof(char*) * token_number + 1);
-	make_tokens(str, split, &root);
+	make_tokens(str, split);
 	// split = ft_split(str, ' '); // Returns MALLOC string
 	if (!split) // When does this get called?
 		printf("empty string\n");
-	i = 0;
-	while (split[i]) //Each i is a string in it self as split is whole words without spaces. 
-	{
-		token[i] = split[i];
-		// printf("token[%d]: %s\n", i, token[i]);
-		i++;
-	}
-	token[i] = NULL;
-	free(split);
-	char_list_delete(&root);
+	return (split);
+	// i = 0;
+	// while (split[i]) //Each i is a string in it self as split is whole words without spaces. 
+	// {
+	// 	token[i] = split[i];
+	// 	printf("token[%d]: %s\n", i, token[i]);
+	// 	i++;
+	// }
+	// token[i] = 0;
+	// int j = 0;
+	// while (j < i)
+	// 	free(split[j++]);
+	// free(split);
 }
 
 
@@ -172,7 +202,7 @@ Return value is always 0? Why
 int	process_input(char *str, char **token)
 {
 	debugFunctionName("PROCESS_INPUT");
-	parse_input(str, token);
+	token = parse_input(str);
 	// tampvar is just for debugging purposes. Can cahange back to `if (builitins(token))`. 
 	// if (builtins(token));
 	int tempvar = builtins(token);
