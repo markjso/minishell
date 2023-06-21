@@ -23,7 +23,7 @@ SRCS=minishell.c \
 	debug.c \
 	process_input.c
 
-dINCLUDE=-I$(LIBFT)
+INCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
 LINK_RL = /usr/local/opt/readline/lib
 
