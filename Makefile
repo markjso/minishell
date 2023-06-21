@@ -30,7 +30,7 @@ LINK_RL = /usr/local/opt/readline/lib
 RM = rm -rf
 	
 OBJS=$(SRCS:.c=.o)
-OBJECT_FOLDER=objects
+#OBJECT_FOLDER=objects
 
 CC=gcc
 
@@ -42,8 +42,8 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) $(CFLAGS) -L $(LINK_RL) -o $@ $^ -lreadline 
-	mkdir -p $(OBJECT_FOLDER)
-	mv $(OBJS) $(OBJECT_FOLDER)
+	#mkdir -p $(OBJECT_FOLDER)
+	#mv $(OBJS) $(OBJECT_FOLDER)
 	@echo minishell is compiled
 
 $(LIBFT):
@@ -54,8 +54,8 @@ $(LIBFT):
 
 clean:
 	@$(MAKE) clean -C libft
-	@rm -rf $(OBJECT_FOLDER)
-	# @rm -f $(OBJS)
+	#@rm -rf $(OBJECT_FOLDER)
+	@rm -f $(OBJS)
 
 fclean:	clean
 	@$(MAKE) fclean -C libft
