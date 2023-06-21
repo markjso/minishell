@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 14:32:38 by jmarks            #+#    #+#             */
-/*   Updated: 2023/05/17 12:38:57 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/06/20 18:27:52 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@
 # define MAXCOM 1000 // max number of letters to be supported
 # define MAXLIST 100 // max number of commands to be supported
 
+typedef struct s_program
+{
+    struct s_envar *envar;
+	char	**token;
+    // Other fields related to the shell's configuration and data
+} 	t_program;
+
 typedef struct s_envar
 {
 	char			*name;
@@ -37,14 +44,15 @@ typedef struct s_envar
 	struct s_envar	*next;
 }	t_envar;
 
+t_program g_program; // Global variable
+
 int		takeInput(char *str);
+void	init_global(void);
 char	*get_location(char *cmd);
-void	execmd(char **argv);
-int		builtins(char **token);
-// int 	child_builtins(int builtin_id, char **token);
-// int 	parent_builtins(int builtin_id, char **token);
-void	parse_input(char *str, char **token);
-int		process_input(char *str, char **token);
+void	execmd(t_program *program);
+void	do_builtins(char **builtin_id, t_program *program);
+int 	is_builtin_cmd(t_program *program);
+void	parse_input(char *str, t_program *program);
 char	*ft_strcpy(char *s1, char *s2);
 void	ft_free_array(char **arr);
 void	sig_initialiser(void);
@@ -58,6 +66,8 @@ void	add_env_var(t_envar *node);
 void	remove_env_var(char *name);
 void	print_env(void);
 int		export_cmd(char **token);
+void	echo_cmd(char **token);
+void	printpwd(void);
 void	debugFunctionName(char* function_name);
 
 #endif

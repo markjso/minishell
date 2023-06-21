@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 11:53:36 by jmarks            #+#    #+#             */
-/*   Updated: 2023/05/05 15:15:09 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/06/20 17:31:10 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,20 @@ up a new signal with SIGQUIT as first argument and
 SIG_IGN as second argument. SIGQUIT is sent when Ctrl-\
 is typed. SIG_IGN tells the system to ignore the
 signal so nothing will happen.*/
-void	sig_initialiser(void)
+void sig_initialiser(void)
 {
-	if (signal(SIGINT, sig_handler) == SIG_ERR)
-	{
-		printf("failed to catch the signal\n");
-	}
+    if (signal(SIGINT, sig_handler) == SIG_ERR)
+    {
+        printf("failed to catch the SIGINT signal\n");
+    }
+    if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+    {
+        printf("failed to catch the SIGQUIT signal\n");
+    }
+    if (signal(SIGQUIT, sig_handler) == SIG_ERR)
+    {
+        printf("failed to catch the EOF signal\n");
+    }
 	else
-		signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }

@@ -3,68 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 16:05:05 by jmarks            #+#    #+#             */
-/*   Updated: 2023/06/16 16:05:08 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/06/20 18:16:12 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int child_builtins(int builtin_id, char **token)
-{
-    int i;
-    int j;
+#include "minishell.h"
 
-    i = 0;
-    j = 0;
-    while (token[i] && i = 0)
+t_program g_program;
+
+/* checks if the input in position token[0]
+is one of the builtin shell functions.
+Returns 1 if it is and 0 if it is not.
+*/
+
+int is_builtin_cmd(t_program *program)
+{
+    debugFunctionName("IS_BUILTIN");
+    //checks if the token array is empty or the first token is NULL
+    if (!program->token || !program->token[0])
+    // if either of these is true it means there is nothing to check
+        return (0);
+    if (ft_strcmp(program->token[0], "echo") == 0 
+        || ft_strcmp(program->token[0], "cd") == 0 
+        || ft_strcmp(program->token[0], "pwd") == 0 
+        || ft_strcmp(program->token[0], "export") == 0 
+        || ft_strcmp(program->token[0], "unset") == 0 
+        || ft_strcmp(program->token[0], "env") == 0 
+        || ft_strcmp(program->token[0], "exit") == 0)
     {
-        if (j == 0 || j == 2 || j == 5)
-        {
-            if (ft_strcmp(token[i], builtin_id[j]) == 0)
-            return (j);
-        }
-        j++;
-        i++;
+        return (1);
     }
-    return (-1);
+    return (0);
 }
 
-int parent_builtins(int builtin_id, char **token)
-{
-    int i;
-    int j;
+/* if the is_builtin_cmd check passes then it
+moves into the do_builtins function to execute
+the appropriate builtin*/
 
-    i = 0;
-    j = 0;
-    while (token[i] && i = 0)
-    {
-        if (j == 1 || j == 3 || j == 4 || j = 6)
-        {
-           if (ft_strcmp(token[i], builtin_id[j]) == 0)
-            return (j);
-        }
-        j++;
-        i++;
-    }
-    return (-1);
-}
-
-void	do_builtins(int builtin_id, char **token)
+void	do_builtins(char **builtin_id, t_program *program)
 {
-	debugFunctionName("BUILTINS");
-	if (builtin_id == 0)
-	echo_cmd(token + 1);
-	if (builtin_id == 1)
-	cd_command(token);
-	if (builtin_id == 2)
-	printpwd();
-	if (builtin_id == 3)
-	export_cmd(token);
-	if (builtin_id == 4)
-	remove_env_var(token[1]);
-	if (builtin_id == 5)
-	print_env();
-	if (builtin_id == 6)
+	debugFunctionName("DO_BUILTIN");
+    if (ft_strcmp(builtin_id[0], "echo") == 0)
+	echo_cmd(program->token);
+    if (ft_strcmp(builtin_id[0], "cd") == 0)
+	cd_command(program->token);
+    if (ft_strcmp(builtin_id[0], "pwd") == 0)
+    printpwd();
+    if (ft_strcmp(builtin_id[0], "export") == 0)
+	export_cmd(program->token);
+    if (ft_strcmp(builtin_id[0], "unset") == 0)
+	remove_env_var(program->token[1]);
+    if (ft_strcmp(builtin_id[0], "env") == 0)
+    print_env();
+    if (ft_strcmp(builtin_id[0], "exit") == 0)
 	exit(0);
 }
