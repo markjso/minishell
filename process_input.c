@@ -107,6 +107,7 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
+	// printf("return_token[%d] = %s\n", i, return_token);
 	return(return_token);
 }
 
@@ -125,12 +126,14 @@ void	make_tokens(char *str, char **split)
 		if (ft_is_not_white_space(str[input_index]) == 1)
 		{
 			split[split_index] = make_token(&str[input_index]);
-			input_index = ft_strlen(split[split_index]) - 1 + input_index;
+			printf("split[split_index_%d] = %s\n", split_index, split[split_index]);
+			// input_index = ft_strlen(split[split_index]) - 1 + input_index;
 			split_index++;
 		}
 		input_index++; // if whitespace
 	}
 	split[split_index] = 0;
+	// printf("split[split_index_%d] = %s\n", split_index, split[split_index]);
 }
 
 void	parse_input(char *str, t_program *program)
