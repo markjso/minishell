@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exexmd.c                                           :+:      :+:    :+:   */
+/*   execmd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 15:30:25 by jmarks            #+#    #+#             */
-/*   Updated: 2023/05/01 15:52:57 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/06/20 18:26:35 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_envar *g_env_vars; 
+t_program g_program;
 
 char	*get_location(char *cmd)
 {
@@ -44,56 +44,30 @@ char	*get_location(char *cmd)
 	return (NULL);
 }
 
-void	execmd(char **argv)
+void execmd(t_program *program)
 {
-	debugFunctionName("EXECMD");
-	pid_t	pid;
-	char	*cmd;
-	char	*actual_cmd;
+    debugFunctionName("EXECMD");
+    pid_t pid;
+    char *cmd;
+    char *actual_cmd;
 
-	if (argv)
-	{
-		if (ft_strcmp(argv[0], "export") == 0)
-        {
-            export_cmd(argv);
-            return ;
-        }
-		// Check if the command is "unset"
-		if (ft_strcmp(argv[0], "unset") == 0)
-        {
-            remove_env_var(argv[1]);
-            return ;
-        }
-		if (ft_strcmp(argv[0], "cd") == 0)
-		{
-			cd_command(argv);
-			return ;
-		}	
-		pid = fork();
-		if (pid < 0)
-		{
-			perror("Error: Fork failed");
-		}
-		else if (pid == 0)
-		{
+        pid = fork();
+        if (pid < 0) {
+            perror("Error: Fork failed");
+        } else if (pid == 0) {
             /* execute the actual command with execve */
-			cmd = argv[0];
-			actual_cmd = get_location(cmd);
-			if (actual_cmd == NULL)
-			{
-				printf("%s: command not found\n", cmd);
-				exit(1);
-			}
-			if (execve(actual_cmd, argv, NULL) == -1)
-			{
-				perror("Error:");
-				exit(1);
-			}
-		}
-		else
-		{
-			wait(NULL);
-			return ;
-		}
-	}
+            cmd = program->token[0];
+            actual_cmd = get_location(cmd);
+            if (actual_cmd == NULL) {
+                printf("%s: command not found\n", cmd);
+                exit(1);
+            }
+            if (execve(actual_cmd, program->token, NULL) == -1) {
+                perror("Error:");
+                exit(1);
+            }
+        } else {
+            wait(NULL);
+            return;
+        }
 }

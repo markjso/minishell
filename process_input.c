@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pprocess_input.c                                   :+:      :+:    :+:   */
+/*   process_input.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jchurch <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 11:10:49 by jchurch           #+#    #+#             */
-/*   Updated: 2023/06/06 11:11:09 by jchurch          ###   ########.fr       */
+/*   Updated: 2023/06/20 18:27:24 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_envar	*g_env_vars;
+extern	t_program	g_program;
 
 // int	return_char_type(char c, char next)
 // {
@@ -68,9 +68,7 @@ int	find_end(char *str)
 {
 	int			i;
 	char		type;
-	int			count;
 
-	count = 0;
 	i = 0;
 	type = 39; // Single quote by default. 
 
@@ -135,21 +133,22 @@ void	make_tokens(char *str, char **split)
 	split[split_index] = 0;
 }
 
-char	**parse_input(char *str)
+void	parse_input(char *str, t_program *program)
 {
 	// int		i;
-	char	**split;
+	// char	**split;
 	int		token_number;
 
 	debugFunctionName("PARSE_INPUT");
 	token_number = find_token_number(str);
 	// printf("token number is: %d\n", token_number);
-	split = malloc(sizeof(char*) * token_number + 1);
-	make_tokens(str, split);
+	// split = malloc(sizeof(char*) * token_number + 1);
+	program->token = malloc(sizeof(char*) * token_number + 1);
+	make_tokens(str, program->token);
 	// split = ft_split(str, ' '); // Returns MALLOC string
-	if (!split) // When does this get called?
-		printf("empty string\n");
-	return (split);
+	// if (!split) // When does this get called?
+	// 	printf("empty string\n");
+	// return (split);
 	// i = 0;
 	// while (split[i]) //Each i is a string in it self as split is whole words without spaces. 
 	// {
@@ -199,16 +198,8 @@ char	**parse_input(char *str)
 process_input(char *str: raw user input, char **token: is empty pointer to string that will become tokenised string).
 Return value is always 0? Why
 */
-int	process_input(char *str, char **token)
+void	process_input(char *str, t_program *program)
 {
 	debugFunctionName("PROCESS_INPUT");
-	token = parse_input(str);
-	// tampvar is just for debugging purposes. Can cahange back to `if (builitins(token))`. 
-	// if (builtins(token));
-	int tempvar = builtins(token);
-	printf("Builtins return value: %d\n", tempvar);
-	if (tempvar)
-		return (0);	
-	return (1);
+	parse_input(str, program);
 }
-

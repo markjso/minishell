@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 13:55:05 by jmarks            #+#    #+#             */
-/*   Updated: 2023/05/17 13:45:55 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/06/21 15:12:38 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_envar	*g_env_vars;
+t_program g_program;
 
 void	printpwd(void)
 {
@@ -26,37 +26,31 @@ void	printpwd(void)
 Write to screen the text folloing the command `echo`. 
 Checks for the -n flag. Must expand this description.
 */
-void	echo_cmd(char **token)
+void echo_cmd(char **token)
 {
-	debugFunctionName("ECHO_CMD");
-	int	i;
-	int	no_newline; // flag for -n option
+    debugFunctionName("ECHO_CMD");
+    int i = 1;
+    int no_newline = 0;
 
-	i = 1;
-	no_newline = 0;
-	token++;
-	// printf("echo_cmd token 0: %s\n", token); //this is `echo`
-	// printf("echo_cmd token 1: %s\n", token); //this is the next item after `echo`
-    // check if -n option was passed
-	if (token[i] && ft_strcmp(token[i], "-n") == 0)
-	{
-		no_newline++;
-		i++;
-	}
-	while (token[i])
-	{
-		if (token[i] && ft_strcmp(token[i], "-n") == 0)
-		{
-			printf("%s", token[i]);
-			if (token[i + 1])
-				printf(" ");
-		}
-		i++;
-	}
-    // print new line only if -n option was not passed and there are arguments
-	if (!token[1] && no_newline)
-		printf("\n");
-	token--;
+    // Check if -n option was passed
+    if (token[i] && ft_strcmp(token[i], "-n") == 0)
+    {
+        no_newline++;
+        i++;
+    }
+
+    // Print the arguments
+    while (token[i])
+    {
+        printf("%s ", token[i]);
+        i++;
+    }
+
+    // Print a new line only if -n option was not passed and there are arguments
+    if (!no_newline && (i > 1))
+    {
+        printf("\n");
+    }
 }
 
 int	export_cmd(char **token)
@@ -66,6 +60,12 @@ int	export_cmd(char **token)
 	char	*value;
 	t_envar	*node;
 
+	if (token[1] == NULL)
+    {
+        // No arguments provided, print the environment variables
+        print_env();
+        return 0;
+    }
 	split_env = ft_split(token[1], '=');
 	if (!split_env[1])
 		return (1);
@@ -88,28 +88,3 @@ int	export_cmd(char **token)
 /*
 Always returns 0?
 */
-
-int	builtins(char **token)
-{
-	debugFunctionName("BUILTINS");
-	int no_of_builtins = 4;
-	char	*builtin_id[4];
-	int i = 0;
-	builtin_id[0] = "echo";
-	builtin_id[1] = "pwd";
-	builtin_id[2] = "env";
-	builtin_id[3] = "exit";
-	while (i < no_of_builtins && ft_strcmp(token[0], builtin_id[i]) != 0)
-	{
-		i++;
-	}
-	if (i == 0)
-		echo_cmd(token + 1);
-	else if (i == 1)
-		printpwd();
-	else if (i == 2)
-		print_env();
-	else if (i == 3)
-		exit(0);
-	return (0);
-}
