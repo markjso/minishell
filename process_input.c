@@ -14,22 +14,13 @@
 
 extern	t_program	g_program;
 
-// int	return_char_type(char c, char next)
-// {
-// 	if (c == '$' && ft_is_not_white_space(next) == 1)
-// 		return (1);
-// 	else if ((c == '~' || c == '|') && ft_is_not_white_space(next) == 1)
-// 		return (1);
-// 	else if ((c == '>' && next == '>') || (c == '<' && next == '<'))
-// 		return (2);
-// 	else if ((c = '>' && next == '=') || (c == '<' && next == '='))
-// 		return (2);
-// 	else if ((c = '>' && next == '<') || (c == '<' && next == '>'))
-// 		return (2);
-// 	else
-// 		return (0);
-// }
+/*Input: string to return an integer the number of "tokens" that can be 
+created. A token is seperated by a space or tab, unless the space or tab 
+is enclosed within matching double or single quotation marks. 
 
+Any word that has no space or no tab and is next to the "outside" of a 
+quotation mark: One token will be created to encompas the outside word 
+and the whole quotation mark.*/
 int	find_token_number(char *str)
 {
 	int			i;
@@ -64,6 +55,13 @@ int	find_token_number(char *str)
 	return (count);
 }
 
+/*Returns the index number of a string, the return value is the first space or 
+tab to occur. Spaces within matching double or single quotation marks are 
+ignored. The quotation is treated as one word. 
+
+Any word that has no space or no tab and is next to the "outside" of a 
+quotation mark: One token will be created to encompas the outside word 
+and the whole quotation mark.*/
 int	find_end(char *str)
 {
 	int			i;
@@ -92,6 +90,16 @@ int	find_end(char *str)
 	return (i);
 }
 
+/*Create a "token" from an input string. 
+A token is defined by any word that has a space or tab either side of it. 
+Unless it is within matching double or single quotaiton marks. 
+
+Spaces within matching double or single quotation marks are ignored. 
+The quotation is treated as one word. 
+
+Any word that has no space or no tab and is next to the "outside" of a 
+quotation mark: One token will be created to encompas the outside word 
+and the whole quotation mark.*/
 char	*make_token(char *str)
 {
 	debugFunctionName("MAKE_TOKEN");
@@ -100,6 +108,7 @@ char	*make_token(char *str)
 
 	i = 0;
 	int length = find_end(str);
+	printf("length %d\n", length);
 	return_token = malloc(sizeof(char) * length + 1); //JC MALLOC
 	while (i < length)
 	{
@@ -112,7 +121,18 @@ char	*make_token(char *str)
 }
 
 
+/*Creates a double pointer of type char into **split 
+based on the input *str. 
 
+A token is defined by any word that has a space or tab either side of it. 
+Unless it is within matching double or single quotaiton marks. 
+
+Spaces within matching double or single quotation marks are ignored. 
+The quotation is treated as one word. 
+
+Any word that has no space or no tab and is next to the "outside" of a 
+quotation mark: One token will be created to encompas the outside word 
+and the whole quotation mark.*/
 void	make_tokens(char *str, char **split)
 {
 	debugFunctionName("MAKE_TOKENS");
@@ -126,76 +146,25 @@ void	make_tokens(char *str, char **split)
 		if (ft_is_not_white_space(str[input_index]) == 1)
 		{
 			split[split_index] = make_token(&str[input_index]);
-			printf("split[split_index_%d] = %s\n", split_index, split[split_index]);
-			// input_index = ft_strlen(split[split_index]) - 1 + input_index;
+			input_index = ft_strlen(split[split_index]) - 1 + input_index;
 			split_index++;
 		}
 		input_index++; // if whitespace
 	}
 	split[split_index] = 0;
-	// printf("split[split_index_%d] = %s\n", split_index, split[split_index]);
 }
 
 void	parse_input(char *str, t_program *program)
 {
-	// int		i;
-	// char	**split;
+
 	int		token_number;
 
 	debugFunctionName("PARSE_INPUT");
 	token_number = find_token_number(str);
-	// printf("token number is: %d\n", token_number);
-	// split = malloc(sizeof(char*) * token_number + 1);
+
 	program->token = malloc(sizeof(char*) * token_number + 1);
 	make_tokens(str, program->token);
-	// split = ft_split(str, ' '); // Returns MALLOC string
-	// if (!split) // When does this get called?
-	// 	printf("empty string\n");
-	// return (split);
-	// i = 0;
-	// while (split[i]) //Each i is a string in it self as split is whole words without spaces. 
-	// {
-	// 	token[i] = split[i];
-	// 	printf("token[%d]: %s\n", i, token[i]);
-	// 	i++;
-	// }
-	// token[i] = 0;
-	// int j = 0;
-	// while (j < i)
-	// 	free(split[j++]);
-	// free(split);
-}
 
-
-    // t_envar *pwd;
-    // t_envar *oldpwd;
-
-    // pwd = find_env_var("PWD");
-
-// void expand_input(char *str)
-// {
-// 	int i;
-// 	int len;
-// 	char *variable;
-// 	t_envar	*env_var;
-
-// 	len = 0;
-// 	// WHILE the string exists, increment through each char index. 
-// 	while (str[i] != '\0')
-// 	{
-// 		// IF current char is $ and next is alpha number, there is the potential for this to be an env var. 
-// 		if (str[i] == '$' && ft_isalnum(str[i + 1] == 1))
-// 		{
-// 			// Get the lenth of the potential env var. 
-// 			len = ft_alnum_word_len(str, i);
-
-// 			env_var = find_env_var(*token);
-
-// 		}
-// 		// else if (str[i] == '$' && str[i + 1] == '\0'){ print dollar sign if echo $ }
-// 		i++;
-// 	}
-// }
 
 /*
 process_input(char *str: raw user input, char **token: is empty pointer to string that will become tokenised string).

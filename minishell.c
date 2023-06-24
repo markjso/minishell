@@ -29,7 +29,6 @@ while (1)
         {
 			//takes input from user and splits it into tokens found in process_input.c
 			process_input(input, &g_program);
-            printf("token: %s\n", g_program.token[0]);
 			// if it is one of the builtin commands do it. Found in buitlin_utils.c
             if (is_builtin_cmd(&g_program))
             {
