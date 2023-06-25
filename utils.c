@@ -6,13 +6,25 @@
 /*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 10:44:00 by jmarks            #+#    #+#             */
-/*   Updated: 2023/05/17 12:35:29 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/06/25 21:34:46 by jchurch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int		ft_is_special_char(char *s1)
+{
+	int i;
 
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		if (s1[i] == '~')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 char	*ft_strcpy(char *s1, char *s2)
 {

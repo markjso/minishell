@@ -47,9 +47,13 @@ int	find_token_number(char *str)
 		else if (ft_is_not_white_space(str[i] == 0) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
 		{
 			count++;
-			while (ft_is_not_white_space(str[i] == 0))
+			while (ft_is_not_white_space(str[i] == 0)) //While white space, increase index
 				i++;
 		}
+		else if (str[i] == '~' && ft_is_not_white_space(str[i + 1]) == 1)
+			count += 2;
+		else if (str[i] == '~')
+			count++;
 		i++;
 	}
 	return (count);
@@ -72,7 +76,7 @@ int	find_end(char *str)
 
 	while (str[i] != '\0')
 	{
-		if (ft_is_not_white_space(str[i]) == 0) // IF whitespace, stop. 
+		if (ft_is_not_white_space(str[i]) == 0 )// IF whitespace, stop. 
 		{
 			break ;
 		}
@@ -84,6 +88,11 @@ int	find_end(char *str)
 			i++;
 			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
 				i++;
+		}
+		if (str[i + 1] == '~' || str[i] == '~')
+		{
+			i++;
+			break ;
 		}
 		i++;
 	}
@@ -164,7 +173,7 @@ void	parse_input(char *str, t_program *program)
 
 	program->token = malloc(sizeof(char*) * token_number + 1);
 	make_tokens(str, program->token);
-
+}
 
 /*
 process_input(char *str: raw user input, char **token: is empty pointer to string that will become tokenised string).
@@ -174,4 +183,5 @@ void	process_input(char *str, t_program *program)
 {
 	debugFunctionName("PROCESS_INPUT");
 	parse_input(str, program);
+	variable_expand(program);
 }

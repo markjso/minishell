@@ -22,7 +22,8 @@ SRCS=minishell.c \
 	environ.c \
 	initialise.c \
 	debug.c \
-	process_input.c
+	process_input.c \
+	variable.c
 	
 dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
@@ -37,7 +38,7 @@ CC=gcc
 
 LIBFT=libft/libft.a
 
-CFLAGS=-Wall -Wextra -Werror $(INCLUDE)
+CFLAGS=-Wall -Wextra -Werror  $(INCLUDE)
 
 all: $(NAME)
 
