@@ -1,3 +1,10 @@
 -------- No backslash and no open quotes --------
 Look for redirection operators before remving quotes and this means don't make tokens without quotes. 
 
+'
+"
+<
+>
+|
+$
+$?

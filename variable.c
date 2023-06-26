@@ -18,12 +18,7 @@ void    expand_tilda(t_program *program, int t)
 
     node = find_env_var("HOME");
     program->token[t] = ft_strdup(node->value);
-    // char a, b;
-    // a = program->token[t][13];
-    // b = program->token[t][14];
-    // printf("A is: %d and B is: %d\n", a, b);
-    // printf("%c\n", program->token[t][13]);
-    // printf("%c\n", program->token[t][14]);
+	printf("%stext", node->value);
 }
 
 void     if_special_char(char c, t_program *program, int t)

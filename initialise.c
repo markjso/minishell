@@ -59,14 +59,14 @@ void init_env_vars(void)
 	char cwd[256];
     t_envar *pwd;
     t_envar *oldpwd;
-    
-	pwd = init_env(ft_strdup("PWD"), ft_strdup(cwd));
-    oldpwd = init_env(ft_strdup("OLDPWD"), ft_strdup(cwd));
+
     if (getcwd(cwd, sizeof(cwd)) == NULL)
     {
         printf("Failed to get current directory\n");
         exit(1);
-    }
+    }    
+	pwd = init_env(ft_strdup("PWD"), ft_strdup(cwd));
+    oldpwd = init_env(ft_strdup("OLDPWD"), ft_strdup(cwd));
     add_env_var(pwd);
     add_env_var(oldpwd);
 }

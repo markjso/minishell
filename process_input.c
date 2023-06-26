@@ -29,33 +29,28 @@ int	find_token_number(char *str)
 
 	i = 0;
 	count = 0;
-	if (ft_isprint(str[i]))
+	if (ft_isprint(str[i]) == 1)
 		count++;
-	type = 39; // Single quote by default. 
 	while (str[i] != '\0')
 	{
 		if (ft_is_quote(str[i]) && str[i + 1] != '\0') //IF index i is double or single quote and next exists. 
 		{
-			if (str[i] == 34) // Type is double quote, else default to single quote
-				type = 34;
-			i++;
+			type = str[i]; // The type of quote. 
+			i++; // One beyond the quote. 
 			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
 				i++;
-			if (str[i] == type) // Found the matching close quote. 
-				count++;
+			// if (str[i] == type) // Found the matching close quote. 
+			// 	i++;
 		}
-		else if (ft_is_not_white_space(str[i] == 0) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
+		else if (ft_is_white_space(str[i] == 1) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
 		{
 			count++;
-			while (ft_is_not_white_space(str[i] == 0)) //While white space, increase index
+			while (ft_is_white_space(str[i] == 1) && ft_is_white_space(str[i + 1]) == 1 && str[i + 1] != '\0') // While spaces!
 				i++;
 		}
-		else if (str[i] == '~' && ft_is_not_white_space(str[i + 1]) == 1)
-			count += 2;
-		else if (str[i] == '~')
-			count++;
 		i++;
 	}
+	printf("count is: %d\n", count);
 	return (count);
 }
 
@@ -72,27 +67,17 @@ int	find_end(char *str)
 	char		type;
 
 	i = 0;
-	type = 39; // Single quote by default. 
-
 	while (str[i] != '\0')
 	{
-		if (ft_is_not_white_space(str[i]) == 0 )// IF whitespace, stop. 
-		{
+		if (ft_is_white_space(str[i]) == 1) // IF whitespace, stop. 
 			break ;
-		}
 		// IF quote, ignore white space
 		if (ft_is_quote(str[i]) == 1) //IF index i is double or single quote and next exists. 
 		{
-			if (str[i] == 34) // Type is double quote, else default to single quote
-				type = 34;
+			type = str[i]; // Set type to quote type. 
 			i++;
 			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
 				i++;
-		}
-		if (str[i + 1] == '~' || str[i] == '~')
-		{
-			i++;
-			break ;
 		}
 		i++;
 	}
@@ -165,7 +150,6 @@ void	make_tokens(char *str, char **split)
 
 void	parse_input(char *str, t_program *program)
 {
-
 	int		token_number;
 
 	debugFunctionName("PARSE_INPUT");
@@ -183,5 +167,4 @@ void	process_input(char *str, t_program *program)
 {
 	debugFunctionName("PROCESS_INPUT");
 	parse_input(str, program);
-	variable_expand(program);
 }

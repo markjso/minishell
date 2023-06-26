@@ -87,9 +87,25 @@ int	ft_is_not_white_space(int c)
 		return (0);
 }
 
+int ft_is_white_space(int c)
+{
+	if (ft_is_not_white_space(c) == 0)
+		return (1);
+	else 
+		return (0);
+}
+
 int	ft_is_quote(int c)
 {
 	if (c == 34 || c == 39)
+		return (1);
+	else
+		return (0);
+}
+
+int	ft_not_whitespace_not_quote(int c)
+{
+	if (ft_is_not_white_space(c) == 1 && ft_is_quote(c) == 0)
 		return (1);
 	else
 		return (0);
