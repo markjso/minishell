@@ -80,5 +80,9 @@ int		ft_is_quote(int c);
 int		ft_is_special_char(char *s1);
 int 	ft_is_white_space(int c);
 int	ft_not_whitespace_not_quote(int c);
+int	ft_is_valid_var_char(char c);
+int	ft_env_word_len(char *str);
+
+
 
 #endif
