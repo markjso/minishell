@@ -140,7 +140,7 @@ int	ft_env_word_len(char *str)
 		}
 	}
 	if (str[j] == '\0')
-		EXIT_FAILURE;
+		return (0);
 }
 
 /*
