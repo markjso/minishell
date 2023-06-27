@@ -93,22 +93,54 @@ int ft_is_upper(char c)
 }
 
 /*
+Verify if the char is valid for a shell environment variable. 
+Returns 1 if true and 0 if false.
+*/
+int	ft_is_valid_var_char(char c)
+{
+	if (c != '\0' && ft_is_not_white_space(c) == 1
+			&& (ft_is_upper(c) == 1 || ft_isdigit(c) == 1 || c == 95))
+	{
+		return (1);
+	}
+	else
+	{
+		return (0);
+	}
+}
+
+/*
 Returns the lengh of a word based on environment variable rules: 
 (1) Uppercase, (2) Numeric, (3) Underscores.
 Don't sent the dollar sign ($) as it will not process. 
 ft_env_word_len(char *string to use, int starting index of first char of word.)
 */
-int	ft_env_word_len(char *str, int start)
+int	ft_env_word_len(char *str)
 {
-	int i;
+	int start;
+	int j;
 
-	i = start;
-	while(str[i] != '\0' && ft_is_not_white_space(str[i]) == 1
-			&& (ft_is_upper(str[i]) == 1 || ft_isdigit(str[i]) == 1 || str[i] == 95))
+	j = 0;
+	start = 0;
+	while (str[j] != '\0')
+	{
+		if (str[j] == '$' && ft_is_valid_var_char(str[j + 1]) == 1) // IF is var
 		{
-			i++;
+			start = j;
+			j++;
+			while (ft_is_valid_var_char(str[j]))
+			{
+				j++;
+			}
+			return (start - j);
 		}
-	return (i - start);
+		else //ELSE is not var
+		{
+			j++;
+		}
+	}
+	if (str[j] == '\0')
+		EXIT_FAILURE;
 }
 
 /*
