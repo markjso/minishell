@@ -60,6 +60,8 @@ void execmd(t_program *program)
             actual_cmd = get_location(cmd);
             if (actual_cmd == NULL) {
                 printf("%s: command not found\n", cmd);
+                g_program.exit_status = 1;
+                printf("%d\n", g_program.exit_status);
                 exit(1);
             }
             if (execve(actual_cmd, program->token, NULL) == -1) {

@@ -41,5 +41,5 @@ while (1)
             }
         }
     }
-    return EXIT_SUCCESS;
+    exit(g_program.exit_status);
 }

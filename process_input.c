@@ -116,7 +116,7 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
-	// printf("return_token[%d] = %s\n", i, return_token);
+	printf("return_token[%d] = %s\n", i, return_token);
 	return(return_token);
 }
 
@@ -164,7 +164,8 @@ void	parse_input(char *str, t_program *program)
 
 	program->token = malloc(sizeof(char*) * token_number + 1);
 	make_tokens(str, program->token);
-
+	// printf("%s\n", program->token[token_number++]);
+}
 
 /*
 process_input(char *str: raw user input, char **token: is empty pointer to string that will become tokenised string).

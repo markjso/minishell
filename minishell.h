@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <signal.h>
+# include <stdbool.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
@@ -34,6 +35,8 @@ typedef struct s_program
 {
     struct s_envar *envar;
 	char	**token;
+	char	**envp;
+	int		exit_status;
     // Other fields related to the shell's configuration and data
 } 	t_program;
 
@@ -67,6 +70,7 @@ void	add_env_var(t_envar *node);
 void	remove_env_var(char *name);
 void	print_env(void);
 int		export_cmd(char **token);
+int 	get_exit_status(char **token);
 void	echo_cmd(char **token);
 void	printpwd(void);
 void	debugFunctionName(char* function_name);
