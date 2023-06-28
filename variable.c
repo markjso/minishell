@@ -12,56 +12,56 @@
 
 #include "minishell.h"
 
-void    expand_tilda(t_program *program, int t)
+void    expand_dollar(char* token_var, int length)
 {
     t_envar *node;
 
-    node = find_env_var("HOME");
-    program->token[t] = ft_strdup(node->value);
+    node = find_env_var("");
+    token_var = ft_strdup(node->value);
 	printf("%stext", node->value);
 }
 
-void     if_special_char(char c, t_program *program, int t)
+char	**split_var(char *token, int length)
 {
-    if (c == '~')
-        expand_tilda(program, t);
-    return ;
+	char	*var_name = malloc(sizeof(char) * length + 1);
+	char	*after_name = malloc(sizeof(char) * (ft_strlen(token) - length) + 1);
+
+	
 }
 
-
-void    find_characters(t_program *program)
+void	expand_token(char *token)
 {
-    int     i;
-    int     t;
-    char    type;
+	int i;
+	int length;
 
-    t = 0;
-    type = 39;
+	i = 0;
+	length = 0;
 
-    while (program->token[t] != 0)
-    {
-        i = 0;
-        while (program->token[t][i] != '\0')
-        {
-            if (ft_is_quote(program->token[t][i] == 1)) //IF index i is double or single quote and next exists. 
-            {
-                if (program->token[t][i] == 34) // Type is double quote, else default to single quote
-                    type = 34;
-                i++;
-                while (program->token[t][i] != type && program->token[t][i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
-                    i++;
-            }
-            if_special_char(program->token[t][i], program, t); // Else If a special character ouside of quotes, do somthing
-            i++;
-        }
-        t++;
-    }
-
+	while(token[i] != '\0')
+	{
+		if (token[i] == '$')
+		{
+			length = ft_env_word_len(token[i]);
+			if (length > 0) // if found token, act
+			{
+				expand_dollar(token[i], length);
+			}
+		}
+		i++;
+	}
 }
 
-void    variable_expand(t_program *program)
+void    expand_tokens(t_program *program)
 {
     debugFunctionName("VARIABLE_EXPAND");
+	int j;
+
+	j = 0;
+	while (program->token[j] != 0)
+	{
+	    expand_token(program->token[j]);
+		j++;
+	}
     find_characters(program);
 
 

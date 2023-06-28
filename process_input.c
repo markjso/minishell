@@ -50,7 +50,7 @@ int	find_token_number(char *str)
 		}
 		i++;
 	}
-	printf("count is: %d\n", count);
+	// printf("count is: %d\n", count);
 	return (count);
 }
 
@@ -102,7 +102,7 @@ char	*make_token(char *str)
 
 	i = 0;
 	int length = find_end(str);
-	printf("length %d\n", length);
+	// printf("length %d\n", length);
 	return_token = malloc(sizeof(char) * length + 1); //JC MALLOC
 	while (i < length)
 	{
@@ -110,7 +110,7 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
-	// printf("return_token[%d] = %s\n", i, return_token);
+	printf("return_token[%d] = %s\n", i, return_token);
 	return(return_token);
 }
 
@@ -167,4 +167,5 @@ void	process_input(char *str, t_program *program)
 {
 	debugFunctionName("PROCESS_INPUT");
 	parse_input(str, program);
+	expand_tokens(program);
 }
