@@ -30,6 +30,13 @@
 # define MAXCOM 1000 // max number of letters to be supported
 # define MAXLIST 100 // max number of commands to be supported
 
+/*Struct for holding tokenised user input.*/
+typedef struct s_token_list
+{
+	char				*data;
+	struct s_token_list	*next;
+}	t_token_list;
+
 typedef struct s_program
 {
     struct s_envar *envar;
@@ -79,5 +86,15 @@ int 	ft_is_white_space(int c);
 int		ft_not_whitespace_not_quote(int c);
 int		ft_is_not_quote(int c);
 int		ft_env_word_len(char *str);
+
+void    ll_insert_end(t_token_list **root, t_token_list *new_node);
+void    ll_insert_beginning(t_token_list **root, t_token_list *new_node);
+void    ll_insert_after(t_token_list *this_node, t_token_list *new_node);
+void	ll_insert_before(t_token_list **root, t_token_list *this_node, t_token_list *new_node);
+void    ll_remove_node(t_token_list **root, t_token_list *this_node);
+void    ll_deallocate(t_token_list **root);
+t_token_list    *make_new_node(char *value);
+
+
 
 #endif

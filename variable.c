@@ -26,7 +26,6 @@ char	**split_var(char *token, int length)
 	char	*var_name = malloc(sizeof(char) * length + 1);
 	char	*after_name = malloc(sizeof(char) * (ft_strlen(token) - length) + 1);
 
-	
 }
 
 void	expand_token(char *token)

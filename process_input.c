@@ -45,7 +45,7 @@ int	find_token_number(char *str)
 		else if (ft_is_white_space(str[i] == 1) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
 		{
 			count++;
-			while (ft_is_white_space(str[i] == 1) && ft_is_white_space(str[i + 1]) == 1 && str[i + 1] != '\0') // While spaces!
+			while (ft_is_white_space(str[i]) == 1) && ft_is_white_space(str[i + 1]) == 1 && str[i + 1] != '\0') // While spaces!
 				i++;
 		}
 		i++;
@@ -165,6 +165,7 @@ Return value is always 0? Why
 */
 void	process_input(char *str, t_program *program)
 {
+	
 	debugFunctionName("PROCESS_INPUT");
 	parse_input(str, program);
 	expand_tokens(program);
