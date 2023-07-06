@@ -60,7 +60,7 @@ void	process_input(char *str, t_program *program);
 void	execmd(t_program *program);
 void	do_builtins(char **builtin_id, t_program *program);
 int 	is_builtin_cmd(t_program *program);
-void	parse_input(char *str, t_program *program);
+void	make_tokens(char *str, t_token_list **root);
 char	*ft_strcpy(char *s1, char *s2);
 void	ft_free_array(char **arr);
 void	sig_initialiser(void);
@@ -80,20 +80,22 @@ void	debugFunctionName(char* function_name);
 int		ft_alnum_word_len(char *str, int start);
 int		ft_is_not_white_space(int c);
 int		ft_is_quote(int c);
-void    expand_tokens(t_program *program);
+void    expand_tokens(t_token_list **root);
 int		ft_is_special_char(char *s1);
 int 	ft_is_white_space(int c);
 int		ft_not_whitespace_not_quote(int c);
 int		ft_is_not_quote(int c);
 int		ft_env_word_len(char *str);
+int	ft_is_valid_var_char(char c);
 
+t_token_list    *make_new_node(char *value);
 void    ll_insert_end(t_token_list **root, t_token_list *new_node);
 void    ll_insert_beginning(t_token_list **root, t_token_list *new_node);
 void    ll_insert_after(t_token_list *this_node, t_token_list *new_node);
 void	ll_insert_before(t_token_list **root, t_token_list *this_node, t_token_list *new_node);
 void    ll_remove_node(t_token_list **root, t_token_list *this_node);
 void    ll_deallocate(t_token_list **root);
-t_token_list    *make_new_node(char *value);
+void	ll_print_token(t_token_list **root);
 
 
 

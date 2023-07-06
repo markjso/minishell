@@ -56,3 +56,13 @@ void    ll_deallocate(t_token_list **root)
     }
     *root = NULL;
 }
+
+void	ll_print_token(t_token_list **root)
+{
+	t_token_list *curr = *root;
+	while (curr != NULL)
+	{
+		printf("Current node data: %s\n", curr->data);
+		curr = curr->next;
+	}
+}

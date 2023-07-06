@@ -21,38 +21,54 @@ is enclosed within matching double or single quotation marks.
 Any word that has no space or no tab and is next to the "outside" of a 
 quotation mark: One token will be created to encompas the outside word 
 and the whole quotation mark.*/
-int	find_token_number(char *str)
+int	find_token_number(t_token_list **root)
 {
 	int			i;
-	char		type;
-	int			count;
+	t_token_list *curr;
 
 	i = 0;
-	count = 0;
-	if (ft_isprint(str[i]) == 1)
-		count++;
-	while (str[i] != '\0')
+	curr = *root;
+
+	while (curr != NULL)
 	{
-		if (ft_is_quote(str[i]) && str[i + 1] != '\0') //IF index i is double or single quote and next exists. 
-		{
-			type = str[i]; // The type of quote. 
-			i++; // One beyond the quote. 
-			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
-				i++;
-			// if (str[i] == type) // Found the matching close quote. 
-			// 	i++;
-		}
-		else if (ft_is_white_space(str[i] == 1) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
-		{
-			count++;
-			while (ft_is_white_space(str[i]) == 1) && ft_is_white_space(str[i + 1]) == 1 && str[i + 1] != '\0') // While spaces!
-				i++;
-		}
 		i++;
+		curr = curr->next;
 	}
-	// printf("count is: %d\n", count);
-	return (count);
+	return (i);
 }
+
+// int	find_token_number(char *str)
+// {
+// 	int			i;
+// 	char		type;
+// 	int			count;
+
+// 	i = 0;
+// 	count = 0;
+// 	if (ft_isprint(str[i]) == 1)
+// 		count++;
+// 	while (str[i] != '\0')
+// 	{
+// 		if (ft_is_quote(str[i]) && str[i + 1] != '\0') //IF index i is double or single quote and next exists. 
+// 		{
+// 			type = str[i]; // The type of quote. 
+// 			i++; // One beyond the quote. 
+// 			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
+// 				i++;
+// 			// if (str[i] == type) // Found the matching close quote. 
+// 			// 	i++;
+// 		}
+// 		else if (ft_is_white_space(str[i] == 1) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
+// 		{
+// 			count++;
+// 			while (ft_is_white_space(str[i]) == 1) && ft_is_white_space(str[i + 1]) == 1 && str[i + 1] != '\0') // While spaces!
+// 				i++;
+// 		}
+// 		i++;
+// 	}
+// 	// printf("count is: %d\n", count);
+// 	return (count);
+// }
 
 /*Returns the index number of a string, the return value is the first space or 
 tab to occur. Spaces within matching double or single quotation marks are 
@@ -110,7 +126,6 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
-	printf("return_token[%d] = %s\n", i, return_token);
 	return(return_token);
 }
 
@@ -127,36 +142,56 @@ The quotation is treated as one word.
 Any word that has no space or no tab and is next to the "outside" of a 
 quotation mark: One token will be created to encompas the outside word 
 and the whole quotation mark.*/
-void	make_tokens(char *str, char **split)
+void	make_tokens(char *str, t_token_list **root)
 {
 	debugFunctionName("MAKE_TOKENS");
-	int split_index;
-	int input_index;
+	int				input_index;
+	t_token_list	*new_node;
 
-	split_index = 0;
 	input_index = 0;
 	while (str[input_index] != '\0')
 	{
 		if (ft_is_not_white_space(str[input_index]) == 1)
 		{
-			split[split_index] = make_token(&str[input_index]);
-			input_index = ft_strlen(split[split_index]) - 1 + input_index;
-			split_index++;
+			new_node = make_new_node(make_token(&str[input_index]));
+			ll_insert_end(root, new_node);
+			input_index = ft_strlen(new_node->data) - 1 + input_index;
 		}
 		input_index++; // if whitespace
 	}
-	split[split_index] = 0;
 }
 
-void	parse_input(char *str, t_program *program)
+
+/*
+copy_int_array
+Moves linked list t_token_list->data* into program->token** array. 
+*/
+void	copy_into_array(t_program *program, t_token_list **root)
 {
+	t_token_list	*curr;
 	int		token_number;
+	int		i;
 
-	debugFunctionName("PARSE_INPUT");
-	token_number = find_token_number(str);
+	token_number = find_token_number(root);
+	printf("Token Number is: %d\n", token_number);
+	program->token = (char**)malloc(sizeof(char*) * token_number + 1);
+	i = 0;
+	curr = *root;
+	while (i < token_number)
+	{
+		program->token[i] = ft_strdup(curr->data);
+		curr = curr->next;
+		i++;
+	}
+	program->token[i] = 0;
 
-	program->token = malloc(sizeof(char*) * token_number + 1);
-	make_tokens(str, program->token);
+	// printf("Printing tokens in Jo's array\n");
+	// int j = 0;
+	// while (j < token_number)
+	// {
+	// 	printf("token[%d]: %s\n", j, program->token[j]);
+	// 	j++;
+	// }
 }
 
 /*
@@ -165,8 +200,12 @@ Return value is always 0? Why
 */
 void	process_input(char *str, t_program *program)
 {
-	
+	t_token_list	*root;
+
+	root = NULL;
 	debugFunctionName("PROCESS_INPUT");
-	parse_input(str, program);
-	expand_tokens(program);
+	make_tokens(str, &root);
+	ll_print_token(&root);
+	expand_tokens(&root);
+	copy_into_array(program, &root);
 }

@@ -98,8 +98,7 @@ Returns 1 if true and 0 if false.
 */
 int	ft_is_valid_var_char(char c)
 {
-	if (c != '\0' && ft_is_not_white_space(c) == 1
-			&& (ft_is_upper(c) == 1 || ft_isdigit(c) == 1 || c == 95))
+	if (c != '\0' && (ft_is_upper(c) == 1 || ft_isdigit(c) == 1 || c == 95))
 	{
 		return (1);
 	}

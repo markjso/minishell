@@ -23,6 +23,9 @@ SRCS=minishell.c \
 	initialise.c \
 	debug.c \
 	process_input.c \
+	token_linked_list.c \
+	token_linked_list_create.c \
+	token_linked_list_delete.c \
 	variable.c
 	
 dINCLUDE=-I$(LIBFT)
