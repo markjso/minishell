@@ -12,48 +12,38 @@
 
 #include "minishell.h"
 
-void    expand_dollar(t_token_list **root, t_token_list *curr, int start, int length)
+char	*expand_dollar(char *variable)
 {
-	t_token_list	*new_node;
-	char	*temp;
-	int i;
-	int j;
+	t_envar *env_node;
 
-	i = 0;
-	j = 0;
-	// Before $ sign
-	while (i < start)
-	{
-		temp[i] = curr->data[i];
-		i++;
-	}
-	temp[i] = '\0';
-	make_new_node(temp);
-	ll_insert_before(&root, curr, new_node);
+	variable++; // Because first is $ sign. 
+	env_node = find_env_var(variable);
+	return (env_node->value);
+}
 
-	// During $ sign
-	while (i < length + start)
-	{
-		temp[j] = curr->data[i];
-		i++;
-		j++;
-	}
-	temp[j] = '\0';
-	make_new_node(temp);
-	ll_insert_before(&root, curr, new_node);
+void    isolate_dollar(t_token_list **root, t_token_list *curr, int start, int length)
+{
+	char			*before;
+	char			*variable;
+	char			*expanded;
+	char			*join_1;
+	char			*join_2;
 
-	j = 0;
-	// After variable
-	while (curr->data[i] != '\0')
-	{
-		temp[j] = curr->data[i];
-		j++;
-		i++;
-	}
-	temp[j] = '\0';
-	make_new_node(temp);
-	ll_insert_before(&root, curr, new_node);
-	ll_remove_node(&root, curr);
+	before = ft_strdup(curr->data);
+	before[start] = '\0';
+	curr->data += start; //increment to the $
+	variable = ft_strdup(curr->data);
+	variable[length] = '\0'; // One after var ends. 
+	expanded = ft_strdup(expand_dollar(variable));
+	free(variable);
+	curr->data += length; //increment to after varible. 
+	join_1 = ft_strjoin(before, expanded);
+	free(before);
+	free(expanded);
+	join_2 = ft_strjoin(join_1, curr->data); // Add the rest of the string. 
+	free(join_1);
+	curr->data = join_2;
+	free(join_2);
 }
 
 char	**split_var(char *token, int length)
@@ -77,23 +67,24 @@ void	find_dollar(t_token_list **root, t_token_list *curr)
 {
 	int i;
 	int length;
+	char *temp;
 
 	i = 0;
 	length = 0;
 	while(curr->data[i] != '\0')
 	{
-		if (curr->data[i] == 39)
+		if (curr->data[i] == 39) // If is '. Skip over until next ' is found or end of string. 
 		{
 			i++;
 			while (curr->data[i] != 39 && curr->data[i] != '\0')
 				i++;
 		}
-		if (curr->data[i] == '$')
+		if (curr->data[i] == '$') // If is $
 		{
 			length = env_len(curr->data);
-			if (length > 0) // if found token, act
+			if (length > 0) // If valid var char type. 
 			{
-				expand_dollar(&root, curr, i, length);
+				isolate_dollar(&root, curr, i, length);
 			}
 		}
 		i++;
