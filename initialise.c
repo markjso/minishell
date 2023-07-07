@@ -12,40 +12,48 @@
 
 #include "minishell.h"
 
-void	init_free(char *temp, char *input)
-{
-	if (input)
-		free(input);
-	if (temp)
-		free(temp);
+// void	init_free(char *input)
+// {
+// 	if (input)
+// 		free(input);
+// 	// if (temp)
+// 	// 	free(temp);
 	
-}
+// }
 
-int	takeInput(char *str)
+void	get_user_prompt(void)
 {
-	char	*input;
+	char	*prompt;
 	char	*username;
-	char	*temp;
 
 	username = getenv("USER");
-	temp = ft_strjoin(username, "@>>$ "); // Return is MALLOCED
-	input = readline(temp); // Return is MALLOCED
-	if (!input) // Input is username and '$'.  IF username doesn't exist or Ctrl-d, exit program in error. 
+	prompt = ft_strjoin(username, "@>>$ ");
+	g_program.prompt = prompt;
+	free (prompt);
+}
+
+int	take_input(char *input)
+{
+	char	*user_input;
+
+	get_user_prompt();
+	user_input = readline(g_program.prompt); // Return is MALLOCED
+	if (!user_input) // Input is username and '$'.  IF username doesn't exist or Ctrl-d, exit program in error. 
 	{
-		printf("%s exit\n", temp);
-		free(temp);
+		printf("%s exit\n", input);
+		// free(input);
 		exit(1);
 	}
-	if (ft_strlen(input) != 0) // If user inputs text, even nonsense, this is called. 
+	if (ft_strlen(user_input) != 0) // If user inputs text, even nonsense, this is called. 
 	{
-		add_history(input);
-		ft_strlcpy(str, input, ft_strlen(input) + 1);
-		init_free(temp, input);
+		ft_strlcpy(input, user_input, MAXCOM - 1);
+		add_history(user_input);
+		free(user_input);
 		return (0);
 	}
 	else // Else the user inputed nothing. 
 	{
-		init_free(temp, input);
+		free(user_input);
 		return (1);
 	}
 }
@@ -82,6 +90,7 @@ void init_global(void)
     g_program.token = (char **)malloc((MAXLIST + 1) * sizeof(char *));
     for (int i = 0; i < MAXLIST + 1; i++) {
         g_program.token[i] = NULL;
+	g_program.envp = NULL;
 	g_program.exit_status = 0;
 	init_env_vars();
     }

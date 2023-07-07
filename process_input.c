@@ -44,10 +44,10 @@ int	find_token_number(char *str)
 			if (str[i] == type) // Found the matching close quote. 
 				count++;
 		}
-		else if (ft_is_not_white_space(str[i] == 0) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
+		else if (ft_is_not_white_space(str[i]) == 0 && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
 		{
 			count++;
-			while (ft_is_not_white_space(str[i] == 0))
+			while (ft_is_not_white_space(str[i]) == 0)
 				i++;
 		}
 		i++;
@@ -161,18 +161,18 @@ void	parse_input(char *str, t_program *program)
 
 	debugFunctionName("PARSE_INPUT");
 	token_number = find_token_number(str);
-
+	printf("token number: %d\n", token_number);
 	program->token = malloc(sizeof(char*) * token_number + 1);
 	make_tokens(str, program->token);
-	// printf("%s\n", program->token[token_number++]);
+	printf("token is: %s\n", program->token[token_number - 1]);
 }
 
 /*
 process_input(char *str: raw user input, char **token: is empty pointer to string that will become tokenised string).
 Return value is always 0? Why
 */
-void	process_input(char *str, t_program *program)
-{
-	debugFunctionName("PROCESS_INPUT");
-	parse_input(str, program);
-}
+// void	process_input(char *str, t_program *program)
+// {
+// 	debugFunctionName("PROCESS_INPUT");
+// 	parse_input(str, program);
+// }

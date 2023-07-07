@@ -20,17 +20,22 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	char input[MAXCOM];
 
-	g_program.envar = split_env_var(envp);
+    g_program.envar = split_env_var(envp);
+    g_program.envp = envp;
 	init_global();// initilise global variable found in initialise.c
 	sig_initialiser();// sets up the signal handling found in signal.c
 while (1)
     {      
-        if (takeInput(input) == 0)
+        if (take_input(input) == 0)
         {
 			//takes input from user and splits it into tokens found in process_input.c
-			process_input(input, &g_program);
+			parse_input(input, &g_program);
 			// if it is one of the builtin commands do it. Found in buitlin_utils.c
-            if (is_builtin_cmd(&g_program))
+            if (check_for_redirect(&g_program) == 1 || check_for_redirect(&g_program) == 2)
+            {
+                do_redirect(&g_program);
+            }
+            else if (is_builtin_cmd(&g_program))
             {
                 do_builtins(g_program.token, &g_program);
             }

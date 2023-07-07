@@ -20,8 +20,11 @@ SRCS=minishell.c \
 	signal.c \
 	cd_command.c \
 	environ.c \
+	environ_utils.c \
 	initialise.c \
 	debug.c \
+	error.c \
+	redirection.c \
 	process_input.c
 	
 dINCLUDE=-I$(LIBFT)
