@@ -39,13 +39,6 @@ void	remove_redirect(char *redirector)
 	g_program.token = new;
 }
 
-void restore_stdout()
-{
-    int stdout_fd = dup(STDOUT_FILENO);  // Save the original standard output file descriptor
-    dup2(stdout_fd, STDOUT_FILENO);     // Restore the standard output
-    close(stdout_fd);
-}
-
 int std_output(t_program *program)
 {
 	debugFunctionName("STD_OUT");
