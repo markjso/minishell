@@ -29,11 +29,13 @@ void    ll_remove_node(t_token_list **root, t_token_list *this_node)
         return ;
     }
     curr = *root;
-    while (curr->next != NULL) {
+    while (curr->next != NULL)
+    {
         if (curr->next == this_node)
 		{
             curr->next = this_node->next;
-			free(this_node->data);
+            if (this_node->data)
+                free(this_node->data);
             free(this_node);
             return ;
         }

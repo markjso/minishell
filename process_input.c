@@ -173,25 +173,27 @@ void	copy_into_array(t_program *program, t_token_list **root)
 	int		i;
 
 	token_number = find_token_number(root);
-	printf("Token Number is: %d\n", token_number);
+	// printf("Token Number is: %d\n", token_number);
 	program->token = (char**)malloc(sizeof(char*) * token_number + 1);
 	i = 0;
 	curr = *root;
 	while (i < token_number)
 	{
 		program->token[i] = ft_strdup(curr->data);
+		ll_print_token(root);
 		curr = curr->next;
 		i++;
 	}
 	program->token[i] = 0;
+	ll_deallocate(root);
 
-	// printf("Printing tokens in Jo's array\n");
-	// int j = 0;
-	// while (j < token_number)
-	// {
-	// 	printf("token[%d]: %s\n", j, program->token[j]);
-	// 	j++;
-	// }
+	printf("Printing tokens in Jo's array\n");
+	int j = 0;
+	while (j < token_number)
+	{
+		printf("token[%d]: %s\n", j, program->token[j]);
+		j++;
+	}
 }
 
 /*

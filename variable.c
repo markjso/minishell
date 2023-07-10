@@ -21,38 +21,6 @@ char	*expand_dollar(char *variable)
 	return (env_node->value);
 }
 
-void    isolate_dollar(t_token_list **root, t_token_list *curr, int start, int length)
-{
-	char			*before;
-	char			*variable;
-	char			*expanded;
-	char			*join_1;
-	char			*join_2;
-
-	before = ft_strdup(curr->data);
-	before[start] = '\0';
-	curr->data += start; //increment to the $
-	variable = ft_strdup(curr->data);
-	variable[length] = '\0'; // One after var ends. 
-	expanded = ft_strdup(expand_dollar(variable));
-	free(variable);
-	curr->data += length; //increment to after varible. 
-	join_1 = ft_strjoin(before, expanded);
-	free(before);
-	free(expanded);
-	join_2 = ft_strjoin(join_1, curr->data); // Add the rest of the string. 
-	free(join_1);
-	curr->data = join_2;
-	free(join_2);
-}
-
-char	**split_var(char *token, int length)
-{
-	char	*var_name = malloc(sizeof(char) * length + 1);
-	char	*after_name = malloc(sizeof(char) * (ft_strlen(token) - length) + 1);
-
-}
-
 int	env_len(char *str)
 {
 	int	i;
@@ -63,46 +31,109 @@ int	env_len(char *str)
 	return (i);
 }
 
-void	find_dollar(t_token_list **root, t_token_list *curr)
+
+char	*return_string(char *src, int terminator)
 {
-	int i;
-	int length;
+	char *ret;
+	static char	*backup;
+
+	if (!src)
+		src = backup;
+
+	ret = ft_strdup(src);
+	ret[terminator] = '\0';
+	return (ret);
+}
+
+
+void	skip_single_quote(char *src, int *end)
+{
+	(*end)++;
+	while (src[*end] != 39 && src[*end] != '\0')
+		(*end)++;
+	if (src[*end] != '\0')
+		(*end)++;
+}
+
+void	dollar_found(t_token_list **root, t_token_list *curr, t_token_list *new_node, int *end, int *start)
+{
 	char *temp;
 
-	i = 0;
-	length = 0;
-	while(curr->data[i] != '\0')
+	temp = ft_substr(curr->data, *start, *end - *start);
+	new_node = make_new_node(temp);
+	ll_insert_before(root, curr, new_node);
+	*start = *end;
+	*end = env_len(curr->data);
+	new_node = make_new_node(expand_dollar(ft_substr(curr->data, *start, *end - *start)));
+	*start = *end;
+}
+
+void	maybe_expand(t_token_list **root, t_token_list *curr)
+{
+	int	end;
+	int	start;
+	t_token_list	*new_node;
+
+	end = 0;
+	start = 0;
+	while(curr->data[end] != '\0')
 	{
-		if (curr->data[i] == 39) // If is '. Skip over until next ' is found or end of string. 
+		if (curr->data[end] == 39) // If is '. Skip over until next ' is found or end of string. 
+		{
+			skip_single_quote(curr->data, &end);
+			continue ;
+		}
+		if (curr->data[end] == '$')  // If is $
+		{
+			dollar_found(root, curr, new_node, &end, &start);
+			continue ;
+		}
+		while (curr->data[end] != '\0' && curr->data[end] != '$' && curr->data[end] != 39)
+			end++;
+		new_node = make_new_node((ft_substr(curr->data, start, end - start)));
+		ll_insert_before(root, curr, new_node);
+		start = end;
+		end++;
+	}
+}
+
+
+
+
+int	find_dollar(char *str)
+{
+	int i;
+
+	i = 0;
+	int	todo = 0;
+	while(str[i] != '\0')
+	{
+		if (str[i] == 39) // If is '. Skip over until next ' is found or end of string. 
 		{
 			i++;
-			while (curr->data[i] != 39 && curr->data[i] != '\0')
+			while (str[i] != 39 && str[i] != '\0')
 				i++;
 		}
-		if (curr->data[i] == '$') // If is $
-		{
-			length = env_len(curr->data);
-			if (length > 0) // If valid var char type. 
-			{
-				isolate_dollar(&root, curr, i, length);
-			}
-		}
+		if (str[i] == '$') // If is $
+			todo++;
 		i++;
 	}
+	return (todo);
 }
 
 void    expand_tokens(t_token_list **root)
 {
-    debugFunctionName("EXPAND_TOKENS");
-	t_token_list *curr;
+	t_token_list	*curr;
+	t_token_list	*temp;
 
 	curr = *root;
 	while (curr != NULL)
 	{
-		find_dollar(&root, curr);
+		maybe_expand(root, curr);
+		temp = curr;
 		curr = curr->next;
+		ll_remove_node(root, temp);
 	}
-
-
+	ll_print_token(root);
 
 }
