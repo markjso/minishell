@@ -143,32 +143,6 @@ int	ft_env_word_len(char *str)
 		return (0);
 }
 
-/* in case we need it. If the first value after the $ is '?' it 
-will look for the value in exit_status and convert it to a string
-using ft_itoa to return it. getname will be populated using ft_substr, 
-the token passed in and the length from get_env_word_len. tmp will
-look for the env name in find_env_var and if it exits return its value
-using ft_strdup. Otherwise return NULL.
-
-char	*get_envar(char *token)
-{
-	t_envar	*tmp;
-	char	*getname;
-
-	if (!token)
-		return (NULL);
-	if (token[0] == '?')
-		return (ft_itoa(g_program.exit_status));
-	getname = ft_substr(token, 0, get_env_word_len(token));
-	tmp = find_env_var(getname);
-	free(getname);
-	if (tmp)
-		return ((char *)ft_strdup(tmp->value));
-	else
-		return (NULL);
-}
-*/
-
 /*
 Checks if the char is printable ASCII 33 (!) to 126 (~) inclusive. 
 Excludes space and tab. 
@@ -216,7 +190,7 @@ Returns 0 otherwise.
 */
 int	ft_not_whitespace_not_quote(int c)
 {
-	if (ft_is_white_space(c) == 0 && ft_is_quote(c) == 0)
+	if (ft_is_not_white_space(c) == 1 && ft_is_quote(c) == 0)
 		return (1);
 	else
 		return (0);

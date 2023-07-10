@@ -39,29 +39,27 @@ void	remove_redirect(char *redirector)
 	g_program.token = new;
 }
 
-void restore_stdout()
-{
-    int stdout_fd = dup(STDOUT_FILENO);  // Save the original standard output file descriptor
-    dup2(stdout_fd, STDOUT_FILENO);     // Restore the standard output
-    close(stdout_fd);
-}
-
 int std_output(t_program *program)
 {
 	debugFunctionName("STD_OUT");
 	int fd;
 	char *file;
+	pid_t pid = fork();
 
 	file = g_program.redirect_file;
-
-	printf("Redirect File: %s\n", file);
-    printf("Token 1: %s\n", program->token[1]);
-
-	if (program->token[1][0] == '\0') // Check if only ">" is present
+	// if (program->token[1][0] == '\0') // Check if only ">" is present
+	// {
+	// 	printf("Invalid command\n");
+	// 	return (-1);
+	// }
+	if (pid < 0)
 	{
-		printf("Invalid command\n");
-		return (-1);
+        perror("Fork failed");
+        exit(1);
 	}
+	
+	else if (pid == 0)
+	{
 	fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -71,29 +69,48 @@ int std_output(t_program *program)
 	close(fd);
 	remove_redirect(">");
 	execmd(program);
-	restore_stdout();
+	exit (0);
+	}
+	else {
+        // Parent process
+        wait(NULL); // Wait for the child process to complete
+        // Cleanup and restore standard output if necessary
+    }
+	// exit(g_program.exit_status);
 	return (0);
-	exit(g_program.exit_status);
 }
 
-int std_input(void)
+int std_input(t_program *program)
 {
 	debugFunctionName("STD_IN");
 	int	fd;
 	char *file;
+	pid_t pid = fork();
 
 	file = g_program.redirect_file;
 
-	printf("Redirect File: %s\n", file);
+	if (pid < 0) {
+        perror("Fork failed");
+        exit(1);
+    } 
+	else if (pid == 0)
+	{
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 	{
-		perror("Error: \n");
+		perror("Error in std_input: \n");
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	remove_redirect("<");
-	return(-1);
+	execmd(program);
+	exit(0);
+    } else {
+        // Parent process
+        wait(NULL); // Wait for the child process to complete
+        // Cleanup and restore standard input if necessary
+    }
+    return 0;
 }
 
 int output_append(t_program *program)
@@ -101,11 +118,16 @@ int output_append(t_program *program)
 	debugFunctionName("STD_APPEND");
 	int fd;
 	char *file;
+	pid_t pid = fork();
 
 	file = g_program.redirect_file;
 
-	printf("Redirect File: %s\n", file);
-    printf("Token 1: %s\n", program->token[1]);
+	if (pid < 0) {
+        perror("Fork failed");
+        exit(1);
+    } 
+	else if (pid == 0)
+	{
 	fd = open(file, O_CREAT | O_WRONLY | O_APPEND , 0644);
 	if (fd < 0)
 	{
@@ -116,6 +138,12 @@ int output_append(t_program *program)
 	// restore_stdout();
 	remove_redirect(">>");
 	execmd(program);
+	exit(0);
+    } else {
+        // Parent process
+        wait(NULL); // Wait for the child process to complete
+        // Cleanup and restore standard input if necessary
+    }
 	return (0);
 }
 
@@ -237,7 +265,7 @@ void do_redirect(t_program *program)
         else if (program->is_redirect == 3)
         {
             program->redirect_file = ft_strdup(program->token[redirect_index + 1]);
-            std_input();
+            std_input(program);
         }
 		else if (program->is_redirect == 4)
 		{
