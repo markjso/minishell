@@ -57,14 +57,14 @@ void	skip_single_quote(char *src, int *end)
 
 void	dollar_found(t_token_list **root, t_token_list *curr, t_token_list *new_node, int *end, int *start)
 {
-	char *temp;
+	char	*temp;
+	char	*env_exp;
 
-	temp = ft_substr(curr->data, *start, *end - *start);
-	new_node = make_new_node(temp);
-	ll_insert_before(root, curr, new_node);
-	*start = *end;
 	*end = env_len(curr->data);
-	new_node = make_new_node(expand_dollar(ft_substr(curr->data, *start, *end - *start)));
+	temp = ft_substr(curr->data, *start, *end - *start);
+	env_exp = expand_dollar(ft_substr(curr->data, *start, *end - *start));
+	new_node = make_new_node(ft_strjoin(temp, env_exp));
+	ll_insert_before(root, curr, new_node);
 	*start = *end;
 }
 
