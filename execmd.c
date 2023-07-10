@@ -16,7 +16,8 @@ t_program g_program;
 
 char	*get_location(char *cmd)
 {
-	char	**path_tokens;
+	debugFunctionName("GET_LOCATION");
+    char	**path_tokens;
 	char	*path;
 	char	*location;
 	int		i;
@@ -39,8 +40,9 @@ char	*get_location(char *cmd)
 		}
 		free(location);
 		i++;
-	}
+    }
 	ft_free_array(path_tokens);
+    free(location);
 	return (NULL);
 }
 
@@ -60,16 +62,16 @@ void execmd(t_program *program)
     {
         cmd = program->token[0];
         actual_cmd = get_location(cmd);
-    // free(path);
         if (actual_cmd == NULL)
-            error_and_exit("Command not found", 127);
-        if (execve(actual_cmd, program->token, program->envp) == -1)
-            error_and_exit("Failed to execute", 126);
-        else
-        {
-            wait(NULL);
-            return;
-        }
+            {
+                error_and_exit("Command not found", 127);
+            }
+        (execve(actual_cmd, program->token, program->envp));
+    }
+    else
+    {
+        wait(NULL);
+        return;
     }
 }
 
