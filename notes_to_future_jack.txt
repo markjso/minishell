@@ -8,3 +8,13 @@ and this means tokenise before removing quotes.
 |
 $
 $?
+
+
+hi$HOME
+0123456
+
+End = 7
+Start = 0
+env_start = 2
+
+Temp ft_substr(0,7
