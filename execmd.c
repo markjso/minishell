@@ -66,7 +66,7 @@ void execmd(t_program *program)
             {
                 error_and_exit("Command not found", 127);
             }
-        (execve(actual_cmd, program->token, program->envp));
+        execve(actual_cmd, program->token, program->envp);
     }
     else
     {
