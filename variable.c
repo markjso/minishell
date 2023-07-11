@@ -58,23 +58,30 @@ void	skip_single_quote(char *src, int *end)
 void	dollar_found(t_token_list **root, t_token_list *curr, t_token_list *new_node, int *end, int *start)
 {
 	char	*first;
+	char	*first_2
 	char	*env_str;
 	int		env_len;
 	int		env_start;
+	char	*last;
+	char	*last_2;
 
 	env_start = *end;
-	while (ft_is_not_white_space(curr->data[*end] && curr->data[*end] != '\0')
+	while (ft_is_not_white_space(curr->data[*end] && ft_is_not_quote(curr->data[*end]) && curr->data[*end] != '\0')
 		(*end)++;
-	env_str = expand_dollar(ft_substr(curr->data, env_start, *end - env_start));
+	env_str = expand_dollar(ft_substr(curr->data, env_start, (*end) - env_start));
+	first = ft_substr(curr->data, *start, env_start);
+	first_2 = ft_strjoin(first, env_str);
 
-	*end = env_len(curr->data);
-	first = ft_substr(curr->data, *start, env_start;
-	new_node = make_new_node(ft_strjoin(temp, env_exp));
-	ll_insert_before(root, curr, new_node);
 	*start = *end;
+	while (curr->data[*end] != '\0')
+		(*end)++;
+	last = ft_substr(curr->data, *start, *end)
+	last_2 = ft_strjoin(first_2, last_2);
+	new_node = make_new_node(last_2);
+	ll_insert_after(root, curr, new_node);
 }
 
-void	maybe_expand(t_token_list **root, t_token_list *curr, int *join)
+void	expand_dollar_1(t_token_list **root, t_token_list *curr, int *join)
 {
 	int	end;
 	int	start;
@@ -98,28 +105,17 @@ void	maybe_expand(t_token_list **root, t_token_list *curr, int *join)
 		}
 		while (curr->data[end] != '\0' && curr->data[end] != '$' && curr->data[end] != 39)
 			end++;
-		if (curr->data[end] == "$") // If next is $
-		{
-			*join = 1;
-			join_1_node = curr;
-			dollar_found(root, curr, new_node, &end, &start);
-		}
-		new_node = make_new_node((ft_substr(curr->data, start, end - start)));
-		ll_insert_before(root, curr, new_node);
-		start = end;
 		end++;
 	}
 }
 
-
-
-
-int	find_dollar(char *str)
+int	count_dollars(char *str)
 {
 	int i;
+	int	todo;
 
 	i = 0;
-	int	todo = 0;
+	todo = 0;
 	while(str[i] != '\0')
 	{
 		if (str[i] == 39) // If is '. Skip over until next ' is found or end of string. 
@@ -140,11 +136,17 @@ void    expand_tokens(t_token_list **root)
 	t_token_list	*curr;
 	t_token_list	*temp;
 	int				join;
+	int				todo;
 
 	curr = *root;
 	while (curr != NULL)
 	{
-		maybe_expand(root, curr, &jion);
+		todo = count_dollars(curr->data);
+		while (todo > 0)
+		{
+			expand_dollar_1(root, curr, &join);
+			todo--;
+		}
 		temp = curr;
 		curr = curr->next;
 		ll_remove_node(root, temp);
