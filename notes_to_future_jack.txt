@@ -1,3 +1,104 @@
 -------- No backslash and no open quotes --------
 Look for redirection operators before remving quotes and this means don't make tokens without quotes. 
 
+
+
+
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+	/*
+	OG process (x) -> child process 1 (x+5) -> child process 2 ((x+5)+5) -> OG process. 
+	3 Pipes. Each piple has 3 File Descriptors. 
+	Each FD is inherited by 2 child processes, therefore there are 6*3=18 FDs.
+	Therefore must close 18 FD's. 
+	*/
+int main(int argc, char * argv[]) {
+	int fd[3][2];
+	int i;
+	for (i = 0; i < 3; i++) {
+		if (pipe(fd[i]) < 0) {
+			return 1;
+		}
+	}
+
+	int pid1 = fork();
+	if (pid1 < 0) {
+		return 2;
+	}
+
+	if (pid1 == 0) {
+		//Child process 1
+		close(fd[0][1]);
+		close(fd[1][0]);
+		close(fd[2][0]);
+		close(fd[2][1]);
+		int x;
+		if (read(fd[0][0], &x, sizeof(int)) < 0) {
+			return 3;
+		}
+		printf("Child 1 input: %d\n", x);
+		x += 5;
+		if (write(fd[1][1], &x, sizeof(int)) < 0) {
+			return 4;
+		}
+		printf("Child 1 output: %d\n", x);
+		close(fd[0][0]);
+		close(fd[1][1]);
+		return 0; //will mean the code below will only be executed by the parent and not this child process. 
+	}
+
+	int pid2 = fork();
+	if (pid2 < 0) {
+		return 5;
+	}
+
+	if (pid2 == 0) {
+		//Child process 2
+		close(fd[0][0]);
+		close(fd[0][1]);
+		close(fd[1][1]);
+		close(fd[2][0]);
+		int x;
+		if (read(fd[1][0], &x, sizeof(int)) < 0) {
+			return 6;
+		}
+		printf("Child 2 input: %d\n", x);
+		x += 5;
+		if (write(fd[2][1], &x, sizeof(int)) < 0) {
+			return 7;
+		}
+		printf("Child 2 output: %d\n", x);
+		close(fd[1][0]);
+		close(fd[2][1]);
+		return 0; //will mean the code below will only be executed by the parent and not this child process. 
+	}
+
+	//Parent process
+	close(fd[0][0]);
+	close(fd[1][0]);
+	close(fd[1][1]);
+	close(fd[2][1]);
+	int x = 0;
+	if (write(fd[0][1], &x, sizeof(int)) < 0) {
+		return 8;
+	}
+
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2, NULL, 0);
+
+	if (read(fd[2][0], &x, sizeof(int)) < 0) {
+		return 9;
+	}
+	printf("Result is %d\n", x);
+	close(fd[0][1]);
+	close(fd[2][0]);
+
+
+
+	return 0;
+}
