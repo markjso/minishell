@@ -67,48 +67,90 @@ void	skip_single_quote(char *src, int *end)
 	(*end)++; // End lands on a quote, so increment one more to not be a quote. 
 }
 
-void	free_dollar_found(char **env_str, char **first, char **first_2, char **last, char **last_2)
+// void	free_dollar_found(char **env_str, char **first, char **first_2, char **last, char **last_2)
+// {
+// 	debugFunctionName("FREE_DOLLAR_FOUND");
+// 	if (**env_str)
+// 		free(*env_str);
+// 	if (**first)
+// 		free(*first);
+// 	if (**first_2)
+// 		free(*first_2);
+// 	if (**last)
+// 		free(*last);
+// 	if (**last_2)
+// 		free(*last_2);
+// }
+
+char	*ft_first_and_second(char *str, int *start, int env_start, int *end)
 {
-	debugFunctionName("FREE_DOLLAR_FOUND");
-	if (**env_str)
-		free(*env_str);
-	if (**first)
-		free(*first);
-	if (**first_2)
-		free(*first_2);
-	if (**last)
-		free(*last);
-	if (**last_2)
-		free(*last_2);
+	char	*first;
+	char	*second_temp;
+	char	*second;
+	char	*first_and_second;
+
+	first = ft_substr(str, *start, env_start); // MALLOC freed
+	second_temp = ft_substr(str, env_start, (*end) - env_start); // MALLOC freed
+	second = ft_strdup(expand_dollar(second_temp)); // MALLOC freed
+	free(second_temp); // FREE
+	first_and_second = ft_strjoin(first, second); // MALLOC to be freed in parent function
+	free(first); // FREE
+	free(second); // FREE
+	return (first_and_second);
 }
 
 void	dollar_found(t_token_list *curr, int *end, int *start)
 {
 	debugFunctionName("DOLLAR_FOUND");
-
-	char	*first;
-	char	*first_2;
-	char	*env_str;
+	char	*first_and_second;
 	int		env_start;
-	char	*last;
-	char	*last_2;
+	char	*third_temp;
+	char	*final;
 
 	env_start = *end;
 	while ((curr->data[*end] != '\0') && ft_is_not_white_space(curr->data[*end]) && ft_is_not_quote(curr->data[*end])) 
 		(*end)++;
-	env_str = ft_strdup(expand_dollar(ft_substr(curr->data, env_start, (*end) - env_start))); // MALLOC
-	if (env_str)
-		printf("env_str: %s\n", env_str);
-	first = ft_substr(curr->data, *start, env_start); // MALLOC
-	first_2 = ft_strjoin(first, env_str); // If to many lines merge first_2 and last_2 into lines above each recepcitvly.  // MALLOC
+	first_and_second = ft_first_and_second(curr->data, start, env_start, end); // MALLOC
 	*start = *end;
 	while (curr->data[*end] != '\0')
 		(*end)++;
-	last = ft_substr(curr->data, *start, *end - *start); // MALLOC
-	last_2 = ft_strjoin(first_2, last); // If to many lines merge first_2 and last_2 into lines above each recepcitvly. // MALLOC
-	replace_node_data(curr, last_2);
-	free_dollar_found(&env_str, &first, &first_2, &last, &last_2); // FREE FREE FREE FREE FREE
+	third_temp = ft_substr(curr->data, *start, *end - *start); // MALLOC freed
+	final = ft_strjoin(first_and_second, third_temp); // MALLOC
+	free(first_and_second); // FREE
+	free(third_temp); // FREE
+	replace_node_data(curr, final);
+	free(final);
 }
+
+// void	dollar_found(t_token_list *curr, int *end, int *start)
+// {
+// 	debugFunctionName("DOLLAR_FOUND");
+// 	char	*first;
+// 	char	*first_2;
+// 	char	*env_str;
+// 	int		env_start;
+// 	char	*last;
+// 	char	*last_2;
+// 	char	*var_substring;
+
+// 	env_start = *end;
+// 	while ((curr->data[*end] != '\0') && ft_is_not_white_space(curr->data[*end]) && ft_is_not_quote(curr->data[*end])) 
+// 		(*end)++;
+// 	var_substring = ft_substr(curr->data, env_start, (*end) - env_start); // MALLOC 
+// 	env_str = ft_strdup(expand_dollar(var_substring)); // MALLOC
+// 	free(var_substring);
+// 	if (env_str)
+// 		printf("env_str: %s\n", env_str);
+// 	first = ft_substr(curr->data, *start, env_start); // MALLOC
+// 	first_2 = ft_strjoin(first, env_str); // MALLOC
+// 	*start = *end;
+// 	while (curr->data[*end] != '\0')
+// 		(*end)++;
+// 	last = ft_substr(curr->data, *start, *end - *start); // MALLOC
+// 	last_2 = ft_strjoin(first_2, last); // MALLOC
+// 	replace_node_data(curr, last_2);
+// 	free_dollar_found(&env_str, &first, &first_2, &last, &last_2); // FREE FREE FREE FREE FREE
+// }
 
 void	expand_dollar_1(t_token_list *curr)
 {
