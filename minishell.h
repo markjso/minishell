@@ -96,6 +96,7 @@ void	ll_insert_before(t_token_list **root, t_token_list *this_node, t_token_list
 void    ll_remove_node(t_token_list **root, t_token_list *this_node);
 void    ll_deallocate(t_token_list **root);
 void	ll_print_token(t_token_list **root);
+void	replace_node_data(t_token_list *curr, char *new_data);
 
 
 

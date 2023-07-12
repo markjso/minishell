@@ -64,7 +64,7 @@ void	ll_print_token(t_token_list **root)
 	t_token_list *curr = *root;
 	while (curr != NULL)
 	{
-		printf("Current node data: %s\n", curr->data);
+		printf("Current node data with q's around it: q%sq\n", curr->data);
 		curr = curr->next;
 	}
 }

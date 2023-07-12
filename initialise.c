@@ -28,7 +28,7 @@ int	takeInput(char *str)
 	char	*temp;
 
 	username = getenv("USER");
-	temp = ft_strjoin(username, "@>>$ "); // Return is MALLOCED
+	temp = ft_strjoin(username, "################################# @>>$ "); // Return is MALLOCED
 	input = readline(temp); // Return is MALLOCED
 	if (!input) // Input is username and '$'.  IF username doesn't exist or Ctrl-d, exit program in error. 
 	{

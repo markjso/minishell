@@ -25,3 +25,11 @@ t_token_list    *make_new_node(char *value)
     new_node->next = NULL;
     return (new_node);
 }
+
+void	replace_node_data(t_token_list *curr, char *new_data)
+{
+	if (curr == NULL)
+		exit(21);
+	free(curr->data);
+	curr->data = ft_strdup(new_data);
+}

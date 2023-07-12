@@ -11,14 +11,23 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+t_program g_program;
 
 char	*expand_dollar(char *variable)
 {
+	debugFunctionName("*EXPAND_DOLLAR");
 	t_envar *env_node;
 
 	variable++; // Because first is $ sign. 
 	env_node = find_env_var(variable);
-	return (env_node->value);
+	if (env_node == NULL)
+	{
+		return ("");
+	}
+	else
+	{
+		return (env_node->value);
+	}
 }
 
 int	env_len(char *str)
@@ -38,8 +47,9 @@ char	*return_string(char *src, int terminator)
 	static char	*backup;
 
 	if (!src)
+	{
 		src = backup;
-
+	}
 	ret = ft_strdup(src);
 	ret[terminator] = '\0';
 	return (ret);
@@ -48,49 +58,66 @@ char	*return_string(char *src, int terminator)
 
 void	skip_single_quote(char *src, int *end)
 {
+	debugFunctionName("SKIP_SINGLE_QUOTE");
 	(*end)++;
-	while (src[*end] != 39 && src[*end] != '\0')
+	while (src[*end] != 39)
+	{
 		(*end)++;
-	if (src[*end] != '\0')
-		(*end)++;
+	}
+	(*end)++; // End lands on a quote, so increment one more to not be a quote. 
 }
 
-void	dollar_found(t_token_list **root, t_token_list *curr, t_token_list *new_node, int *end, int *start)
+void	free_dollar_found(char **env_str, char **first, char **first_2, char **last, char **last_2)
 {
+	debugFunctionName("FREE_DOLLAR_FOUND");
+	if (**env_str)
+		free(*env_str);
+	if (**first)
+		free(*first);
+	if (**first_2)
+		free(*first_2);
+	if (**last)
+		free(*last);
+	if (**last_2)
+		free(*last_2);
+}
+
+void	dollar_found(t_token_list *curr, int *end, int *start)
+{
+	debugFunctionName("DOLLAR_FOUND");
+
 	char	*first;
-	char	*first_2
+	char	*first_2;
 	char	*env_str;
-	int		env_len;
 	int		env_start;
 	char	*last;
 	char	*last_2;
 
 	env_start = *end;
-	while (ft_is_not_white_space(curr->data[*end] && ft_is_not_quote(curr->data[*end]) && curr->data[*end] != '\0')
+	while ((curr->data[*end] != '\0') && ft_is_not_white_space(curr->data[*end]) && ft_is_not_quote(curr->data[*end])) 
 		(*end)++;
-	env_str = expand_dollar(ft_substr(curr->data, env_start, (*end) - env_start));
-	first = ft_substr(curr->data, *start, env_start);
-	first_2 = ft_strjoin(first, env_str);
-
+	env_str = ft_strdup(expand_dollar(ft_substr(curr->data, env_start, (*end) - env_start))); // MALLOC
+	if (env_str)
+		printf("env_str: %s\n", env_str);
+	first = ft_substr(curr->data, *start, env_start); // MALLOC
+	first_2 = ft_strjoin(first, env_str); // If to many lines merge first_2 and last_2 into lines above each recepcitvly.  // MALLOC
 	*start = *end;
 	while (curr->data[*end] != '\0')
 		(*end)++;
-	last = ft_substr(curr->data, *start, *end)
-	last_2 = ft_strjoin(first_2, last_2);
-	new_node = make_new_node(last_2);
-	ll_insert_after(root, curr, new_node);
+	last = ft_substr(curr->data, *start, *end - *start); // MALLOC
+	last_2 = ft_strjoin(first_2, last); // If to many lines merge first_2 and last_2 into lines above each recepcitvly. // MALLOC
+	replace_node_data(curr, last_2);
+	free_dollar_found(&env_str, &first, &first_2, &last, &last_2); // FREE FREE FREE FREE FREE
 }
 
-void	expand_dollar_1(t_token_list **root, t_token_list *curr, int *join)
+void	expand_dollar_1(t_token_list *curr)
 {
+	debugFunctionName("EXPAND_DOLLAR_1");
 	int	end;
 	int	start;
-	t_token_list	*new_node;
-	t_token_list	*join_1_node;
 
 	end = 0;
 	start = 0;
-	*join = 0;
 	while(curr->data[end] != '\0')
 	{
 		if (curr->data[end] == 39) // If is '. Skip over until next ' is found or end of string. 
@@ -100,17 +127,17 @@ void	expand_dollar_1(t_token_list **root, t_token_list *curr, int *join)
 		}
 		if (curr->data[end] == '$')  // If is $
 		{
-			dollar_found(root, curr, new_node, &end, &start);
-			continue ;
+			dollar_found(curr, &end, &start);
+			break ;
 		}
-		while (curr->data[end] != '\0' && curr->data[end] != '$' && curr->data[end] != 39)
+		while (curr->data[end] != '\0' && curr->data[end] != '$' && curr->data[end] != 39) // Think of this as an else to the 2 ifs. 
 			end++;
-		end++;
 	}
 }
 
 int	count_dollars(char *str)
 {
+	debugFunctionName("COUNT_DOLLARS");
 	int i;
 	int	todo;
 
@@ -133,9 +160,8 @@ int	count_dollars(char *str)
 
 void    expand_tokens(t_token_list **root)
 {
+	debugFunctionName("EXPAND_TOKENS");
 	t_token_list	*curr;
-	t_token_list	*temp;
-	int				join;
 	int				todo;
 
 	curr = *root;
@@ -144,13 +170,10 @@ void    expand_tokens(t_token_list **root)
 		todo = count_dollars(curr->data);
 		while (todo > 0)
 		{
-			expand_dollar_1(root, curr, &join);
+			expand_dollar_1(curr);
 			todo--;
 		}
-		temp = curr;
 		curr = curr->next;
-		ll_remove_node(root, temp);
 	}
 	ll_print_token(root);
-
 }

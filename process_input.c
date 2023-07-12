@@ -28,7 +28,6 @@ int	find_token_number(t_token_list **root)
 
 	i = 0;
 	curr = *root;
-
 	while (curr != NULL)
 	{
 		i++;
@@ -87,8 +86,7 @@ int	find_end(char *str)
 	{
 		if (ft_is_white_space(str[i]) == 1) // IF whitespace, stop. 
 			break ;
-		// IF quote, ignore white space
-		if (ft_is_quote(str[i]) == 1) //IF index i is double or single quote and next exists. 
+		if (ft_is_quote(str[i]) == 1) // IF quote, ignore white space
 		{
 			type = str[i]; // Set type to quote type. 
 			i++;
@@ -118,7 +116,6 @@ char	*make_token(char *str)
 
 	i = 0;
 	int length = find_end(str);
-	// printf("length %d\n", length);
 	return_token = malloc(sizeof(char) * length + 1); //JC MALLOC
 	while (i < length)
 	{
@@ -173,7 +170,6 @@ void	copy_into_array(t_program *program, t_token_list **root)
 	int		i;
 
 	token_number = find_token_number(root);
-	// printf("Token Number is: %d\n", token_number);
 	program->token = (char**)malloc(sizeof(char*) * token_number + 1);
 	i = 0;
 	curr = *root;
@@ -209,5 +205,13 @@ void	process_input(char *str, t_program *program)
 	make_tokens(str, &root);
 	ll_print_token(&root);
 	expand_tokens(&root);
+	t_envar	*tmp;
+	tmp = g_program.envar;
+	while (tmp != NULL)
+	{
+		if (ft_strcmp(tmp->name, "HOME") == 0)
+			tmp = find_env_var("HOME");
+		tmp = tmp->next;
+	}
 	copy_into_array(program, &root);
 }
