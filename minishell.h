@@ -80,7 +80,7 @@ void	debugFunctionName(char* function_name);
 int		ft_alnum_word_len(char *str, int start);
 int		ft_is_not_white_space(int c);
 int		ft_is_quote(int c);
-void    expand_tokens(t_token_list **root);
+void    expand_variables(t_token_list **root);
 int		ft_is_special_char(char *s1);
 int 	ft_is_white_space(int c);
 int		ft_not_whitespace_not_quote(int c);
@@ -98,6 +98,13 @@ void    ll_deallocate(t_token_list **root);
 void	ll_print_token(t_token_list **root);
 void	replace_node_data(t_token_list *curr, char *new_data);
 
+char	*expand_dollar(char *variable);
+int		env_len(char *str);
+char	*return_string(char *src, int terminator);
+void	skip_single_quote(char *src, int *end);
+// void	free_dollar_found(char **env_str, char **first, char **first_2, char **last, char **last_2);
+int		find_token_number(t_token_list **root);
+int		find_end(char *str);
 
 
 #endif

@@ -14,90 +14,6 @@
 
 extern	t_program	g_program;
 
-/*Input: string to return an integer the number of "tokens" that can be 
-created. A token is seperated by a space or tab, unless the space or tab 
-is enclosed within matching double or single quotation marks. 
-
-Any word that has no space or no tab and is next to the "outside" of a 
-quotation mark: One token will be created to encompas the outside word 
-and the whole quotation mark.*/
-int	find_token_number(t_token_list **root)
-{
-	int			i;
-	t_token_list *curr;
-
-	i = 0;
-	curr = *root;
-	while (curr != NULL)
-	{
-		i++;
-		curr = curr->next;
-	}
-	return (i);
-}
-
-// int	find_token_number(char *str)
-// {
-// 	int			i;
-// 	char		type;
-// 	int			count;
-
-// 	i = 0;
-// 	count = 0;
-// 	if (ft_isprint(str[i]) == 1)
-// 		count++;
-// 	while (str[i] != '\0')
-// 	{
-// 		if (ft_is_quote(str[i]) && str[i + 1] != '\0') //IF index i is double or single quote and next exists. 
-// 		{
-// 			type = str[i]; // The type of quote. 
-// 			i++; // One beyond the quote. 
-// 			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
-// 				i++;
-// 			// if (str[i] == type) // Found the matching close quote. 
-// 			// 	i++;
-// 		}
-// 		else if (ft_is_white_space(str[i] == 1) && str[i + 1] != '\0') // ELSE IF is space or tab AND next is not end of string but an actual char. Then it will be a new word. 
-// 		{
-// 			count++;
-// 			while (ft_is_white_space(str[i]) == 1) && ft_is_white_space(str[i + 1]) == 1 && str[i + 1] != '\0') // While spaces!
-// 				i++;
-// 		}
-// 		i++;
-// 	}
-// 	// printf("count is: %d\n", count);
-// 	return (count);
-// }
-
-/*Returns the index number of a string, the return value is the first space or 
-tab to occur. Spaces within matching double or single quotation marks are 
-ignored. The quotation is treated as one word. 
-
-Any word that has no space or no tab and is next to the "outside" of a 
-quotation mark: One token will be created to encompas the outside word 
-and the whole quotation mark.*/
-int	find_end(char *str)
-{
-	int			i;
-	char		type;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (ft_is_white_space(str[i]) == 1) // IF whitespace, stop. 
-			break ;
-		if (ft_is_quote(str[i]) == 1) // IF quote, ignore white space
-		{
-			type = str[i]; // Set type to quote type. 
-			i++;
-			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
-				i++;
-		}
-		i++;
-	}
-	return (i);
-}
-
 /*Create a "token" from an input string. 
 A token is defined by any word that has a space or tab either side of it. 
 Unless it is within matching double or single quotaiton marks. 
@@ -198,20 +114,12 @@ Return value is always 0? Why
 */
 void	process_input(char *str, t_program *program)
 {
+	debugFunctionName("PROCESS_INPUT");
 	t_token_list	*root;
 
 	root = NULL;
-	debugFunctionName("PROCESS_INPUT");
 	make_tokens(str, &root);
-	ll_print_token(&root);
-	expand_tokens(&root);
-	t_envar	*tmp;
-	tmp = g_program.envar;
-	while (tmp != NULL)
-	{
-		if (ft_strcmp(tmp->name, "HOME") == 0)
-			tmp = find_env_var("HOME");
-		tmp = tmp->next;
-	}
+	expand_variables(&root);
+
 	copy_into_array(program, &root);
 }

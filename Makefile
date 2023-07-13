@@ -26,8 +26,10 @@ SRCS=minishell.c \
 	token_linked_list.c \
 	token_linked_list_create.c \
 	token_linked_list_delete.c \
-	variable.c
-	
+	variable.c \
+	variable_expand_utils.c \
+	process_input_utils.c
+
 dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
 LINK_RL = /usr/local/opt/readline/lib
@@ -40,7 +42,7 @@ CC=gcc
 
 LIBFT=libft/libft.a
 
-CFLAGS=-Wall -Wextra -Werror  $(INCLUDE)
+CFLAGS=-Wall -Wextra -Werror $(INCLUDE)
 
 all: $(NAME)
 
