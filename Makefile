@@ -28,7 +28,8 @@ SRCS=minishell.c \
 	token_linked_list_delete.c \
 	variable.c \
 	variable_expand_utils.c \
-	process_input_utils.c
+	process_input_utils.c \
+	remove_quotes.c
 
 dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/

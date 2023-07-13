@@ -92,7 +92,7 @@ void	copy_into_array(t_program *program, t_token_list **root)
 	while (i < token_number)
 	{
 		program->token[i] = ft_strdup(curr->data);
-		ll_print_token(root);
+		// ll_print_token(root);
 		curr = curr->next;
 		i++;
 	}
@@ -120,6 +120,6 @@ void	process_input(char *str, t_program *program)
 	root = NULL;
 	make_tokens(str, &root);
 	expand_variables(&root);
-
+	remove_quotes(&root);
 	copy_into_array(program, &root);
 }
