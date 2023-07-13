@@ -6,7 +6,7 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:44:30 by jmarks            #+#    #+#             */
-/*   Updated: 2023/06/20 18:08:12 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/07/13 14:41:15 by jchurch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	get_user_prompt(void)
 
 	username = getenv("USER");
 	prompt = ft_strjoin(username, "@>>$ ");
-	g_program.prompt = prompt;
+	g_program.prompt = ft_strdup(prompt);
 	free (prompt);
 }
 
