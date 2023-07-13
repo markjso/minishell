@@ -105,6 +105,7 @@ void	skip_single_quote(char *src, int *end);
 // void	free_dollar_found(char **env_str, char **first, char **first_2, char **last, char **last_2);
 int		find_token_number(t_token_list **root);
 int		find_end(char *str);
+void    remove_quotes(t_token_list **root);
 
 
 #endif
