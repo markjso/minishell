@@ -247,11 +247,12 @@ int check_for_redirect(t_program *program, char *str)
 		if (ft_is_quote(str[g_program.redirect_index] == 1))
 		{
 			locate_second_quote(str);
+			continue ;
 		}
         if (str[g_program.redirect_index] == '>' && str[g_program.redirect_index + 1] == '>')
 		{
             program->is_redirect = 2;
-			return (g_program.redirect_index);
+			return (2);
 		}
         else if (str[g_program.redirect_index] == '>')
 		{
