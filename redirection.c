@@ -218,126 +218,99 @@ If a matching close quote is found:
 If no matching close quote is found: 
 	Index will be moved to 1 char after the current loose quote. 
 */
-void	locate_second_quote(char *str, int *first)
+void	locate_second_quote(char *str)
 {
 	int		second;
 
-	second = *first + 1; // One after the quote
+	second = g_program.redirect_index + 1; // One after the quote
 	while (str[second] != '\0') // For the length of the string
 	{
-		if (str[second] == str[*first]) // If matching quote found
+		if (str[second] == str[g_program.redirect_index]) // If matching quote found
 		{
-			*first = second + 1; // Make first be the index of the 2nd quote plus one next outside of the quote. 
+			g_program.redirect_index = second + 1; // Make first be the index of the 2nd quote plus one next outside of the quote. 
 			break ; // First will now be one after the matching quote. 
 		}
 		second++;
 	}
 	if (str[second] == '\0') // At end and therefore no matching quote was found. 
 	{
-        (*first)++; // One after the current quote. 
+        g_program.redirect_index++; // One after the current quote. 
         return ; // Can remove this return if norm error. 
 	}
 }
 
-int check_for_redirect(t_program *program, char *str, int *i)
+int check_for_redirect(t_program *program, char *str)
 {
     debugFunctionName("CHECK_REDIR");
-    // *i = 0;
-
-    while (str[*i])
+    while (str[g_program.redirect_index] != '\0')
     {
-		if (ft_is_quote(str[*i] == 1))
+		if (ft_is_quote(str[g_program.redirect_index] == 1))
 		{
-			locate_second_quote(str, i);
+			locate_second_quote(str);
 		}
-        if (str[*i] == '>' && str[*i + 1] == '>')
+        if (str[g_program.redirect_index] == '>' && str[g_program.redirect_index + 1] == '>')
 		{
-			printf("Yes >>\n");
             program->is_redirect = 2;
-			return (*i);
+			return (g_program.redirect_index);
 		}
-        else if (str[*i] == '>')
+        else if (str[g_program.redirect_index] == '>')
 		{
-			printf("Yes >\n");
             program->is_redirect = 1;
 			return (1);
 		}
-        else if (str[*i] == '<' && str[*i + 1] == '<')
+        else if (str[g_program.redirect_index] == '<' && str[g_program.redirect_index + 1] == '<')
 		{
-			printf("Yes <<\n");
             program->is_redirect = 4;
 			return (4);
 		}
-        else if (str[*i] == '<')
+        else if (str[g_program.redirect_index] == '<')
 		{
-			printf("Yes <\n");
             program->is_redirect = 3;
 			return (3);
 		}
-        (*i)++;
+        (g_program.redirect_index)++;
     }
     return (0); // No redirect symbol found
 }
 
-char	*get_file_name(char *str, int *redirect_index)
+char	*get_file_name(char *str)
 {
 	int 	end_of_name;
 	char	*file_name;
 
-	(*redirect_index)++;
-	while (ft_is_white_space(str[*redirect_index]))
-	{
-		(*redirect_index)++;
-	}
-
-	end_of_name = *redirect_index;
-
-	while (ft_is_not_white_space(str[end_of_name]) == 1 && ft_is_not_quote(str[end_of_name]) == 1)
-	{
+	g_program.redirect_index++;
+	while (ft_is_white_space(str[g_program.redirect_index]))
+		g_program.redirect_index++;
+	end_of_name = g_program.redirect_index;
+	while (ft_not_whitespace_not_quote(str[end_of_name]) == 1)
 		end_of_name++;
-	}
-	file_name = ft_substr(str, *redirect_index, end_of_name - *redirect_index);
+	file_name = ft_substr(str, g_program.redirect_index, end_of_name - g_program.redirect_index);
 	return (file_name);
 }
 
 
-void do_redirect(t_program *program, char *str, int *redirect_index)
+void do_redirect(t_program *program, char *str)
 {
     debugFunctionName("DO_REDIR");
-    // int redirect_index;
 	char	*file_name;
-	// redirect_index = check_for_redirect(program, str);
-	printf("Redirect index: %d\n", *redirect_index);
-    if (*redirect_index >= 0)
+
+    if (g_program.redirect_index >= 0)
     {
-		file_name = get_file_name(str, redirect_index);
+		file_name = get_file_name(str);
 		program->redirect_file = ft_strdup(file_name);
 		free(file_name);
 
         if (program->is_redirect == 1)
-        {
-            // program->redirect_file = ft_strdup(&str[*redirect_index + 1]);
-			printf("redirect file: q%sq\n", program->redirect_file);
             std_output(program);
-        }
 		else if (program->is_redirect == 2)
-		{
-			// program->redirect_file = ft_strdup(&str[*redirect_index + 1]);
             output_append(program);
-		}
         else if (program->is_redirect == 3)
-        {
-            // program->redirect_file = ft_strdup(&str[*redirect_index + 1]);
             std_input(program);
-        }
 		else if (program->is_redirect == 4)
-		{
-			// program->redirect_file = ft_strdup(&str[*redirect_index + 1]);
             input_heredoc(program->redirect_file);
-		}
     }
     else
-    {
+	{
         error_message("Not a redirect", 1);
-    }
+	}
 }

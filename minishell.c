@@ -19,7 +19,6 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	char input[MAXCOM];
-    int     redirect_index;
 
     g_program.envar = split_env_var(envp);
     g_program.envp = envp;
@@ -29,11 +28,11 @@ int	main(int ac, char **av, char **envp)
     {      
         if (take_input(input) == 0)
         {
-            redirect_index = 0;
-            check_for_redirect(&g_program, input, &redirect_index);// == 1 || check_for_redirect(&g_program, input, 0) == 2)
+            g_program.redirect_index = 0;
+            check_for_redirect(&g_program, input);// == 1 || check_for_redirect(&g_program, input, 0) == 2)
             if (g_program.is_redirect > 0)
             {
-                do_redirect(&g_program, input, &redirect_index);
+                do_redirect(&g_program, input);
             }
 			//takes input from user and splits it into tokens found in process_input.c
             // Also removes quotes
