@@ -20,37 +20,53 @@ void	printpwd(void)
 
 	getcwd(pwd, sizeof(pwd));
 	printf("\nDir: %s", pwd);
+    g_program.exit_status = 0;
 }
 
 /*
 Write to screen the text folloing the command `echo`. 
 Checks for the -n flag. Must expand this description.
 */
+
+static	bool	check_n_flag(char *str)
+{
+	if (!*str)
+		return (false);
+	if (*str == '-' && *(str + 1))
+	{
+		str++;
+		while (*str == 'n')
+			str++;
+	}
+	if (*str)
+		return (false);
+	return (true);
+}
+
 void echo_cmd(char **token)
 {
     debugFunctionName("ECHO_CMD");
     int i = 1;
-    int no_newline = 0;
+    bool    flag;
+    flag = false;
 
     // Check if -n option was passed
-    if (token[i] && ft_strcmp(token[i], "-n") == 0)
+    while (token[i] && check_n_flag(token[i]))
     {
-        no_newline++;
+        flag = true;
         i++;
     }
-
     // Print the arguments
     while (token[i])
     {
         printf("%s ", token[i]);
+        if (token[i])
         i++;
     }
-
     // Print a new line only if -n option was not passed and there are arguments
-    if (!no_newline && (i > 1))
-    {
+    if (!flag && (i > 1))
         printf("\n");
-    }
+        g_program.exit_status = 0;
 }
 
 int	export_cmd(char **token)
@@ -64,7 +80,7 @@ int	export_cmd(char **token)
     {
         // No arguments provided, print the environment variables
         print_env();
-        return 0;
+        return (0);
     }
 	split_env = ft_split(token[1], '=');
 	if (!split_env[1])

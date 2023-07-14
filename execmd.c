@@ -16,7 +16,8 @@ t_program g_program;
 
 char	*get_location(char *cmd)
 {
-	char	**path_tokens;
+	debugFunctionName("GET_LOCATION");
+    char	**path_tokens;
 	char	*path;
 	char	*location;
 	int		i;
@@ -39,8 +40,9 @@ char	*get_location(char *cmd)
 		}
 		free(location);
 		i++;
-	}
+    }
 	ft_free_array(path_tokens);
+    free(location);
 	return (NULL);
 }
 
@@ -49,25 +51,50 @@ void execmd(t_program *program)
     debugFunctionName("EXECMD");
     pid_t pid;
     char *cmd;
-    char *actual_cmd;
+    char    *actual_cmd;
 
-        pid = fork();
-        if (pid < 0) {
-            perror("Error: Fork failed");
-        } else if (pid == 0) {
-            /* execute the actual command with execve */
-            cmd = program->token[0];
-            actual_cmd = get_location(cmd);
-            if (actual_cmd == NULL) {
-                printf("%s: command not found\n", cmd);
-                exit(1);
+    pid = fork();
+    if (pid < 0)
+    {
+        perror("Error: fork failed\n");
+    }
+    else if (pid == 0)
+    {
+        cmd = program->token[0];
+        actual_cmd = get_location(cmd);
+        if (actual_cmd == NULL)
+            {
+                error_and_exit("Command not found", 127);
             }
-            if (execve(actual_cmd, program->token, NULL) == -1) {
-                perror("Error:");
-                exit(1);
-            }
-        } else {
-            wait(NULL);
-            return;
-        }
+        execve(actual_cmd, program->token, program->envp);
+    }
+    else
+    {
+        wait(NULL);
+        return;
+    }
 }
+
+// void	pipex(void)
+// {
+// 	int		fd[2];
+// 	pid_t 	pid;
+
+// 	pipe(fd);
+// 	pid = fork();
+// 	if (pid < 0)
+// 		printf("Error: did not fork\n");
+// 	if (pid)
+// 	{
+// 		close(fd[1]);
+// 		dup2(fd[1], 0);
+// 		close(fd[0]);
+// 	}
+// 	else
+// 	{
+// 		close(fd[1]);
+// 		dup2(fd[0], 1);
+// 		close(fd[0]);
+//         execmd(g_program->token);
+// 	}
+// }

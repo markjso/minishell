@@ -20,6 +20,7 @@ SRCS=minishell.c \
 	signal.c \
 	cd_command.c \
 	environ.c \
+	environ_utils.c \
 	initialise.c \
 	debug.c \
 	process_input.c \
@@ -31,8 +32,10 @@ SRCS=minishell.c \
 	process_input_utils.c \
 	remove_quotes.c \
 	string_utils_1.c \
-	string_utils_2.c
-
+	string_utils_2.c \
+	error.c \
+	redirection.c
+	
 dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
 LINK_RL = /usr/local/opt/readline/lib

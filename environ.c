@@ -97,7 +97,8 @@ void add_env_var(t_envar *node)
             // Update the value of the existing environment variable
             free(tmp->value);
             tmp->value = strdup(node->value);
-            return;
+            rebuild_envp();
+			return;
         }
         tmp = tmp->next;
     }
@@ -115,6 +116,7 @@ void add_env_var(t_envar *node)
         }
         tmp->next = node;
     }
+	rebuild_envp();
 }
 
 /* search for an environment variable in the 
