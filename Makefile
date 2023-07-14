@@ -29,7 +29,9 @@ SRCS=minishell.c \
 	variable.c \
 	variable_expand_utils.c \
 	process_input_utils.c \
-	remove_quotes.c
+	remove_quotes.c \
+	string_utils_1.c \
+	string_utils_2.c
 
 dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
