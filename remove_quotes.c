@@ -79,7 +79,7 @@ void    find_second_quote(t_token_list *curr, int *start, int *first)
     }
     if (curr->data[second] == '\0') // At end and therefore no matching quote was found. 
     {
-        (*first)++;
+        (*first)++; // One after the current quote. 
         return ; // Can remove this return if norm error. 
     }
 }

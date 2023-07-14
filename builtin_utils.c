@@ -47,17 +47,17 @@ void	do_builtins(char **builtin_id, t_program *program)
 {
 	debugFunctionName("DO_BUILTIN");
     if (ft_strcmp(builtin_id[0], "echo") == 0)
-	echo_cmd(program->token);
+    	echo_cmd(program->token);
     if (ft_strcmp(builtin_id[0], "cd") == 0)
-	cd_command(program->token);
+	    cd_command(program->token);
     if (ft_strcmp(builtin_id[0], "pwd") == 0)
-    printpwd();
+        printpwd();
     if (ft_strcmp(builtin_id[0], "export") == 0)
-	export_cmd(program->token);
+	    export_cmd(program->token);
     if (ft_strcmp(builtin_id[0], "unset") == 0)
-	remove_env_var(program->token[1]);
+	    remove_env_var(program->token[1]);
     if (ft_strcmp(builtin_id[0], "env") == 0)
-    print_env();
+        print_env();
     if (ft_strcmp(builtin_id[0], "exit") == 0)
-	exit(0);
+	    exit(0);
 }
