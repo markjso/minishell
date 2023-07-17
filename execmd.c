@@ -35,14 +35,14 @@ char	*get_location(char *cmd)
         //check if the command exists and if it does return it
 		if (access(location, F_OK) == 0)
 		{
-			ft_free_array(path_tokens);
+			// ft_free_array(path_tokens);
 			return (location);
 		}
-		free(location);
+		// free(location);
 		i++;
     }
-	ft_free_array(path_tokens);
-    free(location);
+	// ft_free_array(path_tokens);
+    // free(location);
 	return (NULL);
 }
 
