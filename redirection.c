@@ -46,7 +46,7 @@ int std_output(t_program *program)
 	char *file;
 	pid_t pid = fork();
 
-	file = g_program.redirect_file;
+	file = g_program.redirect_out;
 	// if (program->token[1][0] == '\0') // Check if only ">" is present
 	// {
 	// 	printf("Invalid command\n");
@@ -60,6 +60,7 @@ int std_output(t_program *program)
 	
 	else if (pid == 0)
 	{
+		printf("file: %s\n", file);
 		fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (fd < 0)
 		{
@@ -88,7 +89,7 @@ int std_input(t_program *program)
 	char *file;
 	pid_t pid = fork();
 
-	file = g_program.redirect_file;
+	file = g_program.redirect_in;
 
 	if (pid < 0) {
         perror("Fork failed");
@@ -121,7 +122,7 @@ int output_append(t_program *program)
 	char *file;
 	pid_t pid = fork();
 
-	file = g_program.redirect_file;
+	file = g_program.redirect_out;
 
 	if (pid < 0) {
         perror("Fork failed");
@@ -211,6 +212,14 @@ int input_heredoc(char *delimiter)
     return (0);
 }
 
+
+
+
+
+
+
+
+
 /*
 If a matching close quote is found: 
 	Index will be moved to 1 char after the close quote. 
@@ -239,40 +248,6 @@ void	locate_second_quote(char *str)
 	}
 }
 
-int check_for_redirect(t_program *program, char *str)
-{
-    debugFunctionName("CHECK_REDIR");
-    while (str[g_program.redirect_index] != '\0')
-    {
-		if (ft_is_quote(str[g_program.redirect_index] == 1))
-		{
-			locate_second_quote(str);
-			continue ;
-		}
-        if (str[g_program.redirect_index] == '>' && str[g_program.redirect_index + 1] == '>')
-		{
-            program->is_redirect = 2;
-			return (2);
-		}
-        else if (str[g_program.redirect_index] == '>')
-		{
-            program->is_redirect = 1;
-			return (1);
-		}
-        else if (str[g_program.redirect_index] == '<' && str[g_program.redirect_index + 1] == '<')
-		{
-            program->is_redirect = 4;
-			return (4);
-		}
-        else if (str[g_program.redirect_index] == '<')
-		{
-            program->is_redirect = 3;
-			return (3);
-		}
-        (g_program.redirect_index)++;
-    }
-    return (0); // No redirect symbol found
-}
 
 char	*get_file_name(char *str)
 {
@@ -283,35 +258,65 @@ char	*get_file_name(char *str)
 	while (ft_is_white_space(str[g_program.redirect_index]))
 		g_program.redirect_index++;
 	end_of_name = g_program.redirect_index;
-	while (ft_not_whitespace_not_quote(str[end_of_name]) == 1)
+	while (ft_is_not_white_space(str[end_of_name]) == 1)
 		end_of_name++;
 	file_name = ft_substr(str, g_program.redirect_index, end_of_name - g_program.redirect_index);
 	return (file_name);
 }
 
 
-void do_redirect(t_program *program, char *str)
+void	do_redirect(t_program *program, char *str, int	num)
 {
     debugFunctionName("DO_REDIR");
 	char	*file_name;
 
-    if (g_program.redirect_index >= 0)
-    {
-		file_name = get_file_name(str);
-		program->redirect_file = ft_strdup(file_name);
-		free(file_name);
-
-        if (program->is_redirect == 1)
-            std_output(program);
-		else if (program->is_redirect == 2)
-            output_append(program);
-        else if (program->is_redirect == 3)
-            std_input(program);
-		else if (program->is_redirect == 4)
-            input_heredoc(program->redirect_file);
-    }
-    else
+	file_name = get_file_name(str);
+	if (num == 1)
 	{
-        error_message("Not a redirect", 1);
+		program->redirect_out = file_name;
+		free(file_name);
+		printf("program->redirect_out: %s\n", program->redirect_out);
+		std_output(program);
 	}
+	else if (num == 2)
+	{
+		program->redirect_out = file_name;
+		free(file_name);
+		output_append(program);
+	}
+	else if (num == 3)
+	{
+		program->redirect_in = file_name;
+		free(file_name);
+		std_input(program);
+	}
+	else if (num == 4)
+	{
+		program->redirect_in = ft_strdup(file_name);
+		free(file_name);
+		input_heredoc(program->redirect_in);
+	}
+}
+
+
+void check_for_redirect(char *str)
+{
+    debugFunctionName("CHECK_REDIR");
+    while (str[g_program.redirect_index] != '\0')
+    {
+		if (ft_is_quote(str[g_program.redirect_index] == 1))
+		{
+			locate_second_quote(str);
+			continue ;
+		}
+        if (str[g_program.redirect_index] == '>' && str[g_program.redirect_index + 1] == '>')
+			do_redirect(&g_program, str, 2);
+        else if (str[g_program.redirect_index] == '>')
+			do_redirect(&g_program, str, 1);
+        else if (str[g_program.redirect_index] == '<' && str[g_program.redirect_index + 1] == '<')
+			do_redirect(&g_program, str, 4);
+        else if (str[g_program.redirect_index] == '<')
+			do_redirect(&g_program, str, 3);
+        (g_program.redirect_index)++;
+    }
 }

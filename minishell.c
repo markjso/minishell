@@ -29,11 +29,7 @@ int	main(int ac, char **av, char **envp)
         if (take_input(input) == 0)
         {
             g_program.redirect_index = 0;
-            check_for_redirect(&g_program, input);// == 1 || check_for_redirect(&g_program, input, 0) == 2)
-            if (g_program.is_redirect > 0)
-            {
-                do_redirect(&g_program, input);
-            }
+            check_for_redirect(input);
 			//takes input from user and splits it into tokens found in process_input.c
             // Also removes quotes
 			process_input(input, &g_program);
