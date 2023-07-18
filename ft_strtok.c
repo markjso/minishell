@@ -75,6 +75,12 @@ int		ft_strok_delim_start(char **str, char **delim)
 // 	return (return_string);
 // }
 
+/*Using strtok_r ensures that each call to the function gets its 
+own separate context for tokenization, avoiding potential issues 
+related to shared state that could occur with strtok. By using 
+strtok_r, the function can safely handle multiple calls 
+in different contexts without unintended side effects*/
+
 char *ft_strtok_r(char **str, char *delim)
 {
     char *start = *str;
@@ -104,6 +110,5 @@ char *ft_strtok_r(char **str, char *delim)
         // Move str to the next character after the delimiter
         *str = start + 1;
     }
-
     return return_string;
 }

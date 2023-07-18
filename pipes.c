@@ -14,26 +14,33 @@
 
 extern	t_program	g_program;
 
+/*tokenises the input string "str" based on the delimiter "|"
+trims each command of any whitespace and creates the pipe for 
+communication between commands if the string contains more than
+one command*/
 void	handle_pipe(char *str)
 {
 	debugFunctionName("HANDLE_PIPE");
-    char	*token;
-	char	*end;
-    int		is_first_command;
-    int		pipefd[2];
+    char	*token; //store tokens extracted from str
+	char	*end; //trim whitespaces
+    int		is_first_command; //flag to indicate if the current command is the first one
+    int		pipefd[2]; //pipe file descriptors
 
 	is_first_command = 1;
+	//while loop to tokenise the input str using the delimiter "|". Allows for 
+	//multiple commands separated by pipes
     while ((token = ft_strtok_r(&str, "|"))) 
 	{
-        // Trim leading and trailing whitespace from the token.
+        //Trim leading whitespace from the token.
         while (*token == ' ' || *token == '\t')
             token++;
-        end = token + ft_strlen(token) - 1;
-        while (end > token && (*end == ' ' || *end == '\t'))
+        end = token + ft_strlen(token) - 1;//sets the end ptr to the last character of the token
+        //trim trailing whitespace from the token
+		while (end > token && (*end == ' ' || *end == '\t'))
             end--;
+		//null terminate the token	
         *(end + 1) = '\0';
-
-        // Create a pipe if it's not the first command
+        //Create a pipe if it's not the first command
         if (!is_first_command)
 		{
             if (pipe(pipefd) == -1)
@@ -45,6 +52,7 @@ void	handle_pipe(char *str)
 	}
 }
 
+//executes the indiviudal commands separated by "|"
 void	do_pipe(t_program *program, char *str)
 {
     debugFunctionName("DO_PIPE");
@@ -62,7 +70,7 @@ void	do_pipe(t_program *program, char *str)
 	}
 	else if (pid == 0)
 	{
-            // Child process
+        //Child process
 		if (!is_first_command)
 		{
                 // Redirect stdin to read from the previous pipe
@@ -95,5 +103,4 @@ void	do_pipe(t_program *program, char *str)
 			close(pipefd[1]);
 		}
 	}
-	is_first_command = 0;
 }

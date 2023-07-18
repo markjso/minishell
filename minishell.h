@@ -78,7 +78,7 @@ void	sig_initialiser(void);
 int		ft_stdout(char *command, char *out_file);
 int		cd_command(char **token);
 int		check_for_redirect(t_program *program, char *str);
-void do_redirect(t_program *program, char *str);
+void	do_redirect(t_program *program, char *str);
 int		ft_strcmp(char *s1, char *s2);
 t_envar	*split_env_var(char **envp);
 t_envar	*find_env_var(char *name);

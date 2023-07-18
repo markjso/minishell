@@ -74,27 +74,3 @@ void execmd(t_program *program)
         return;
     }
 }
-
-// void	pipex(void)
-// {
-// 	int		fd[2];
-// 	pid_t 	pid;
-
-// 	pipe(fd);
-// 	pid = fork();
-// 	if (pid < 0)
-// 		printf("Error: did not fork\n");
-// 	if (pid)
-// 	{
-// 		close(fd[1]);
-// 		dup2(fd[1], 0);
-// 		close(fd[0]);
-// 	}
-// 	else
-// 	{
-// 		close(fd[1]);
-// 		dup2(fd[0], 1);
-// 		close(fd[0]);
-//         execmd(g_program->token);
-// 	}
-// }
