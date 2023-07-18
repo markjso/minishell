@@ -39,6 +39,7 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
+	printf("Return_token inbetween q's: q%sq\n", return_token);
 	return(return_token);
 }
 

@@ -36,13 +36,26 @@ int	find_token_number(t_token_list **root)
 	return (i);
 }
 
+
+int	ft_is_pipe_or_redirect(char c)
+{
+	if (c == '<' || c == '>' || c == '|')
+		return (1);
+	else
+		return (0);
+}
+
 /*Returns the index number of a string, the return value is the first space or 
 tab to occur. Spaces within matching double or single quotation marks are 
 ignored. The quotation is treated as one word. 
 
 Any word that has no space or no tab and is next to the "outside" of a 
 quotation mark: One token will be created to encompas the outside word 
-and the whole quotation mark.*/
+and the whole quotation mark...
+
+...Unless pipe and redirectino operators are found outisde of quotes. Then 
+the redirection operator or pipe will be its own token regardless if 
+it buts-up against another word or quote. */
 int	find_end(char *str)
 {
 	int			i;
@@ -50,7 +63,26 @@ int	find_end(char *str)
 
 	i = 0;
 	while (str[i] != '\0')
-	{
+	{	
+		if (i == 0 && ft_is_pipe_or_redirect(str[i]) == 1) // if at start of new string and is special
+		{
+			i++;			// Increment over special
+			//>bb
+			// i			<- return this to make token: '>'
+			if (str[i] == str[i - 1]) // If this one is same type as previous we just incremented over
+			{
+				i++;		// Increment 2nd over special
+				//>>bb
+				//  i			<- return this to make token: '>>'
+			}
+			break ;
+		}
+		if (ft_is_pipe_or_redirect(str[i]) == 1) // Not index 0, Current is special, next is not
+		{
+			//aa>>bb
+			//  i		<- return that to make token: aa
+			break ;
+		}
 		if (ft_is_white_space(str[i]) == 1) // IF whitespace, stop. 
 			break ;
 		if (ft_is_quote(str[i]) == 1) // IF quote, ignore white space
@@ -64,3 +96,12 @@ int	find_end(char *str)
 	}
 	return (i);
 }
+
+/*
+012346789
+aaaa>>bbbb \0
+
+37 - 10 = 27 lines
+
+*/
+
