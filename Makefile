@@ -36,6 +36,7 @@ SRCS=minishell.c \
 	string_utils_2.c \
 	error.c \
 	redirection.c \
+	heredoc.c \
 	pipes.c \
 	redirection_utils.c
 	

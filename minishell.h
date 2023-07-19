@@ -67,7 +67,7 @@ void	init_global(void);
 t_envar	*init_env(char *name, char *value);
 
 /*process_input*/
-char	*get_command(char *path);
+// char	*get_command(char *path);
 void	process_input(char *str, t_program *program);
 void	make_tokens(char *str, t_token_list **root);
 int		find_token_number(t_token_list **root);

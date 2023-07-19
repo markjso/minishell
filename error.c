@@ -25,5 +25,6 @@ void	error_message(char *message, int status)
 void	error_and_exit(void)
 {
 	write(2, strerror(errno), ft_strlen(strerror(errno)));
+	write(2, "\n", 1);
 	exit(EXIT_FAILURE);
 }

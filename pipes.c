@@ -14,6 +14,22 @@
 
 extern	t_program	g_program;
 
+void	close_pipe(char *str)
+{
+	int	is_first_command;
+	int	pipefd[2];
+
+	is_first_command = 1;
+	{
+		if (!is_first_command)
+			close(pipefd[0]);
+		wait(NULL);
+		return ;
+		if (str != NULL)
+			close(pipefd[1]);
+	}
+}
+
 /*tokenises the input string "str" based on the delimiter "|"
 trims each command of any whitespace and creates the pipe for 
 communication between commands if the string contains more than
@@ -82,15 +98,5 @@ void	do_pipe(t_program *program, char *str)
 		exit(EXIT_SUCCESS);
 	}
 	else
-	{
-		// Parent process
-		if (!is_first_command)
-		   	//Close the unused read end of the pipe
-			close(pipefd[0]);
-		// Wait for the child process to complet
-		waitpid(pid, NULL, 0);
-		// If not the last command, close the write end of the pipe
-		if (str != NULL)
-			close(pipefd[1]);
-	}
+		close_pipe(str);
 }
