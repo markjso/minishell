@@ -14,22 +14,6 @@
 
 t_program g_program;
 
-/*allocates memory for the struct and assigns
-name and value to the name and value fields.
-Returns a pointer to the new struct.*/
-t_envar	*init_env(char *name, char *value)
-{
-	t_envar	*new;
-
-	new = malloc(sizeof(t_envar));
-	if (!new)
-		return (NULL);
-	new->name = name;
-	new->value = value;
-	new->next = NULL;
-	return (new);
-}
-
 /*iterates through the envp array splitting each string
 by '=' using ft_split. Then calls init_env to create a 
 new struct and append it to the linked list. Start and end
@@ -61,24 +45,6 @@ t_envar	*split_env_var(char **envp)
 		i++;
 	}
 	return (start);
-}
-
-/*prints all the environment variables in the linked list
-Initialisses tmp to the head of the list and iterates 
-through printing the name and value fields. I then updates
-tmp to point to the next sturct in the list */
-
-void print_env(void)
-{
- debugFunctionName("PRINT_ENV");   
-	t_envar *tmp;
-
-	tmp = g_program.envar;
-    while (tmp)
-    {
-        printf("%s=%s\n", tmp->name, tmp->value);
-        tmp = tmp->next;
-    }
 }
 
 /* adds or updates an environment variable to the

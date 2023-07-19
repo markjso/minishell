@@ -95,3 +95,19 @@ void init_global(void)
 	init_env_vars();
     }
 }
+
+/*allocates memory for the struct and assigns
+name and value to the name and value fields.
+Returns a pointer to the new struct.*/
+t_envar	*init_env(char *name, char *value)
+{
+	t_envar	*new;
+
+	new = malloc(sizeof(t_envar));
+	if (!new)
+		return (NULL);
+	new->name = name;
+	new->value = value;
+	new->next = NULL;
+	return (new);
+}

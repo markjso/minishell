@@ -27,9 +27,10 @@ void	handle_pipe(char *str)
     int		pipefd[2]; //pipe file descriptors
 
 	is_first_command = 1;
+	token = ft_strtok_r(&str, "|");
 	//while loop to tokenise the input str using the delimiter "|". Allows for 
 	//multiple commands separated by pipes
-    while ((token = ft_strtok_r(&str, "|"))) 
+    while (token) 
 	{
         //Trim leading whitespace from the token.
         while (*token == ' ' || *token == '\t')
@@ -44,11 +45,10 @@ void	handle_pipe(char *str)
         if (!is_first_command)
 		{
             if (pipe(pipefd) == -1)
-			{
-                perror("pipe");
-                exit(EXIT_FAILURE);
-            }
+                error_and_exit();
         }
+		is_first_command = 0;
+		token = ft_strtok_r(&str, "|");
 	}
 }
 
@@ -63,12 +63,7 @@ void	do_pipe(t_program *program, char *str)
 	is_first_command = 1;
 	handle_pipe(str);
 	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
+	if (pid == 0)
 	{
         //Child process
 		if (!is_first_command)
@@ -76,8 +71,7 @@ void	do_pipe(t_program *program, char *str)
                 // Redirect stdin to read from the previous pipe
 				if (dup2(pipefd[0], STDIN_FILENO) == -1)
 				{
-                    perror("dup2");
-                    exit(EXIT_FAILURE);
+                    error_and_exit();
                 }
                 // Close the unused write end of the pipe
                 close(pipefd[1]);
@@ -91,16 +85,12 @@ void	do_pipe(t_program *program, char *str)
 	{
 		// Parent process
 		if (!is_first_command)
-		{
 		   	//Close the unused read end of the pipe
 			close(pipefd[0]);
-		}
 		// Wait for the child process to complet
 		waitpid(pid, NULL, 0);
 		// If not the last command, close the write end of the pipe
 		if (str != NULL)
-		{
 			close(pipefd[1]);
-		}
 	}
 }

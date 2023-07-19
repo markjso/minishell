@@ -56,3 +56,21 @@ void	rebuild_envp(void)
 	new_env[i] = NULL;
 	g_program.envp = new_env;
 }
+
+/*prints all the environment variables in the linked list
+Initialisses tmp to the head of the list and iterates 
+through printing the name and value fields. I then updates
+tmp to point to the next sturct in the list */
+
+void print_env(void)
+{
+ debugFunctionName("PRINT_ENV");   
+	t_envar *tmp;
+
+	tmp = g_program.envar;
+    while (tmp)
+    {
+        printf("%s=%s\n", tmp->name, tmp->value);
+        tmp = tmp->next;
+    }
+}

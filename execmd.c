@@ -64,7 +64,7 @@ void execmd(t_program *program)
         actual_cmd = get_location(cmd);
         if (actual_cmd == NULL)
             {
-                error_and_exit("Command not found", 127);
+                error_and_exit();
             }
         execve(actual_cmd, program->token, program->envp);
     }

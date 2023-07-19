@@ -22,9 +22,8 @@ void	error_message(char *message, int status)
 	return ;
 }
 
-void	error_and_exit(char *message, int status)
+void	error_and_exit(void)
 {
-	ft_putstr_fd("Error: ", 2);
-	ft_putendl_fd(message, 2);
-	exit(status);
+	write(2, strerror(errno), ft_strlen(strerror(errno)));
+	exit(EXIT_FAILURE);
 }
