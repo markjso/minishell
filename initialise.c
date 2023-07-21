@@ -41,7 +41,6 @@ int	take_input(char *input)
 	if (!user_input) // Input is username and '$'.  IF username doesn't exist or Ctrl-d, exit program in error. 
 	{
 		printf("%s exit\n", input);
-		// free(input);
 		exit(1);
 	}
 	if (ft_strlen(user_input) != 0) // If user inputs text, even nonsense, this is called. 
@@ -77,6 +76,12 @@ void init_env_vars(void)
     
     add_env_var(pwd);
     add_env_var(oldpwd);
+	free(pwd->name);
+    free(pwd->value);
+    free(pwd);
+    free(oldpwd->name);
+    free(oldpwd->value);
+    free(oldpwd);
 }
 
 /* sets up the g_program global structure

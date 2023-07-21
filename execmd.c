@@ -41,8 +41,8 @@ char	*get_location(char *cmd)
 		// free(location);
 		i++;
     }
-	// ft_free_array(path_tokens);
-    // free(location);
+	ft_free_array(path_tokens);
+    free(location);
 	return (NULL);
 }
 
@@ -52,6 +52,7 @@ void execmd(t_program *program)
     pid_t pid;
     char *cmd;
     char    *actual_cmd;
+    int status;
 
     pid = fork();
     if (pid < 0)
@@ -64,13 +65,17 @@ void execmd(t_program *program)
         actual_cmd = get_location(cmd);
         if (actual_cmd == NULL)
             {
-                error_and_exit();
+                error_and_exit(127);
             }
         execve(actual_cmd, program->token, program->envp);
     }
     else
     {
-        wait(NULL);
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status))
+        {
+            g_program.exit_status = WEXITSTATUS(status);
+        }
         return;
     }
 }

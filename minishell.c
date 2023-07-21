@@ -14,6 +14,18 @@
 
 extern	t_program	g_program;
 
+// static void	free_main_items(char *input)
+// {
+	// if (g_super.cmds)
+	// 	free_cmds(&g_super.cmds);
+	// if (g_program.token)
+	// 	ft_free_array(g_program.token);
+	// if (input)
+	// 	free(input);
+	// if (prompt)
+	// 	free(prompt);
+// }
+
 int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
@@ -47,6 +59,7 @@ int	main(int ac, char **av, char **envp)
             {
                 execmd(&g_program);
             }
+            // free_main_items(input);
         }
     }
     exit(g_program.exit_status);

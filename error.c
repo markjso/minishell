@@ -22,9 +22,9 @@ void	error_message(char *message, int status)
 	return ;
 }
 
-void	error_and_exit(void)
+void	error_and_exit(int status)
 {
 	write(2, strerror(errno), ft_strlen(strerror(errno)));
 	write(2, "\n", 1);
-	exit(EXIT_FAILURE);
+	exit(status);
 }

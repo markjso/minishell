@@ -86,6 +86,7 @@ void	copy_into_array(t_program *program, t_token_list **root)
 	int		i;
 
 	token_number = find_token_number(root);
+	ft_free_array(program->token);
 	program->token = (char**)malloc(sizeof(char*) * token_number + 1);
 	i = 0;
 	curr = *root;

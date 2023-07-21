@@ -21,9 +21,9 @@ char	*expand_dollar(char *variable)
 	variable++; // Because first is $ sign. 
 	env_node = find_env_var(variable);
 	if (variable[0] == '?')
-	printf("exit_status is: %d\n", g_program.exit_status);
-		return (ft_itoa(g_program.exit_status));
-	printf("exit_status is now: %d\n", g_program.exit_status);
+	{
+			return (ft_itoa(g_program.exit_status));
+	}
 	if (env_node == NULL)
 	{
 		return ("");

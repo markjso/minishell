@@ -25,7 +25,7 @@ int	std_output(t_program *program)
 	file = g_program.redirect_file;
 	if (pid < 0)
 	{
-		error_and_exit();
+		error_and_exit(131);
 	}
 	else if (pid == 0)
 	{

@@ -47,6 +47,7 @@ typedef struct s_program
 	char			**envp;
 	char			*prompt;
 	int				exit_status;
+	pid_t			pid;
 	char			*redirect_file;
 	int				is_redirect;
 	int				redirect_index;
@@ -144,7 +145,7 @@ void	replace_node_data(t_token_list *curr, char *new_data);
 
 /*errors*/
 void	error_message(char *message, int status);
-void	error_and_exit(void);
+void	error_and_exit(int status);
 
 void	debugFunctionName(char *function_name);
 

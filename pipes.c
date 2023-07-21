@@ -18,16 +18,16 @@ void	close_pipe(char *str)
 {
 	int	is_first_command;
 	int	pipefd[2];
+	int	status;
 
 	is_first_command = 1;
-	{
-		if (!is_first_command)
-			close(pipefd[0]);
-		wait(NULL);
-		return ;
-		if (str != NULL)
-			close(pipefd[1]);
-	}
+	if (!is_first_command)
+		close(pipefd[0]);
+	if (str != NULL)
+		close(pipefd[1]);
+	waitpid(g_program.pid, &g_program.exit_status, 0);
+	if (WIFEXITED(status))
+		g_program.exit_status = WEXITSTATUS(status);
 }
 
 /*tokenises the input string "str" based on the delimiter "|"
@@ -61,7 +61,7 @@ void	handle_pipe(char *str)
         if (!is_first_command)
 		{
             if (pipe(pipefd) == -1)
-                error_and_exit();
+                error_and_exit(1);
         }
 		is_first_command = 0;
 		token = ft_strtok_r(&str, "|");
@@ -87,7 +87,7 @@ void	do_pipe(t_program *program, char *str)
                 // Redirect stdin to read from the previous pipe
 				if (dup2(pipefd[0], STDIN_FILENO) == -1)
 				{
-                    error_and_exit();
+                    error_and_exit(1);
                 }
                 // Close the unused write end of the pipe
                 close(pipefd[1]);

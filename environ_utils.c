@@ -33,6 +33,7 @@ int     count_envars(t_envar *envars)
 void	rebuild_envp(void)
 {
 	char		**new_env;
+	char 		*name_part;
 	t_envar		*tmp;
 	int			count;
 	int			i;
@@ -47,9 +48,9 @@ void	rebuild_envp(void)
 		return ;
 	while (i < count)
 	{
-		new_env[i] = ft_strdup(tmp->name);
-		new_env[i] = ft_strjoin(new_env[i], "=");
-		new_env[i] = ft_strjoin(new_env[i], tmp->value);
+		name_part = ft_strjoin(tmp->name, "=");
+        new_env[i] = ft_strjoin(name_part, tmp->value);
+		free(name_part);
 		i++;
 		tmp = tmp->next;
 	}
@@ -73,4 +74,6 @@ void print_env(void)
         printf("%s=%s\n", tmp->name, tmp->value);
         tmp = tmp->next;
     }
+	g_program.exit_status = 0;
+	return ;
 }

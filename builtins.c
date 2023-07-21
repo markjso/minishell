@@ -66,7 +66,6 @@ void echo_cmd(char **token)
     // Print a new line only if -n option was not passed and there are arguments
     if (!flag && (i > 1))
         printf("\n");
-        g_program.exit_status = 0;
 }
 
 int	export_cmd(char **token)
@@ -98,9 +97,7 @@ int	export_cmd(char **token)
 		free(node->value);
 		node->value = value;
 	}
+	// free(name);
+	// free(value);
 	return (0);
 }
-
-/*
-Always returns 0?
-*/
