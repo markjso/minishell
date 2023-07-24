@@ -52,6 +52,10 @@ typedef struct s_program
 	char	*redirect_out;
 	int		is_redirect;
 	int		redirect_index;
+	int		out_file;
+	int		out_backup;
+	int		in_file;
+	int		in_backup;
     // Other fields related to the shell's configuration and data
 } 	t_program;
 
@@ -77,8 +81,8 @@ void	ft_free_array(char **arr);
 void	sig_initialiser(void);
 int		ft_stdout(char *command, char *out_file);
 int		cd_command(char **token);
-void		check_for_redirect(char *str);
-void do_redirect(t_program *program, char *str, int num);
+void		check_for_redirect(t_token_list **root);
+void	do_redirect(t_program *program, t_token_list **root, t_token_list *curr, int num);
 int		ft_strcmp(char *s1, char *s2);
 t_envar	*split_env_var(char **envp);
 t_envar	*find_env_var(char *name);

@@ -121,6 +121,7 @@ void	process_input(char *str, t_program *program)
 	root = NULL;
 	make_tokens(str, &root);
 	expand_variables(&root);
+	check_for_redirect(&root);
 	remove_quotes(&root);
 	copy_into_array(program, &root);
 }
