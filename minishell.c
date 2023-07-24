@@ -19,7 +19,9 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 	char input[MAXCOM];
+	t_token_list	*root;
 
+    root = NULL;
     g_program.envar = split_env_var(envp);
     g_program.envp = envp;
 	init_global();// initilise global variable found in initialise.c
@@ -31,17 +33,9 @@ int	main(int ac, char **av, char **envp)
             g_program.redirect_index = 0;
 			//takes input from user and splits it into tokens found in process_input.c
             // Also removes quotes
-			process_input(input, &g_program);
-			// if it is one of the builtin commands do it. Found in buitlin_utils.c
-            if (is_builtin_cmd(&g_program))
-            {
-                do_builtins(g_program.token, &g_program);
-            }
-            else
-			// else it is one of the standard shell commands so execute that with execmd. Found in execmd.c
-            {
-                execmd(&g_program);
-            }
+			process_input(input, &root);
+	        check_for_redirect(&root);
+
         }
     }
     exit(g_program.exit_status);
