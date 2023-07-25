@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 char	*get_location(char *cmd)
 {

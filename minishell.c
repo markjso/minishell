@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+t_program	g_program;
 
 int	main(int ac, char **av, char **envp)
 {

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+// extern	t_program	g_program;
 
 /*Create a "token" from an input string. 
 A token is defined by any word that has a space or tab either side of it. 

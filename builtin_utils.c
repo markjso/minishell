@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 /* checks if the input in position token[0]
 is one of the builtin shell functions.

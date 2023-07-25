@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 /*allocates memory for the struct and assigns
 name and value to the name and value fields.

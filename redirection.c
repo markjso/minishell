@@ -12,15 +12,15 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
-void	remove_redirect_tokens(t_token_list **root, t_token_list *delete_me)
+void	remove_redirect_tokens(t_token_list **root, t_token_list *operator_node)
 {
-	t_token_list	*next_token;
+	t_token_list	*file_name_node;
 
-	next_token = delete_me->next;
-	ll_remove_node(root, delete_me);
-	ll_remove_node(root, next_token);
+	file_name_node = operator_node->next;
+	ll_remove_node(root, operator_node);
+	ll_remove_node(root, file_name_node);
 }
 
 
@@ -35,26 +35,22 @@ void	remove_redirect()
 		close(g_program.out_file);
 		dup2(g_program.out_backup, STDOUT_FILENO);
 		close(g_program.out_backup);
+		free(g_program.redirect_out);
 	}
 	if (g_program.in_file > 0)
 	{
 		close(g_program.in_file);
 		dup2(g_program.in_backup, STDIN_FILENO);
 		close(g_program.in_backup);
-	}
-	if (g_program.redirect_out > 0)
-		free(g_program.redirect_out);
-	if (g_program.redirect_in > 0)
 		free(g_program.redirect_in);
-	
+	}
 }
 
-int std_output()
+void std_output()
 {
 	debugFunctionName("STD_OUT");
 	char			*file;
 	int				file_temp;
-	// t_token_list	*temp_token;
 
 	file = ft_strdup(g_program.redirect_out); // Malloc freed
 	printf("file: %s\n", file);
@@ -66,52 +62,53 @@ int std_output()
 	g_program.out_backup = dup(STDOUT_FILENO);
 	printf("backup number: %d\n", g_program.out_backup);
 	g_program.out_file = dup2(file_temp, STDOUT_FILENO);
+	if (g_program.out_file < 0)
+		perror("Error: cannot open output file\n");
 	close(file_temp);
 	printf("outfile number: %d\n", g_program.out_file);
-	return (0);
 }
 
-int std_input(t_token_list **root, t_token_list *curr)
+void	std_input()
 {
 	debugFunctionName("STD_IN");
 	int				file_temp;
 	char			*file;
-	t_token_list	*temp_token;
 
 	file = ft_strdup(g_program.redirect_in); // MALLOC freed
+	printf("file: %s\n", file);
 	file_temp = open(file, O_RDONLY, 0444);
 	free(file); //FREE
 	if (file_temp == -1)
 		perror("Error in std_input: \n");
+	printf("tempfile number: %d\n", file_temp);
 	g_program.in_backup = dup(STDIN_FILENO);
+	printf("backup number: %d\n", g_program.out_backup);
 	g_program.in_file = dup2(file_temp, STDIN_FILENO);
+	if (g_program.out_file < 0)
+		perror("Error: cannot open output file\n");
 	close(file_temp);
-	temp_token = curr;
-	curr = curr->next->next; // Skip arrow < and name of file
-	ll_remove_node(root, temp_token->next); // Delete name of file
-	ll_remove_node(root, temp_token); // Delete arrow <
-	return (0);
+	printf("infile number: %d\n", g_program.in_file);
 }
 
-void output_append(t_token_list **root, t_token_list *curr)
+void	output_append()
 {
 	debugFunctionName("STD_APPEND");
 	char			*file;
 	int				file_temp;
-	t_token_list	*temp_token;
 
 	file = ft_strdup(g_program.redirect_out); // Malloc
 	file_temp =open(file, O_CREAT | O_WRONLY | O_APPEND , 0644);
 	free(file);
 	if (file_temp == -1)
 		perror("Error in std_append: \n");
+	printf("tempfile number: %d\n", file_temp);
 	g_program.out_backup = dup(STDOUT_FILENO);
+	printf("backup number: %d\n", g_program.out_backup);
 	g_program.out_file = dup2(file_temp, STDOUT_FILENO);
+	if (g_program.out_file < 0)
+		perror("Error: cannot open output file\n");
 	close(file_temp);
-	temp_token = curr;
-	curr = curr->next->next; // Skip arrow < and name of file
-	ll_remove_node(root, temp_token->next); // Delete name of file
-	ll_remove_node(root, temp_token); // Delete arrow <	return (0);
+	printf("outfile number: %d\n", g_program.out_file);
 }
 
 void get_heredoc(int pipefd[2], char *delimiter)
@@ -176,15 +173,6 @@ int input_heredoc(char *delimiter)
     do_heredoc(pipefd);
     return (0);
 }
-
-
-
-
-
-
-
-
-
 /*
 If a matching close quote is found: 
 	Index will be moved to 1 char after the close quote. 
@@ -233,30 +221,27 @@ char	*get_file_name(char *str)
 }
 
 
-void	do_redirect(t_token_list **root, t_token_list *curr, int num)
+void	do_redirect(t_token_list *curr, int num, int *flag)
 {
     debugFunctionName("DO_REDIR");
 
+	*flag = 1;
 	if (curr->next == NULL)
 		perror("File not found\n");
 	if (num == 1) // >
 	{
 		g_program.redirect_out = ft_strdup(curr->next->data); // Malloc freed
 		std_output();
-	printf("std out is : %s\n", g_program.redirect_out);
-		// free(g_program.redirect_out); // free
 	}
 	else if (num == 2) // >>
 	{
 		g_program.redirect_out = ft_strdup(curr->next->data); // Malloc freed
-		output_append(root, curr);
-		free(g_program.redirect_out); // free
+		output_append();
 	}
 	else if (num == 3)  // <
 	{
 		g_program.redirect_in = ft_strdup(curr->next->data); //Malloc freed
-		std_input(root, curr);
-		free(g_program.redirect_in); // free
+		std_input();
 	}
 	else if (num == 4) // <<
 	{
@@ -267,7 +252,7 @@ void	do_redirect(t_token_list **root, t_token_list *curr, int num)
 
 void	ft_continue(t_token_list **root)
 {
-	printf("std out is : %s\n", g_program.redirect_out);
+	printf("start of ft_continue(root): std out is : %s\n", g_program.redirect_out);
 	remove_quotes(root);
 	copy_into_array(root);			// if it is one of the builtin commands do it. Found in buitlin_utils.c
 	if (is_builtin_cmd())
@@ -276,6 +261,7 @@ void	ft_continue(t_token_list **root)
 	}
 	else // else it is one of the standard shell commands so execute that with execmd. Found in execmd.c
 	{
+		printf("going to else\n");
 		execmd(&g_program);
 	}
 	remove_redirect(); // Reset redirection if changed.
@@ -285,40 +271,36 @@ void check_for_redirect(t_token_list **root)
 {
     debugFunctionName("CHECK_REDIR");
 	t_token_list	*curr;
+	t_token_list	*prev;
 	t_token_list	*temp_token;
-
+	int				flag;
+	
 	curr = *root;
-    while (curr != NULL)
-    {
+	while (curr != NULL)
+	{
+		flag = 0;
 		if (curr == NULL)
 			break ;
-        if (curr->data[0] == '>')
-		{
-			do_redirect(root, curr, 1);
-			remove_redirect();
-			temp_token = curr;
-			curr = curr->next->next;  // >   (next)   filename.txt    (next)    {next cmd or NULL}
-			remove_redirect_tokens(root, temp_token);
-			// temp_token = curr;
-			// if (curr->next)
-			// 	curr = curr->next;
-			// ll_remove_node(root, temp_token);
-			// if (curr->next)
-			// {
-			// 	temp_token = curr;
-			// 	curr = curr->next;
-			// 	ll_remove_node(root, temp_token);
-			// }
-		}
-		else if (curr->data[0] == '>' && curr->data[1] == '>')
-			do_redirect(root, curr, 2);
-        else if (curr->data[0] == '<')
-			do_redirect(root, curr, 3);
+		if (curr->data[0] == '>' && curr->data[1] == '>')
+			do_redirect(curr, 2, &flag);
+		else if (curr->data[0] == '>')
+			do_redirect(curr, 1, &flag);
 		else if (curr->data[0] == '<' && curr->data[1] == '<')
-			do_redirect(root, curr, 4);
-		if (curr == NULL)
-			break ;
-        curr = curr->next;
-    }
+		{
+			ll_remove_node(root, prev);
+			do_redirect(curr, 4, &flag);
+		}
+		else if (curr->data[0] == '<')
+			do_redirect(curr, 3, &flag);
+		if (flag == 1)
+		{
+			temp_token = curr;
+			curr = curr->next->next; // after the name
+			remove_redirect_tokens(root, temp_token); // remove operator and name
+			continue ;
+		}
+		prev = curr;
+		curr = curr->next;
+	}
 	ft_continue(root);
 }

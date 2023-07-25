@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 void	printpwd(void)
 {
@@ -65,8 +65,8 @@ void echo_cmd(char **token)
     }
     // Print a new line only if -n option was not passed and there are arguments
     if (!flag && (i > 1))
-        printf("\n");
-        g_program.exit_status = 0;
+		printf("\n");
+	g_program.exit_status = 0;
 }
 
 int	export_cmd(char **token)

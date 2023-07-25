@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+// extern	t_program	g_program;
 
 /*Input: string to return an integer the number of "tokens" that can be 
 created. A token is seperated by a space or tab, unless the space or tab 

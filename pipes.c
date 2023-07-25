@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+// extern	t_program	g_program;
 
 char	**realloc_back(char **arr, char *delim)
 {

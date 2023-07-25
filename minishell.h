@@ -66,7 +66,7 @@ typedef struct s_envar
 	struct s_envar	*next;
 }	t_envar;
 
-t_program g_program; // Global variable
+extern t_program g_program; // Global variable
 
 int		take_input(char *input);
 void	init_global(void);
