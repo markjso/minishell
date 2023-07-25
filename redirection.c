@@ -42,6 +42,10 @@ void	remove_redirect()
 		dup2(g_program.in_backup, STDIN_FILENO);
 		close(g_program.in_backup);
 	}
+	if (g_program.redirect_out > 0)
+		free(g_program.redirect_out);
+	if (g_program.redirect_in > 0)
+		free(g_program.redirect_in);
 	
 }
 
@@ -239,7 +243,8 @@ void	do_redirect(t_token_list **root, t_token_list *curr, int num)
 	{
 		g_program.redirect_out = ft_strdup(curr->next->data); // Malloc freed
 		std_output();
-		free(g_program.redirect_out); // free
+	printf("std out is : %s\n", g_program.redirect_out);
+		// free(g_program.redirect_out); // free
 	}
 	else if (num == 2) // >>
 	{
@@ -292,7 +297,7 @@ void check_for_redirect(t_token_list **root)
 			do_redirect(root, curr, 1);
 			remove_redirect();
 			temp_token = curr;
-			curr = curr->next->next;
+			curr = curr->next->next;  // >   (next)   filename.txt    (next)    {next cmd or NULL}
 			remove_redirect_tokens(root, temp_token);
 			// temp_token = curr;
 			// if (curr->next)
