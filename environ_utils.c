@@ -65,7 +65,6 @@ tmp to point to the next sturct in the list */
 
 void print_env(void)
 {
- debugFunctionName("PRINT_ENV");   
 	t_envar *tmp;
 
 	tmp = g_program.envar;

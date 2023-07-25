@@ -46,10 +46,12 @@ static char	*get_path(char const *currentPath, char const *cmd)
 
 char	**get_full_path(void)
 {
+	debugFunctionName("GET_FULL_PATH");
 	char			**env_paths;
 	t_envar const	*path;
 
 	path = find_env(g_program.envar, "PATH");
+	printf("full path is: %s\n", path->value);
 	if (path)
 		env_paths = ft_split(path->value, ':');
 	else
@@ -59,7 +61,7 @@ char	**get_full_path(void)
 
 char	*get_path_for_cmd(char **env_paths, char const *cmd)
 {
-	debugFunctionName("GET_PATH");
+	debugFunctionName("GET_CMD_PATH");
 	char	*path;
 	int		i;
 
@@ -69,6 +71,7 @@ char	*get_path_for_cmd(char **env_paths, char const *cmd)
 		path = get_path(env_paths[i], cmd);
 		if (access(path, F_OK) == 0)
 			return (path);
+			printf("path for cmd is: %s\n", path);
 		free(path);
 		i++;
 	}
@@ -91,21 +94,23 @@ void	execmd(t_program *program)
     if (cmds[0] == '/')
 	{
 		if (execve(&cmds[0], program->token, program->envp) == -1)
-			error_and_exit(126);
+			error_and_exit("command cannot be executed", 126);
+
 	}
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, &cmds[0]);
+	printf("exec_path is %s\n", exec_path);
 	if (!paths || !exec_path)
-		    error_and_exit(127);
+		    error_and_exit("command not found", 127);
 	if (execve(exec_path, program->token, program->envp) == -1)
-        error_and_exit(126);
+		error_and_exit("command cannot be executed", 126);
     }
     else
     {
         waitpid(pid, &status, 0);
         if (WIFEXITED(status))
         {
-            g_program.exit_status = WEXITSTATUS(status);
+			g_program.exit_status = WEXITSTATUS(status);
         }
         // (ft_putstr_fd("minishell", 2), error_message("command not found", 127));
         return;

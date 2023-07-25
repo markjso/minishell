@@ -25,14 +25,15 @@ int	std_output(t_program *program)
 	file = g_program.redirect_file;
 	if (pid < 0)
 	{
-		error_and_exit(131);
+		perror("Fork failed");
+		exit(1);
 	}
 	else if (pid == 0)
 	{
 		fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (fd < 0)
 		{
-			perror("Error: \n");
+			perror("Error");
 		}
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
@@ -67,7 +68,7 @@ int	std_input(t_program *program)
 		fd = open(file, O_RDONLY);
 		if (fd < 0)
 		{
-			perror("Error in std_input: \n");
+			perror("Error");
 		}
 		dup2(fd, STDIN_FILENO);
 		close(fd);
@@ -104,7 +105,7 @@ int	output_append(t_program *program)
 	fd = open(file, O_CREAT | O_WRONLY | O_APPEND , 0644);
 	if (fd < 0)
 	{
-		perror("Error: \n");
+		perror("Error");
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);

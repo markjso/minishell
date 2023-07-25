@@ -61,7 +61,7 @@ void	handle_pipe(char *str)
         if (!is_first_command)
 		{
             if (pipe(pipefd) == -1)
-                error_and_exit(1);
+                perror("Error");
         }
 		is_first_command = 0;
 		token = ft_strtok_r(&str, "|");
@@ -87,7 +87,7 @@ void	do_pipe(t_program *program, char *str)
                 // Redirect stdin to read from the previous pipe
 				if (dup2(pipefd[0], STDIN_FILENO) == -1)
 				{
-                    error_and_exit(1);
+                    perror("Error");
                 }
                 // Close the unused write end of the pipe
                 close(pipefd[1]);

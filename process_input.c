@@ -39,6 +39,7 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
+	printf("make_token return_token: %s\n", return_token);
 	return(return_token);
 }
 
@@ -86,7 +87,7 @@ void	copy_into_array(t_program *program, t_token_list **root)
 	int		i;
 
 	token_number = find_token_number(root);
-	ft_free_array(program->token);
+	// ft_free_array(program->token);
 	program->token = (char**)malloc(sizeof(char*) * token_number + 1);
 	i = 0;
 	curr = *root;

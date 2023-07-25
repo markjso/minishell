@@ -144,7 +144,7 @@ void	replace_node_data(t_token_list *curr, char *new_data);
 
 /*errors*/
 void	error_message(char *message, int status);
-void	error_and_exit(int status);
+void	error_and_exit(char *message, int status);
 
 void	debugFunctionName(char *function_name);
 

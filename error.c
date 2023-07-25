@@ -22,9 +22,15 @@ void	error_message(char *message, int status)
 	return ;
 }
 
-void	error_and_exit(int status)
+void	error_and_exit(char *message, int status)
 {
-	write(2, strerror(errno), ft_strlen(strerror(errno)));
+	char	*cmd;
+
+	cmd = g_program.token[0];
+	ft_putstr_fd("minishell: ", 2);
+	ft_putendl_fd(message, 2);
+	ft_putstr_fd(" : ", 2);
+	ft_putstr_fd(cmd, 2);
 	write(2, "\n", 1);
 	exit(status);
 }

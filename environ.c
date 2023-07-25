@@ -53,7 +53,7 @@ builtin function*/
 
 void add_env_var(t_envar *node)
 {
-    t_envar *tmp = g_program.envar;
+	t_envar *tmp = g_program.envar;
 
     // Check if an environment variable with the same name already exists
     while (tmp != NULL)
