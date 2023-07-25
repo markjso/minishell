@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 /*iterates through the envp array splitting each string
 by '=' using ft_split. Then calls init_env to create a 

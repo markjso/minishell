@@ -42,16 +42,22 @@ typedef struct s_token_list
 
 typedef struct s_program
 {
-	struct s_envar	*envar;
-	char			**token;
-	char			**envp;
-	char			*prompt;
-	int				exit_status;
-	pid_t			pid;
-	char			*redirect_file;
-	int				is_redirect;
-	int				redirect_index;
-}	t_program;
+    struct s_envar *envar;
+	char	**token;
+	char	**envp;
+	char	*prompt;
+	int		exit_status;
+	char    *redirect_file;
+	char	*redirect_in;
+	char	*redirect_out;
+	int		is_redirect;
+	int		redirect_index;
+	int		out_file;
+	int		out_backup;
+	int		in_file;
+	int		in_backup;
+    // Other fields related to the shell's configuration and data
+} 	t_program;
 
 typedef struct s_envar
 {
@@ -65,16 +71,8 @@ t_program	g_program;
 /*initialise*/
 int		take_input(char *input);
 void	init_global(void);
-t_envar	*init_env(char *name, char *value);
-
-/*process_input*/
-void	process_input(char *str, t_program *program);
-void	make_tokens(char *str, t_token_list **root);
-int		find_token_number(t_token_list **root);
-int		find_end(char *str);
-void	remove_quotes(t_token_list **root);
-
-/*pipes and signals*/
+char	*get_command(char *path);
+void	process_input(char *str, t_token_list **root);
 void	execmd(t_program *program);
 void	handle_pipe(char *str);
 void	sig_initialiser(void);
@@ -128,17 +126,18 @@ int		ft_is_not_white_space(int c);
 int		ft_is_white_space(int c);
 int		ft_is_quote(int c);
 int		ft_is_not_quote(int c);
-int		ft_not_whitespace_not_quote(int c);
+int		ft_env_word_len(char *str);
+int	ft_is_valid_var_char(char c);
+void	 remove_redirect();
+void	copy_into_array(t_token_list **root);
 
-/*token_linked_list*/
-t_token_list	*make_new_node(char *value);
-void	ll_insert_end(t_token_list **root, t_token_list *new_node);
-void	ll_insert_beginning(t_token_list **root, t_token_list *new_node);
-void	ll_insert_after(t_token_list *this_node, t_token_list *new_node);
-void	ll_insert_before(t_token_list **root, t_token_list *this_node, 
-			t_token_list *new_node);
-void	ll_remove_node(t_token_list **root, t_token_list *this_node);
-void	ll_deallocate(t_token_list **root);
+t_token_list    *make_new_node(char *value);
+void    ll_insert_end(t_token_list **root, t_token_list *new_node);
+void    ll_insert_beginning(t_token_list **root, t_token_list *new_node);
+void    ll_insert_after(t_token_list *this_node, t_token_list *new_node);
+void	ll_insert_before(t_token_list **root, t_token_list *this_node, t_token_list *new_node);
+void    ll_remove_node(t_token_list **root, t_token_list *this_node);
+void    ll_deallocate(t_token_list **root);
 void	ll_print_token(t_token_list **root);
 void	replace_node_data(t_token_list *curr, char *new_data);
 

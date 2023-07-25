@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+// extern	t_program	g_program;
 
 /*Input: string to return an integer the number of "tokens" that can be 
 created. A token is seperated by a space or tab, unless the space or tab 
@@ -43,13 +43,26 @@ int	ft_is_pipe_or_redirect(char c)
 		return (0);
 }
 
+
+int	ft_is_pipe_or_redirect(char c)
+{
+	if (c == '<' || c == '>' || c == '|')
+		return (1);
+	else
+		return (0);
+}
+
 /*Returns the index number of a string, the return value is the first space or 
 tab to occur. Spaces within matching double or single quotation marks are 
 ignored. The quotation is treated as one word. 
 
 Any word that has no space or no tab and is next to the "outside" of a 
 quotation mark: One token will be created to encompas the outside word 
-and the whole quotation mark.*/
+and the whole quotation mark...
+
+...Unless pipe and redirectino operators are found outisde of quotes. Then 
+the redirection operator or pipe will be its own token regardless if 
+it buts-up against another word or quote. */
 int	find_end(char *str)
 {
 	int			i;
@@ -90,3 +103,12 @@ int	find_end(char *str)
 	}
 	return (i);
 }
+
+/*
+012346789
+aaaa>>bbbb \0
+
+37 - 10 = 27 lines
+
+*/
+

@@ -12,27 +12,27 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 /* checks if the input in position token[0]
 is one of the builtin shell functions.
 Returns 1 if it is and 0 if it is not.
 */
 
-int is_builtin_cmd(t_program *program)
+int is_builtin_cmd()
 {
     debugFunctionName("IS_BUILTIN");
     //checks if the token array is empty or the first token is NULL
-    if (!program->token || !program->token[0])
+    if (!g_program.token || !g_program.token[0])
     // if either of these is true it means there is nothing to check
         return (0);
-    if (ft_strcmp(program->token[0], "echo") == 0 
-        || ft_strcmp(program->token[0], "cd") == 0 
-        || ft_strcmp(program->token[0], "pwd") == 0 
-        || ft_strcmp(program->token[0], "export") == 0 
-        || ft_strcmp(program->token[0], "unset") == 0 
-        || ft_strcmp(program->token[0], "env") == 0 
-        || ft_strcmp(program->token[0], "exit") == 0)
+    if (ft_strcmp(g_program.token[0], "echo") == 0 
+        || ft_strcmp(g_program.token[0], "cd") == 0 
+        || ft_strcmp(g_program.token[0], "pwd") == 0 
+        || ft_strcmp(g_program.token[0], "export") == 0 
+        || ft_strcmp(g_program.token[0], "unset") == 0 
+        || ft_strcmp(g_program.token[0], "env") == 0 
+        || ft_strcmp(g_program.token[0], "exit") == 0)
     {
         return (1);
     }

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 void change_dirs(t_envar *pwd, t_envar *oldpwd, char *cwd)
 {

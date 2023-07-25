@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+// extern	t_program	g_program;
 
 void	close_pipe(char *str)
 {

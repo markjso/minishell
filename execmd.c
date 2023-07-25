@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 t_envar	*find_env(t_envar *envars, char *name)
 {

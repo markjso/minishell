@@ -42,7 +42,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	s2 = malloc(sizeof(*s1) * (finish - start + 1));
 	if (!s2)
 		return (NULL);
-		i = 0;
+	i = 0;
 	while (start < finish)
 	{
 		s2[i] = s1[start];

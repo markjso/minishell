@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+// extern	t_program	g_program;
 
 /*Create a "token" from an input string. 
 A token is defined by any word that has a space or tab either side of it. 
@@ -39,7 +39,7 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
-	printf("make_token return_token: %s\n", return_token);
+	printf("Return_token inbetween q's: q%sq\n", return_token);
 	return(return_token);
 }
 
@@ -80,32 +80,31 @@ void	make_tokens(char *str, t_token_list **root)
 copy_int_array
 Moves linked list t_token_list->data* into program->token** array. 
 */
-void	copy_into_array(t_program *program, t_token_list **root)
+void	copy_into_array(t_token_list **root)
 {
 	t_token_list	*curr;
 	int		token_number;
 	int		i;
 
 	token_number = find_token_number(root);
-	// ft_free_array(program->token);
-	program->token = (char**)malloc(sizeof(char*) * token_number + 1);
+	g_program.token = (char**)malloc(sizeof(char*) * token_number + 1);
 	i = 0;
 	curr = *root;
 	while (i < token_number)
 	{
-		program->token[i] = ft_strdup(curr->data);
+		g_program.token[i] = ft_strdup(curr->data);
 		// ll_print_token(root);
 		curr = curr->next;
 		i++;
 	}
-	program->token[i] = 0;
+	g_program.token[i] = 0;
 	ll_deallocate(root);
 
 	printf("Printing tokens in Jo's array\n");
 	int j = 0;
 	while (j < token_number)
 	{
-		printf("token[%d]: %s\n", j, program->token[j]);
+		printf("token[%d]: %s\n", j, g_program.token[j]);
 		j++;
 	}
 }
@@ -114,14 +113,11 @@ void	copy_into_array(t_program *program, t_token_list **root)
 process_input(char *str: raw user input, char **token: is empty pointer to string that will become tokenised string).
 Return value is always 0? Why
 */
-void	process_input(char *str, t_program *program)
+void	process_input(char *str, t_token_list **root)
 {
 	debugFunctionName("PROCESS_INPUT");
-	t_token_list	*root;
 
-	root = NULL;
-	make_tokens(str, &root);
-	expand_variables(&root);
-	remove_quotes(&root);
-	copy_into_array(program, &root);
+	make_tokens(str, root);
+	expand_variables(root);
+
 }

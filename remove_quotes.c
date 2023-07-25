@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-t_program g_program;
+// t_program g_program;
 
 
 // a"b"c"d"e \0
