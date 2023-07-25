@@ -36,16 +36,16 @@ int cd_command(char **tokens)
     {
         if (getcwd(cwd, sizeof(cwd)) == NULL)
         {
-            printf("cd: Failed to get current directory\n");
-            return (1);
+            (ft_putstr_fd("cd", 2),error_message("Not a directory", 20));
+            // return (1);
         }
         else
             change_dirs(pwd, oldpwd, cwd);
     }
     else
     {
-        printf("cd: No such file or directory\n");
-        return (1);
+        (ft_putstr_fd("cd", 2),error_message("No such file or directory", 2));
+        // return (1);
     }
     return (0);
 }

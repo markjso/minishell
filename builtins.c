@@ -19,7 +19,7 @@ void	printpwd(void)
 	char	pwd[256];
 
 	getcwd(pwd, sizeof(pwd));
-	printf("\nDir: %s", pwd);
+	printf("Dir: %s\n", pwd);
     g_program.exit_status = 0;
 }
 
@@ -100,4 +100,14 @@ int	export_cmd(char **token)
 	// free(name);
 	// free(value);
 	return (0);
+}
+
+void	exit_cmd(char **token)
+{
+	if (token[1] && token[2])
+		(ft_putstr_fd("exit", 2), error_message("too many arguments", 255));
+	else if (token[1])
+		exit(0);
+	else
+		exit(0);
 }

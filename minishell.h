@@ -68,7 +68,6 @@ void	init_global(void);
 t_envar	*init_env(char *name, char *value);
 
 /*process_input*/
-// char	*get_command(char *path);
 void	process_input(char *str, t_program *program);
 void	make_tokens(char *str, t_token_list **root);
 int		find_token_number(t_token_list **root);
@@ -88,13 +87,13 @@ int		cd_command(char **token);
 int		export_cmd(char **token);
 void	echo_cmd(char **token);
 void	printpwd(void);
+void	exit_cmd(char **token);
 
 /*utils*/
 int		ft_is_special_char(char *s1);
 char	*ft_strcpy(char *s1, char *s2);
 void	ft_free_array(char **arr);
 int		ft_strcmp(char *s1, char *s2);
-// int		ft_stdout(char *command, char *out_file);
 
 /*redirections*/
 int		check_for_redirect(t_program *program, char *str);

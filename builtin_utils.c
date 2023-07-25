@@ -59,5 +59,5 @@ void	do_builtins(char **builtin_id, t_program *program)
     if (ft_strcmp(builtin_id[0], "env") == 0)
         print_env();
     if (ft_strcmp(builtin_id[0], "exit") == 0)
-	    exit(0);
+	    exit_cmd(program->token);
 }
