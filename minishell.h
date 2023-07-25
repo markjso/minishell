@@ -47,6 +47,7 @@ typedef struct s_program
 	char	**envp;
 	char	*prompt;
 	int		exit_status;
+	pid_t			pid;
 	char    *redirect_file;
 	char	*redirect_in;
 	char	*redirect_out;
@@ -71,6 +72,7 @@ t_program	g_program;
 /*initialise*/
 int		take_input(char *input);
 void	init_global(void);
+t_envar	*init_env(char *name, char *value);
 char	*get_command(char *path);
 void	process_input(char *str, t_token_list **root);
 void	execmd(t_program *program);
@@ -78,9 +80,16 @@ void	handle_pipe(char *str);
 void	sig_initialiser(void);
 char	*ft_strtok_r(char **str, char *delim);
 
+/*process_input*/
+void	process_input(char *str, t_token_list **root);
+void	make_tokens(char *str, t_token_list **root);
+int		find_token_number(t_token_list **root);
+int		find_end(char *str);
+void	remove_quotes(t_token_list **root);
+
 /*builtins*/
 void	do_builtins(char **builtin_id, t_program *program);
-int		is_builtin_cmd(t_program *program);
+int		is_builtin_cmd();
 int		cd_command(char **token);
 int		export_cmd(char **token);
 void	echo_cmd(char **token);
@@ -94,9 +103,9 @@ void	ft_free_array(char **arr);
 int		ft_strcmp(char *s1, char *s2);
 
 /*redirections*/
-int		check_for_redirect(t_program *program, char *str);
-void	do_redirect(t_program *program, char *str);
-void	remove_redirect(char *redirector);
+void	check_for_redirect(t_token_list **root);
+void	do_redirect(t_token_list *curr, int num, int *flag);
+void	remove_redirect();
 int		input_heredoc(char *delimiter);
 char	*get_file_name(char *str);
 void	locate_second_quote(char *str);
@@ -127,9 +136,9 @@ int		ft_is_white_space(int c);
 int		ft_is_quote(int c);
 int		ft_is_not_quote(int c);
 int		ft_env_word_len(char *str);
-int	ft_is_valid_var_char(char c);
-void	 remove_redirect();
+void	remove_redirect();
 void	copy_into_array(t_token_list **root);
+int		ft_not_whitespace_not_quote(int c);
 
 t_token_list    *make_new_node(char *value);
 void    ll_insert_end(t_token_list **root, t_token_list *new_node);

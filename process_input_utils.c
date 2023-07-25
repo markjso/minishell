@@ -35,14 +35,6 @@ int	find_token_number(t_token_list **root)
 	}
 	return (i);
 }
-int	ft_is_pipe_or_redirect(char c)
-{
-	if (c == '<' || c == '>' || c == '|')
-		return (1);
-	else
-		return (0);
-}
-
 
 int	ft_is_pipe_or_redirect(char c)
 {

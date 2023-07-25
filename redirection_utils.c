@@ -14,29 +14,26 @@
 
 t_program	g_program;
 
-void	remove_redirect(char *redirector)
+/*
+If either STDOUT_FILENO or STDIN_FILENO where modified:
+Reset to defualt. 
+*/
+void	remove_redirect()
 {
-	char	**new;
-	int		i;
-	int		j;
-
-	i = 0;
-	while (g_program.token[i])
-		i++;
-	new = malloc(sizeof(*new) * (i - 1));
-	i = 0;
-	j = 0;
-	while (g_program.token[i])
+	if (g_program.out_file > 0)
 	{
-		if (!ft_strcmp(g_program.token[i], redirector))
-			i += 2;
-		if (!g_program.token[i])
-			break ;
-		new[j++] = ft_strdup(g_program.token[i++]);
+		close(g_program.out_file);
+		dup2(g_program.out_backup, STDOUT_FILENO);
+		close(g_program.out_backup);
+		free(g_program.redirect_out);
 	}
-	new[j] = NULL;
-	ft_free_array(g_program.token);
-	g_program.token = new;
+	if (g_program.in_file > 0)
+	{
+		close(g_program.in_file);
+		dup2(g_program.in_backup, STDIN_FILENO);
+		close(g_program.in_backup);
+		free(g_program.redirect_in);
+	}
 }
 
 /*
@@ -69,16 +66,19 @@ void	locate_second_quote(char *str)
 
 char	*get_file_name(char *str)
 {
-	int		end_of_name;
+	int 	end_of_name;
 	char	*file_name;
-	
+
 	g_program.redirect_index++;
 	while (ft_is_white_space(str[g_program.redirect_index]))
 		g_program.redirect_index++;
 	end_of_name = g_program.redirect_index;
-	while (ft_not_whitespace_not_quote(str[end_of_name]) == 1)
-		end_of_name++;
+	while (ft_is_not_white_space(str[end_of_name]) == 1)
+		end_of_name++;	
 	file_name = ft_substr(str, g_program.redirect_index, end_of_name - g_program.redirect_index);
-	return (file_name);
+	if (file_name)
+		return (file_name); // MALLOC
+	else
+		return (NULL);
 }
 
