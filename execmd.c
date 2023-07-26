@@ -95,7 +95,6 @@ void	execmd(t_program *program)
 	{
 		if (execve(&cmds[0], program->token, program->envp) == -1)
 			error_and_exit("command cannot be executed", 126);
-
 	}
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, &cmds[0]);
@@ -116,4 +115,3 @@ void	execmd(t_program *program)
         return;
     }
 }
-

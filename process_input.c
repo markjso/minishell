@@ -39,7 +39,7 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
-	printf("Return_token inbetween q's: q%sq\n", return_token);
+	// printf("Return_token inbetween q's: q%sq\n", return_token);
 	return(return_token);
 }
 
@@ -56,23 +56,33 @@ The quotation is treated as one word.
 Any word that has no space or no tab and is next to the "outside" of a 
 quotation mark: One token will be created to encompas the outside word 
 and the whole quotation mark.*/
-void	make_tokens(char *str, t_token_list **root)
+void make_tokens(char *str, t_token_list **root)
 {
-	debugFunctionName("MAKE_TOKENS");
-	int				input_index;
-	t_token_list	*new_node;
+    debugFunctionName("MAKE_TOKENS");
+    int input_index;
+    t_token_list *new_node;
 
-	input_index = 0;
-	while (str[input_index] != '\0')
-	{
-		if (ft_is_not_white_space(str[input_index]) == 1)
-		{
-			new_node = make_new_node(make_token(&str[input_index]));
-			ll_insert_end(root, new_node);
-			input_index = ft_strlen(new_node->data) - 1 + input_index;
-		}
-		input_index++; // if whitespace
-	}
+    input_index = 0;
+    while (str[input_index] != '\0')
+    {
+        if (ft_is_not_white_space(str[input_index]) == 1)
+        {
+            // Check if the current character is a pipe symbol '|'
+            if (str[input_index] == '|')
+            {
+                char pipe_token[2] = {'|', '\0'};
+                new_node = make_new_node(pipe_token);
+            }
+            else
+            {
+                // If not a pipe symbol, create a regular token
+                new_node = make_new_node(make_token(&str[input_index]));
+                input_index = ft_strlen(new_node->data) - 1 + input_index;
+            }
+            ll_insert_end(root, new_node);
+        }
+        input_index++;
+    }
 }
 
 
@@ -109,15 +119,28 @@ void	copy_into_array(t_token_list **root)
 	}
 }
 
+// Implementation of has_pipe_token function
+bool has_pipe_token(char *str)
+{
+    debugFunctionName("HAS_PIPE_TOKEN");
+	while (*str) {
+        if (*str == '|')
+            return true;
+        str++;
+    }
+    return false;
+}
+
 /*
 process_input(char *str: raw user input, char **token: is empty pointer to string that will become tokenised string).
 Return value is always 0? Why
 */
-void	process_input(char *str, t_token_list **root)
+void process_input(char *str, t_token_list **root)
 {
-	debugFunctionName("PROCESS_INPUT");
+    debugFunctionName("PROCESS_INPUT");
 
-	make_tokens(str, root);
+    // Expand variables in the input string
+    make_tokens(str, root);
 	expand_variables(root);
-
 }
+

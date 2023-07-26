@@ -72,16 +72,20 @@ typedef struct s_envar
 t_program	g_program;
 
 /*initialise*/
-char	*take_input();
+int		take_input(char *input);
 void	init_global(void);
 t_envar	*init_env(char *name, char *value);
-char	*get_command(char *path);
+// char	*get_command(char *path);
 void	process_input(char *str, t_token_list **root);
 void	execmd(t_program *program);
-void	handle_pipe(char *str);
+t_envar	*find_env(t_envar *envars, char *name);
+
+/*pipes and signals*/
+void do_pipe(t_token_list **root);
 void	sig_initialiser(void);
 char	*ft_strtok_r(char **str, char *delim);
-t_envar	*find_env(t_envar *envars, char *name);
+void	handle_pipe(char *str);
+bool	has_pipe_token(char *str);
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);

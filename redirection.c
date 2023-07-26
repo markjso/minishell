@@ -60,11 +60,7 @@ void	std_input()
 	printf("backup number: %d\n", g_program.out_backup);
 	g_program.in_file = dup2(file_temp, STDIN_FILENO);
 	if (g_program.in_file < 0)
-<<<<<<< HEAD
 		perror("Error: cannot open input file\n");
-=======
-		perror("Error: cannot open output file\n");
->>>>>>> stash
 	close(file_temp);
 	printf("infile number: %d\n", g_program.in_file);
 	g_program.redir_in_flag = 1;
@@ -121,22 +117,39 @@ void	do_redirect(t_token_list *curr, int num, int *flag)
 	}
 }
 
-void	ft_continue(t_token_list **root)
+void ft_continue(t_token_list **root)
 {
-	printf("start of ft_continue(root): std out is : %s\n", g_program.redirect_out);
-	remove_quotes(root);
-	copy_into_array(root);			// if it is one of the builtin commands do it. Found in buitlin_utils.c
-	if (is_builtin_cmd())
-	{
-		do_builtins(g_program.token, &g_program);
-	}
-	else // else it is one of the standard shell commands so execute that with execmd. Found in execmd.c
-	{
-		printf("going to else\n");
-		execmd(&g_program);
-	}
-	remove_redirect(); // Reset redirection if changed.
+    printf("start of ft_continue(root): std out is : %s\n", g_program.redirect_out);
+    remove_quotes(root);
+	copy_into_array(root);
+    // Check if the command contains a pipe token '|'
+    if (has_pipe_token(g_program.token[0]))
+    {
+        // Handle command execution with pipes
+        do_pipe(root);
+    }
+    else if (g_program.redirect_out || g_program.redirect_in)
+    {
+        // If redirection is present, execute the command with redirection
+        execmd(&g_program);
+    }
+    else if (is_builtin_cmd())
+    {
+        // Check if it is one of the builtin commands and execute it
+        do_builtins(g_program.token, &g_program);
+    }
+    else
+    {
+        // Execute the command without redirection or pipes
+        execmd(&g_program);
+    }
+
+    // Free memory for tokens (already done in copy_into_array)
+    // ...
+
+    remove_redirect(); // Reset redirection if changed.
 }
+
 
 void check_for_redirect(t_token_list **root)
 {
@@ -163,6 +176,8 @@ void check_for_redirect(t_token_list **root)
             do_redirect(curr, 2, &flag);
         else if (curr->data[0] == '>')
             do_redirect(curr, 1, &flag);
+        else if (curr->data[0] == '|')
+            do_pipe(root); // Add this line to handle pipes
 
         if (flag == 1)
         {
@@ -176,3 +191,4 @@ void check_for_redirect(t_token_list **root)
     }
     ft_continue(root);
 }
+

@@ -18,46 +18,33 @@ t_program	g_program;
 If either STDOUT_FILENO or STDIN_FILENO were modified:
 Reset to defualt. 
 */
-void	remove_redirect()
+void remove_redirect()
 {
-printf("g_program.redirect_out is %s\n", g_program.redirect_out);
+    if (g_program.redir_out_flag == 1)
+    {
+        printf("REMOVE_REDIRECT OUT\n");
+        close(g_program.out_file);
+        dup2(g_program.out_backup, STDOUT_FILENO);
+        printf("STDOUT_FILENO: %d\n", STDOUT_FILENO);
+        close(g_program.out_backup);
+        g_program.out_backup = -1;
+        free(g_program.redirect_out);
+        g_program.redir_out_flag = 0;
+    }
 
-	// if (g_program.out_file > 0)
-	// if (g_program.redirect_out != NULL)
-	if (g_program.redir_out_flag == 1)
-	{
-		printf("REMOVE_REDIRECT OUT\n");
-		printf("1\n");
-		printf("g_program.out_file is: %d\n", g_program.out_file);
-		close(g_program.out_file);
-		printf("g_program.out_file is: %d\n", g_program.out_file);
-		printf("2\n");
-		dup2(g_program.out_backup, STDOUT_FILENO);
-		printf("STDOUT_FILENO: %d\n", STDOUT_FILENO);
-		printf("3\n");
-		close(g_program.out_backup);
-		g_program.out_backup = -1;
-		printf("g_program.out_backup is %d\n", g_program.out_backup);
-		printf("4\n");
-		free(g_program.redirect_out);
-		g_program.redir_out_flag = 0;
-	}
-	printf("g_program.redirect_in %s\n", g_program.redirect_in);
-
-	if (g_program.redir_in_flag == 1)
-	{
-		printf("REMOVE_REDIRECT IN\n");
-		close(g_program.in_file);
-		dup2(g_program.in_backup, STDIN_FILENO);
-		printf("STDIN_FILENO: %d\n", STDIN_FILENO);
-		printf("g_program.in_backup: %d\n", g_program.in_backup);
-		close(g_program.in_backup);
-		// g_program.redirect_in = NULL;
-		printf("g_program.redirect_in %s\n", g_program.redirect_in);
-		g_program.redir_in_flag = 0;
-
-	}
+    if (g_program.redir_in_flag == 1)
+    {
+        printf("REMOVE_REDIRECT IN\n");
+        close(g_program.in_file);
+        dup2(g_program.in_backup, STDIN_FILENO);
+        printf("STDIN_FILENO: %d\n", STDIN_FILENO);
+        close(g_program.in_backup);
+        g_program.in_backup = -1;
+        free(g_program.redirect_in);
+        g_program.redir_in_flag = 0;
+    }
 }
+
 
 /*
 If a matching close quote is found: 
