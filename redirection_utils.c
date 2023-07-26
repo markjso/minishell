@@ -15,7 +15,7 @@
 t_program	g_program;
 
 /*
-If either STDOUT_FILENO or STDIN_FILENO where modified:
+If either STDOUT_FILENO or STDIN_FILENO were modified:
 Reset to defualt. 
 */
 void	remove_redirect()
@@ -68,6 +68,7 @@ If no matching close quote is found:
 */
 void	locate_second_quote(char *str)
 {
+	debugFunctionName("LOCATE_SECOND_QUOTE");
 	int		second;
 
 	second = g_program.redirect_index + 1; // One after the quote
@@ -89,6 +90,7 @@ void	locate_second_quote(char *str)
 
 char	*get_file_name(char *str)
 {
+	debugFunctionName("GET_FILE_NAME");
 	int 	end_of_name;
 	char	*file_name;
 

@@ -29,7 +29,7 @@
 # include "libft.h"
 # include <errno.h>
 
-# define MAXCOM 1000 // max number of letters to be supported
+# define MAXCOM 5000 // max number of letters to be supported
 # define MAXLIST 100 // max number of commands to be supported
 # define MAX_BUFFER 4096
 
@@ -81,6 +81,7 @@ void	execmd(t_program *program);
 void	handle_pipe(char *str);
 void	sig_initialiser(void);
 char	*ft_strtok_r(char **str, char *delim);
+t_envar	*find_env(t_envar *envars, char *name);
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);
