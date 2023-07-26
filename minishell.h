@@ -57,6 +57,8 @@ typedef struct s_program
 	int		out_backup;
 	int		in_file;
 	int		in_backup;
+	int		redir_out_flag;
+	int		redir_in_flag;
     // Other fields related to the shell's configuration and data
 } 	t_program;
 
@@ -70,7 +72,7 @@ typedef struct s_envar
 t_program	g_program;
 
 /*initialise*/
-int		take_input(char *input);
+char	*take_input();
 void	init_global(void);
 t_envar	*init_env(char *name, char *value);
 char	*get_command(char *path);

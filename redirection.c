@@ -43,6 +43,7 @@ void std_output()
 		perror("Error: cannot open output file\n");
 	close(file_temp);
 	printf("outfile number: %d\n", g_program.out_file);
+	g_program.redir_out_flag = 1;
 }
 
 void	std_input()
@@ -61,10 +62,11 @@ void	std_input()
 	g_program.in_backup = dup(STDIN_FILENO);
 	printf("backup number: %d\n", g_program.out_backup);
 	g_program.in_file = dup2(file_temp, STDIN_FILENO);
-	if (g_program.out_file < 0)
-		perror("Error: cannot open output file\n");
+	if (g_program.in_file < 0)
+		perror("Error: cannot open input file\n");
 	close(file_temp);
 	printf("infile number: %d\n", g_program.in_file);
+	g_program.redir_in_flag = 1;
 }
 
 void	output_append()
@@ -86,6 +88,7 @@ void	output_append()
 		perror("Error: cannot open output file\n");
 	close(file_temp);
 	printf("outfile number: %d\n", g_program.out_file);
+	g_program.redir_out_flag = 1;
 }
 
 void	do_redirect(t_token_list *curr, int num, int *flag)
