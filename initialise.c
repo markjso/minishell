@@ -29,18 +29,19 @@ void	get_user_prompt(void)
 	username = getenv("USER");
 	prompt = ft_strjoin(username, "@>>$ ");
 	g_program.prompt = ft_strdup(prompt);
-	free (prompt);
+	// free (prompt);
 }
 
 int	take_input(char *input)
 {
+	debugFunctionName("TAKE_INPUT");
 	char	*user_input;
 
 	get_user_prompt();
 	user_input = readline(g_program.prompt); // Return is MALLOCED
 	if (!user_input) // Input is username and '$'.  IF username doesn't exist or Ctrl-d, exit program in error. 
 	{
-		printf("%s exit\n", input);
+		printf("%sexit\n", input);
 		exit(1);
 	}
 	if (ft_strlen(user_input) != 0) // If user inputs text, even nonsense, this is called. 

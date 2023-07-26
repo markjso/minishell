@@ -14,6 +14,11 @@
 
 // extern	t_program	g_program;
 
+void	check_for_pipe(char *str)
+{
+	if 
+}
+
 void	close_pipe(char *str)
 {
 	int	is_first_command;

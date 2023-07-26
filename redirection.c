@@ -30,14 +30,11 @@ void std_output()
 	int				file_temp;
 
 	file = ft_strdup(g_program.redirect_out); // Malloc freed
-	printf("file: %s\n", file);
 	file_temp = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	free(file);
 	if (file_temp == -1)
 		perror("Error in std_input: \n");
-	printf("tempfile number: %d\n", file_temp);
 	g_program.out_backup = dup(STDOUT_FILENO);
-	printf("backup number: %d\n", g_program.out_backup);
 	g_program.out_file = dup2(file_temp, STDOUT_FILENO);
 	if (g_program.out_file < 0)
 		perror("Error: cannot open output file\n");
@@ -61,7 +58,7 @@ void	std_input()
 	g_program.in_backup = dup(STDIN_FILENO);
 	printf("backup number: %d\n", g_program.out_backup);
 	g_program.in_file = dup2(file_temp, STDIN_FILENO);
-	if (g_program.out_file < 0)
+	if (g_program.in_file < 0)
 		perror("Error: cannot open output file\n");
 	close(file_temp);
 	printf("infile number: %d\n", g_program.in_file);
@@ -137,37 +134,38 @@ void	ft_continue(t_token_list **root)
 void check_for_redirect(t_token_list **root)
 {
     debugFunctionName("CHECK_REDIR");
-	t_token_list	*curr;
-	t_token_list	*prev;
-	t_token_list	*temp_token;
-	int				flag;
-	
-	curr = *root;
-	while (curr != NULL)
-	{
-		flag = 0;
-		if (curr == NULL)
-			break ;
-		if (curr->data[0] == '>' && curr->data[1] == '>')
-			do_redirect(curr, 2, &flag);
-		else if (curr->data[0] == '>')
-			do_redirect(curr, 1, &flag);
-		else if (curr->data[0] == '<' && curr->data[1] == '<')
-		{
-			ll_remove_node(root, prev);
-			do_redirect(curr, 4, &flag);
-		}
-		else if (curr->data[0] == '<')
-			do_redirect(curr, 3, &flag);
-		if (flag == 1)
-		{
-			temp_token = curr;
-			curr = curr->next->next; // after the name
-			remove_redirect_tokens(root, temp_token); // remove operator and name
-			continue ;
-		}
-		prev = curr;
-		curr = curr->next;
-	}
-	ft_continue(root);
+    t_token_list *curr;
+    t_token_list *prev;
+    t_token_list *temp_token;
+    int flag;
+
+    curr = *root;
+    while (curr != NULL)
+    {
+        flag = 0;
+        if (curr == NULL)
+            break;
+        if (curr->data[0] == '<' && curr->data[1] == '<')
+        {
+            ll_remove_node(root, prev);
+            do_redirect(curr, 4, &flag);
+        }
+        else if (curr->data[0] == '<')
+            do_redirect(curr, 3, &flag);
+        else if (curr->data[0] == '>' && curr->data[1] == '>')
+            do_redirect(curr, 2, &flag);
+        else if (curr->data[0] == '>')
+            do_redirect(curr, 1, &flag);
+
+        if (flag == 1)
+        {
+            temp_token = curr;
+            curr = curr->next->next; // after the name
+            remove_redirect_tokens(root, temp_token); // remove operator and name
+            continue;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+    ft_continue(root);
 }

@@ -15,19 +15,20 @@
 t_program	g_program;
 
 /*
-If either STDOUT_FILENO or STDIN_FILENO where modified:
+If either STDOUT_FILENO or STDIN_FILENO were modified:
 Reset to defualt. 
 */
 void	remove_redirect()
 {
-	if (g_program.out_file > 0)
+	debugFunctionName("REMOVE_REDIRECT");
+	if (g_program.out_file)
 	{
 		close(g_program.out_file);
 		dup2(g_program.out_backup, STDOUT_FILENO);
 		close(g_program.out_backup);
 		free(g_program.redirect_out);
 	}
-	if (g_program.in_file > 0)
+	if (g_program.in_file)
 	{
 		close(g_program.in_file);
 		dup2(g_program.in_backup, STDIN_FILENO);
@@ -45,6 +46,7 @@ If no matching close quote is found:
 */
 void	locate_second_quote(char *str)
 {
+	debugFunctionName("LOCATE_SECOND_QUOTE");
 	int		second;
 
 	second = g_program.redirect_index + 1; // One after the quote
@@ -66,6 +68,7 @@ void	locate_second_quote(char *str)
 
 char	*get_file_name(char *str)
 {
+	debugFunctionName("GET_FILE_NAME");
 	int 	end_of_name;
 	char	*file_name;
 
