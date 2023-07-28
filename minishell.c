@@ -26,29 +26,34 @@ t_program	g_program;
 	// 	free(prompt);
 // }
 
-int	main(int ac, char **av, char **envp)
+int main(int ac, char **av, char **envp)
 {
-	(void)ac;
-	(void)av;
-	char input[MAXCOM];
-	t_token_list	*root;
+    (void)ac;
+    (void)av;
+    char input[MAXCOM];
+    t_token_list *root;
 
     root = NULL;
     g_program.envar = split_env_var(envp);
     g_program.envp = envp;
-	init_global();// initilise global variable found in initialise.c
-	sig_initialiser();// sets up the signal handling found in signal.c
-    while (1)
-    {      
-        if (take_input(input) == 0)
-        {
-            g_program.redirect_index = 0;
-			//takes input from user and splits it into tokens found in process_input.c
-            // Also removes quotes
-			process_input(input, &root);
-	        check_for_redirect(&root);
+    init_global();
+    sig_initialiser();
 
+    while (1) {
+        if (take_input(input) == 0) {
+            g_program.redirect_index = 0;
+            process_input(input, &root);
+            
+			if (has_pipe_token(input)) 
+			{
+                handle_pipe(root); // Handle multiple pipe commands
+            } 
+			else 
+			{
+                ft_continue(&root);
+            }
+            reset_pipe_state(); // Reset pipe-related state for non-pipe commands
+			// check_for_redirect(&root);
         }
     }
-    exit(g_program.exit_status);
 }

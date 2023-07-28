@@ -20,7 +20,8 @@ Reset to defualt.
 */
 void remove_redirect()
 {
-    if (g_program.redir_out_flag == 1)
+    debugFunctionName("REMOVE_REDIRECT");
+	if (g_program.redir_out_flag == 1)
     {
         printf("REMOVE_REDIRECT OUT\n");
         close(g_program.out_file);
@@ -43,8 +44,17 @@ void remove_redirect()
         free(g_program.redirect_in);
         g_program.redir_in_flag = 0;
     }
+	if (g_program.pipe_fd[0] != -1)
+    {
+        close(g_program.pipe_fd[0]);
+        g_program.pipe_fd[0] = -1;
+    }
+    if (g_program.pipe_fd[1] != -1)
+    {
+        close(g_program.pipe_fd[1]);
+        g_program.pipe_fd[1] = -1;
+    }
 }
-
 
 /*
 If a matching close quote is found: 

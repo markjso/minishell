@@ -51,7 +51,6 @@ char	**get_full_path(void)
 	t_envar const	*path;
 
 	path = find_env(g_program.envar, "PATH");
-	printf("full path is: %s\n", path->value);
 	if (path)
 		env_paths = ft_split(path->value, ':');
 	else
@@ -71,11 +70,45 @@ char	*get_path_for_cmd(char **env_paths, char const *cmd)
 		path = get_path(env_paths[i], cmd);
 		if (access(path, F_OK) == 0)
 			return (path);
-			printf("path for cmd is: %s\n", path);
 		free(path);
 		i++;
 	}
 	return (NULL);
+}
+
+
+void exe_pipe_cmd(char **command_tokens) {
+    debugFunctionName("EXEC_PIPE_CMD");
+    char **paths;
+    char *exec_path;
+    pid_t pid;
+    int status;
+
+    pid = fork();
+    if (pid == 0) {
+        if (command_tokens[0][0] == '/') {
+            if (execve(command_tokens[0], command_tokens, g_program.envp) == -1) {
+                perror("Error");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        paths = get_full_path();
+        exec_path = get_path_for_cmd(paths, command_tokens[0]);
+        if (!paths || !exec_path) {
+            perror("Command not found");
+            exit(EXIT_FAILURE);
+        }
+        if (execve(exec_path, command_tokens, g_program.envp) == -1) {
+            perror("Error");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            g_program.exit_status = WEXITSTATUS(status);
+        }
+    }
 }
 
 void	execmd(t_program *program)
@@ -98,7 +131,6 @@ void	execmd(t_program *program)
 	}
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, &cmds[0]);
-	printf("exec_path is %s\n", exec_path);
 	if (!paths || !exec_path)
 		    error_and_exit("command not found", 127);
 	if (execve(exec_path, program->token, program->envp) == -1)

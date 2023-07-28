@@ -98,6 +98,9 @@ void init_global(void)
         g_program.token[i] = NULL;
 	g_program.envp = NULL;
 	g_program.exit_status = 0;
+	g_program.pipe_fd[0] = -1;
+    g_program.pipe_fd[1] = -1;
+    g_program.is_first_command = 1;
 	init_env_vars();
     }
 }

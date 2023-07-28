@@ -14,124 +14,142 @@
 
 extern	t_program	g_program;
 
-void	close_pipe(char *str)
-{
-	debugFunctionName("CLOSE_PIPE");
-	int	is_first_command;
-	int	pipefd[2];
-	int	status;
+void setup_pipes(int *current_pipe, int *next_pipe) {
+    if (current_pipe[0] != -1) {
+        close(current_pipe[0]); // Close the read end of the current pipe
+        close(current_pipe[1]); // Close the write end of the current pipe
+    }
 
-	is_first_command = 1;
-	if (!is_first_command)
-		close(pipefd[0]);
-	if (str != NULL)
-		close(pipefd[1]);
-	waitpid(g_program.pid, &g_program.exit_status, 0);
-	if (WIFEXITED(status))
-		g_program.exit_status = WEXITSTATUS(status);
+    if (next_pipe[0] != -1) {
+        current_pipe[0] = next_pipe[0]; // Update read end with the next pipe's read end
+        current_pipe[1] = next_pipe[1]; // Update write end with the next pipe's write end
+    }
+}
+
+void exit_pipe(t_token_list *current)
+{
+    debugFunctionName("CLOSE_PIPE");
+    int pipe_fd[2];
+    if (current->next) 
+    {
+        close(g_program.pipe_fd[0]);
+        g_program.pipe_fd[0] = pipe_fd[0];
+        g_program.pipe_fd[1] = pipe_fd[1];
+    }
+    waitpid(g_program.pid, &g_program.exit_status, 0);
 }
 
 /*tokenises the input string "str" based on the delimiter "|"
 trims each command of any whitespace and creates the pipe for 
 communication between commands if the string contains more than
 one command*/
-// void	handle_pipe(char *str)
-// {
-// 	debugFunctionName("HANDLE_PIPE");
-//     char	*token; //store tokens extracted from str
-// 	char	*end; //trim whitespaces
-//     int		is_first_command; //flag to indicate if the current command is the first one
-//     int		pipefd[2]; //pipe file descriptors
+void handle_pipe(t_token_list *current) 
+{
+    debugFunctionName("HANDLE_PIPE");
+    // t_token_list *curr = root;
+    int is_first_command = 1;
 
-// 	is_first_command = 1;
-// 	token = ft_strtok_r(&str, "|");
-// 	//while loop to tokenise the input str using the delimiter "|". Allows for 
-// 	//multiple commands separated by pipes
-//     while (token) 
-// 	{
-//         //Trim leading whitespace from the token.
-//         while (*token == ' ' || *token == '\t')
-//             token++;
-//         end = token + ft_strlen(token) - 1;//sets the end ptr to the last character of the token
-//         //trim trailing whitespace from the token
-// 		while (end > token && (*end == ' ' || *end == '\t'))
-//             end--;
-// 		//null terminate the token	
-//         *(end + 1) = '\0';
-//         //Create a pipe if it's not the first command
-//         if (!is_first_command)
-// 		{
-//             if (pipe(pipefd) == -1)
-//                 perror("Error");
-//         }
-// 		is_first_command = 0;
-// 		token = ft_strtok_r(&str, "|");
-// 	}
-// }
+    while (current != NULL)
+    {
+        if (current->data[0] == '|') 
+        {
+            if (!is_first_command)
+            {
+                close(g_program.pipe_fd[1]);
+            }
+            if (pipe(g_program.pipe_fd) == -1)
+            {
+                perror("Error creating pipe");
+            }
+            is_first_command = 0;
+            current = current->next;
+        } else
+        {
+            // Only execute the first command
+            do_pipe(current);
+            if (current->next && current->next->data[0] == '|')
+            {
+                current = current->next->next; // Skip the pipe symbol '|'
+            }
+            else
+            {
+                current = current->next;
+            }
+        }
+    }
+}
 
-//executes the indiviudal commands separated by "|"
-void do_pipe(t_token_list **root)
+void reset_pipe_state() {
+    g_program.pipe_fd[0] = -1;
+    g_program.pipe_fd[1] = -1;
+    g_program.is_first_command = 1;
+}
+
+char **split_command(const char *command)
+{
+    debugFunctionName("SPLIT_CMDS");
+    char **tokens = malloc(MAXARGS * sizeof(char *));
+    char *token;
+    int i = 0;
+
+    token = strtok(ft_strdup(command), " "); // Split the command using spaces as delimiters
+    while (token != NULL)
+    {
+        tokens[i++] = ft_strdup(token);
+        token = strtok(NULL, " ");
+    }
+    tokens[i] = NULL;
+
+    return tokens;
+}
+
+void do_pipe(t_token_list *current)
 {
     debugFunctionName("DO_PIPE");
     int is_first_command = 1;
-    int pipefd[2];
-    int saved_stdout = dup(STDOUT_FILENO);
 
-    t_token_list *curr = *root;
-    pid_t pid;
-
-    while (curr)
+    int pipe_fd[2];
+    if (pipe(pipe_fd) == -1)
     {
-        if (pipe(pipefd) == -1)
-        {
-            perror("Error");
-            exit(EXIT_FAILURE);
-        }
+        perror("Error creating pipe");
+    }
+    g_program.pid = fork();
+    if (g_program.pid < 0)
+    {
+        perror("Error");
+        exit(EXIT_FAILURE);
+    }
 
-        pid = fork();
-        if (pid < 0)
+    if (g_program.pid == 0)
+    {
+        // Child process
+        if (!is_first_command)
         {
-            perror("Error");
-            exit(EXIT_FAILURE);
-        }
-        else if (pid == 0)
-        {
-            // Child process
-            if (!is_first_command)
+            close(g_program.pipe_fd[1]);
+            if (dup2(g_program.pipe_fd[0], STDIN_FILENO) < 0)
             {
-                // Redirect stdin to read from the previous pipe
-                if (dup2(pipefd[0], STDIN_FILENO) == -1)
-                {
-                    perror("Error");
-                    exit(EXIT_FAILURE);
-                }
+                perror("Error");
+                exit(EXIT_FAILURE);
             }
-
-            // Close the unused write end of the pipe
-            close(pipefd[1]);
-
-            // Execute the command
-            execmd(&g_program);
-
-            // Exit the child process
-            exit(EXIT_SUCCESS);
+            close(g_program.pipe_fd[0]);
         }
-        else
+        if (current->next != NULL)
         {
-            // Parent process
-            if (!is_first_command)
+            close(pipe_fd[0]);
+            if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
             {
-                close(pipefd[0]); // Close the unused read end of the pipe
+                perror("Error");
+                exit(EXIT_FAILURE);
             }
-
-            // Wait for the child process to finish
-            waitpid(pid, NULL, 0);
-
-            // Restore stdout to the original file descriptor
-            dup2(saved_stdout, STDOUT_FILENO);
-
-            curr = curr->next;
-            is_first_command = 0;
+            close(pipe_fd[1]);
         }
+        // Execute the command
+        char **command_tokens = split_command(current->data);
+        execvp(command_tokens[0], command_tokens);
+    }
+    else
+    {
+        // Parent process
+        exit_pipe(current);
     }
 }

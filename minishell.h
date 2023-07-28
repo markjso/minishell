@@ -32,6 +32,7 @@
 # define MAXCOM 5000 // max number of letters to be supported
 # define MAXLIST 100 // max number of commands to be supported
 # define MAX_BUFFER 4096
+# define MAXARGS 20
 
 /*Struct for holding tokenised user input.*/
 typedef struct s_token_list
@@ -59,6 +60,8 @@ typedef struct s_program
 	int		in_backup;
 	int		redir_out_flag;
 	int		redir_in_flag;
+	int 	pipe_fd[2];
+	int		is_first_command;
     // Other fields related to the shell's configuration and data
 } 	t_program;
 
@@ -75,17 +78,21 @@ t_program	g_program;
 int		take_input(char *input);
 void	init_global(void);
 t_envar	*init_env(char *name, char *value);
+
 // char	*get_command(char *path);
 void	process_input(char *str, t_token_list **root);
 void	execmd(t_program *program);
 t_envar	*find_env(t_envar *envars, char *name);
 
 /*pipes and signals*/
-void do_pipe(t_token_list **root);
+void	do_pipe(t_token_list *current);
 void	sig_initialiser(void);
 char	*ft_strtok_r(char **str, char *delim);
-void	handle_pipe(char *str);
+void 	handle_pipe(t_token_list *current);
 bool	has_pipe_token(char *str);
+// void exe_pipe_cmd(char **command_tokens);
+char	**split_command(const char *command);
+void	reset_pipe_state();
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);
@@ -116,6 +123,7 @@ void	remove_redirect();
 int		input_heredoc(char *delimiter);
 char	*get_file_name(char *str);
 void	locate_second_quote(char *str);
+void	ft_continue(t_token_list **root);
 
 /*environment variables*/
 t_envar	*split_env_var(char **envp);
