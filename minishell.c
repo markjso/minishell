@@ -39,21 +39,15 @@ int main(int ac, char **av, char **envp)
     init_global();
     sig_initialiser();
 
-    while (1) {
-        if (take_input(input) == 0) {
+    while (1)
+    {
+        if (take_input(input) == 0)
+        {
             g_program.redirect_index = 0;
             process_input(input, &root);
-            
-			if (has_pipe_token(input)) 
-			{
-                handle_pipe(root); // Handle multiple pipe commands
-            } 
-			else 
-			{
-                ft_continue(&root);
-            }
-            reset_pipe_state(); // Reset pipe-related state for non-pipe commands
-			// check_for_redirect(&root);
+            check_for_redirect(&root);
+            ft_continue(&root);
+			
         }
     }
 }

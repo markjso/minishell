@@ -46,9 +46,10 @@ typedef struct s_program
     struct s_envar *envar;
 	char	**token;
 	char	**envp;
+	char	**commands;
 	char	*prompt;
 	int		exit_status;
-	pid_t			pid;
+	int		pid;
 	char    *redirect_file;
 	char	*redirect_in;
 	char	*redirect_out;
@@ -60,9 +61,6 @@ typedef struct s_program
 	int		in_backup;
 	int		redir_out_flag;
 	int		redir_in_flag;
-	int 	pipe_fd[2];
-	int		is_first_command;
-    // Other fields related to the shell's configuration and data
 } 	t_program;
 
 typedef struct s_envar
@@ -78,21 +76,23 @@ t_program	g_program;
 int		take_input(char *input);
 void	init_global(void);
 t_envar	*init_env(char *name, char *value);
+void	get_user_prompt(void);
 
 // char	*get_command(char *path);
 void	process_input(char *str, t_token_list **root);
-void	execmd(t_program *program);
+void	execmd(void);
 t_envar	*find_env(t_envar *envars, char *name);
+char	**get_full_path(void);
+char	*get_path_for_cmd(char **env_paths, char const *cmd);
 
 /*pipes and signals*/
-void	do_pipe(t_token_list *current);
+void	do_pipe(void);
 void	sig_initialiser(void);
-char	*ft_strtok_r(char **str, char *delim);
-void 	handle_pipe(t_token_list *current);
-bool	has_pipe_token(char *str);
+// char	*ft_strtok_r(char **str, char *delim);
+void 	handle_pipe(void);
+bool	has_pipe_token(void);
 // void exe_pipe_cmd(char **command_tokens);
 char	**split_command(const char *command);
-void	reset_pipe_state();
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);

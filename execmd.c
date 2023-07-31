@@ -76,42 +76,7 @@ char	*get_path_for_cmd(char **env_paths, char const *cmd)
 	return (NULL);
 }
 
-
-void exe_pipe_cmd(char **command_tokens) {
-    debugFunctionName("EXEC_PIPE_CMD");
-    char **paths;
-    char *exec_path;
-    pid_t pid;
-    int status;
-
-    pid = fork();
-    if (pid == 0) {
-        if (command_tokens[0][0] == '/') {
-            if (execve(command_tokens[0], command_tokens, g_program.envp) == -1) {
-                perror("Error");
-                exit(EXIT_FAILURE);
-            }
-        }
-
-        paths = get_full_path();
-        exec_path = get_path_for_cmd(paths, command_tokens[0]);
-        if (!paths || !exec_path) {
-            perror("Command not found");
-            exit(EXIT_FAILURE);
-        }
-        if (execve(exec_path, command_tokens, g_program.envp) == -1) {
-            perror("Error");
-            exit(EXIT_FAILURE);
-        }
-    } else {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status)) {
-            g_program.exit_status = WEXITSTATUS(status);
-        }
-    }
-}
-
-void	execmd(t_program *program)
+void	execmd(void)
 {
 	debugFunctionName("EXEC_CMD");
 	char	**paths;
@@ -121,21 +86,21 @@ void	execmd(t_program *program)
     int		status;
 
 	pid = fork();
-	cmds = program->token[0];
+	cmds = g_program.token[0];
     if (pid == 0)
     {
     if (cmds[0] == '/')
 	{
-		if (execve(&cmds[0], program->token, program->envp) == -1)
+		if (execve(&cmds[0], g_program.token, g_program.envp) == -1)
 			error_and_exit("command cannot be executed", 126);
 	}
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, &cmds[0]);
 	if (!paths || !exec_path)
 		    error_and_exit("command not found", 127);
-	if (execve(exec_path, program->token, program->envp) == -1)
+	if (execve(exec_path, g_program.token, g_program.envp) == -1)
 		error_and_exit("command cannot be executed", 126);
-    }
+	}
     else
     {
         waitpid(pid, &status, 0);
@@ -143,7 +108,7 @@ void	execmd(t_program *program)
         {
 			g_program.exit_status = WEXITSTATUS(status);
         }
-        // (ft_putstr_fd("minishell", 2), error_message("command not found", 127));
         return;
     }
+	exit(EXIT_SUCCESS);
 }
