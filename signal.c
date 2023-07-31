@@ -15,11 +15,15 @@
 //handles the Ctrl-C key combination (SIGINT signal)
 void	sig_handler(int sig)
 {
-	(void)sig;
-	write(2, "\n", 1); // Move to a new line
-	rl_on_new_line(); // Regenerate the prompt on a newline
-	rl_replace_line("", 0); // Clear the previous text
-	rl_redisplay();
+	// (void)sig;
+    if (sig == SIGINT)
+	{
+		g_program.exit_status = 130;
+	    write(2, "\n", 1); // Move to a new line
+	    rl_on_new_line(); // Regenerate the prompt on a newline
+	    rl_replace_line("", 0); // Clear the previous text
+	    rl_redisplay();
+    }
 }
 
 /* if the return value of signal is not SIG_ERR set 

@@ -29,19 +29,19 @@ void	get_user_prompt(void)
 	username = getenv("USER");
 	prompt = ft_strjoin(username, "@>>$ ");
 	g_program.prompt = ft_strdup(prompt);
-	free (prompt);
+	// free (prompt);
 }
 
 int	take_input(char *input)
 {
+	debugFunctionName("TAKE_INPUT");
 	char	*user_input;
 
 	get_user_prompt();
 	user_input = readline(g_program.prompt); // Return is MALLOCED
 	if (!user_input) // Input is username and '$'.  IF username doesn't exist or Ctrl-d, exit program in error. 
 	{
-		printf("%s exit\n", input);
-		// free(input);
+		printf("%sexit\n", input);
 		exit(1);
 	}
 	if (ft_strlen(user_input) != 0) // If user inputs text, even nonsense, this is called. 
@@ -77,6 +77,12 @@ void init_env_vars(void)
     
     add_env_var(pwd);
     add_env_var(oldpwd);
+	free(pwd->name);
+    free(pwd->value);
+    free(pwd);
+    free(oldpwd->name);
+    free(oldpwd->value);
+    free(oldpwd);
 }
 
 /* sets up the g_program global structure
@@ -94,4 +100,20 @@ void init_global(void)
 	g_program.exit_status = 0;
 	init_env_vars();
     }
+}
+
+/*allocates memory for the struct and assigns
+name and value to the name and value fields.
+Returns a pointer to the new struct.*/
+t_envar	*init_env(char *name, char *value)
+{
+	t_envar	*new;
+
+	new = malloc(sizeof(t_envar));
+	if (!new)
+		return (NULL);
+	new->name = name;
+	new->value = value;
+	new->next = NULL;
+	return (new);
 }

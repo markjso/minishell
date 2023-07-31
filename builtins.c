@@ -12,14 +12,14 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 void	printpwd(void)
 {
 	char	pwd[256];
 
 	getcwd(pwd, sizeof(pwd));
-	printf("\nDir: %s", pwd);
+	printf("Dir: %s\n", pwd);
     g_program.exit_status = 0;
 }
 
@@ -65,8 +65,8 @@ void echo_cmd(char **token)
     }
     // Print a new line only if -n option was not passed and there are arguments
     if (!flag && (i > 1))
-        printf("\n");
-        g_program.exit_status = 0;
+		printf("\n");
+	g_program.exit_status = 0;
 }
 
 int	export_cmd(char **token)
@@ -98,9 +98,17 @@ int	export_cmd(char **token)
 		free(node->value);
 		node->value = value;
 	}
+	// free(name);
+	// free(value);
 	return (0);
 }
 
-/*
-Always returns 0?
-*/
+void	exit_cmd(char **token)
+{
+	if (token[1] && token[2])
+		(ft_putstr_fd("exit", 2), error_message("too many arguments", 255));
+	else if (token[1])
+		exit(0);
+	else
+		exit(0);
+}

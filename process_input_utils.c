@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+// extern	t_program	g_program;
 
 /*Input: string to return an integer the number of "tokens" that can be 
 created. A token is seperated by a space or tab, unless the space or tab 
@@ -36,10 +36,9 @@ int	find_token_number(t_token_list **root)
 	return (i);
 }
 
-
 int	ft_is_pipe_or_redirect(char c)
 {
-	if (c == '<' || c == '>' || c == '|')
+	if (c == '<' || c == '>')
 		return (1);
 	else
 		return (0);

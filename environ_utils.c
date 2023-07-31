@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 int     count_envars(t_envar *envars)
 {
@@ -33,6 +33,7 @@ int     count_envars(t_envar *envars)
 void	rebuild_envp(void)
 {
 	char		**new_env;
+	char 		*name_part;
 	t_envar		*tmp;
 	int			count;
 	int			i;
@@ -47,12 +48,31 @@ void	rebuild_envp(void)
 		return ;
 	while (i < count)
 	{
-		new_env[i] = ft_strdup(tmp->name);
-		new_env[i] = ft_strjoin(new_env[i], "=");
-		new_env[i] = ft_strjoin(new_env[i], tmp->value);
+		name_part = ft_strjoin(tmp->name, "=");
+        new_env[i] = ft_strjoin(name_part, tmp->value);
+		free(name_part);
 		i++;
 		tmp = tmp->next;
 	}
 	new_env[i] = NULL;
 	g_program.envp = new_env;
+}
+
+/*prints all the environment variables in the linked list
+Initialisses tmp to the head of the list and iterates 
+through printing the name and value fields. I then updates
+tmp to point to the next sturct in the list */
+
+void print_env(void)
+{
+	t_envar *tmp;
+
+	tmp = g_program.envar;
+    while (tmp)
+    {
+        printf("%s=%s\n", tmp->name, tmp->value);
+        tmp = tmp->next;
+    }
+	g_program.exit_status = 0;
+	return ;
 }

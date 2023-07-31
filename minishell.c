@@ -12,31 +12,42 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+t_program	g_program;
 
-int	main(int ac, char **av, char **envp)
+// static void	free_main_items(char *input)
+// {
+	// if (g_super.cmds)
+	// 	free_cmds(&g_super.cmds);
+	// if (g_program.token)
+	// 	ft_free_array(g_program.token);
+	// if (input)
+	// 	free(input);
+	// if (prompt)
+	// 	free(prompt);
+// }
+
+int main(int ac, char **av, char **envp)
 {
-	(void)ac;
-	(void)av;
-	char input[MAXCOM];
-	t_token_list	*root;
+    (void)ac;
+    (void)av;
+    char input[MAXCOM];
+    t_token_list *root;
 
     root = NULL;
     g_program.envar = split_env_var(envp);
     g_program.envp = envp;
-	init_global();// initilise global variable found in initialise.c
-	sig_initialiser();// sets up the signal handling found in signal.c
+    init_global();
+    sig_initialiser();
+
     while (1)
-    {      
+    {
         if (take_input(input) == 0)
         {
             g_program.redirect_index = 0;
-			//takes input from user and splits it into tokens found in process_input.c
-            // Also removes quotes
-			process_input(input, &root);
-	        check_for_redirect(&root);
-
+            process_input(input, &root);
+            check_for_redirect(&root);
+            ft_continue(&root);
+			
         }
     }
-    exit(g_program.exit_status);
 }

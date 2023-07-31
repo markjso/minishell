@@ -43,18 +43,18 @@ void    ll_insert_beginning(t_token_list **root, t_token_list *new_node)
 
 void    ll_insert_after(t_token_list *this_node, t_token_list *new_node)
 {
-    if (new_node == NULL)
-        exit (4);
-    new_node->next = this_node->next;
-    this_node->next = new_node;
+		if (new_node == NULL)
+		exit (4);
+		new_node->next = this_node->next;
+		this_node->next = new_node;
 }
 
 void	ll_insert_before(t_token_list **root, t_token_list *this_node, t_token_list *new_node)
 {
 	t_token_list*	curr;
 
-    if (new_node == NULL)
-        exit (4);
+	if (new_node == NULL)
+		exit (4);
 	if ((*root) == this_node)
 	{
 		new_node->next = *root;

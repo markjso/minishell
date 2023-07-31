@@ -24,6 +24,7 @@ SRCS=minishell.c \
 	initialise.c \
 	debug.c \
 	process_input.c \
+	ft_strtok.c \
 	token_linked_list.c \
 	token_linked_list_create.c \
 	token_linked_list_delete.c \
@@ -34,7 +35,10 @@ SRCS=minishell.c \
 	string_utils_1.c \
 	string_utils_2.c \
 	error.c \
-	redirection.c
+	redirection.c \
+	heredoc.c \
+	pipes.c \
+	redirection_utils.c
 	
 dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/

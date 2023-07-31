@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
 /* checks if the input in position token[0]
 is one of the builtin shell functions.
@@ -59,5 +59,5 @@ void	do_builtins(char **builtin_id, t_program *program)
     if (ft_strcmp(builtin_id[0], "env") == 0)
         print_env();
     if (ft_strcmp(builtin_id[0], "exit") == 0)
-	    exit(0);
+	    exit_cmd(program->token);
 }

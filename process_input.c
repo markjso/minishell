@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-extern	t_program	g_program;
+// extern	t_program	g_program;
 
 /*Create a "token" from an input string. 
 A token is defined by any word that has a space or tab either side of it. 
@@ -39,7 +39,7 @@ char	*make_token(char *str)
 		i++;
 	}
 	return_token[i] = '\0';
-	printf("Return_token inbetween q's: q%sq\n", return_token);
+	// printf("Return_token inbetween q's: q%sq\n", return_token);
 	return(return_token);
 }
 
@@ -75,7 +75,6 @@ void	make_tokens(char *str, t_token_list **root)
 	}
 }
 
-
 /*
 copy_int_array
 Moves linked list t_token_list->data* into program->token** array. 
@@ -109,15 +108,30 @@ void	copy_into_array(t_token_list **root)
 	}
 }
 
+// Implementation of has_pipe_token function
+bool has_pipe_token(void)
+{
+    debugFunctionName("HAS_PIPE_TOKEN");
+	int i = 0;
+	while (g_program.token[i])
+	{
+        if (g_program.token[i][0] == '|')
+            return true;
+        i++;
+    }
+    return false;
+}
+
 /*
 process_input(char *str: raw user input, char **token: is empty pointer to string that will become tokenised string).
 Return value is always 0? Why
 */
-void	process_input(char *str, t_token_list **root)
+void process_input(char *str, t_token_list **root)
 {
-	debugFunctionName("PROCESS_INPUT");
+    debugFunctionName("PROCESS_INPUT");
 
-	make_tokens(str, root);
+    // Expand variables in the input string
+    make_tokens(str, root);
 	expand_variables(root);
-
 }
+

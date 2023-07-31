@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-t_program g_program;
+// t_program g_program;
 
 char	*expand_dollar(char *variable)
 {
@@ -20,6 +20,10 @@ char	*expand_dollar(char *variable)
 
 	variable++; // Because first is $ sign. 
 	env_node = find_env_var(variable);
+	if (variable[0] == '?')
+	{
+			return (ft_itoa(g_program.exit_status));
+	}
 	if (env_node == NULL)
 	{
 		return ("");
@@ -35,6 +39,8 @@ int	env_len(char *str)
 	int	i;
 
 	i = 1;
+	if (str[0] == '?')
+		return (1);
 	while (ft_is_valid_var_char(str[i]) == 1)
 		i++;
 	return (i);

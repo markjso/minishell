@@ -12,89 +12,103 @@
 
 #include "minishell.h"
 
-t_program g_program;
+// t_program g_program;
 
-char	*get_location(char *cmd)
+t_envar	*find_env(t_envar *envars, char *name)
 {
-	debugFunctionName("GET_LOCATION");
-    char	**path_tokens;
-	char	*path;
-	char	*location;
-	int		i;
+	debugFunctionName("FIND_ENV");
+	t_envar		*temp;
 
-	path = getenv("PATH");
-   	//split into directories
-	path_tokens = ft_split(path, ':');
-	i = 0;
-	while (path_tokens[i])
+	temp = envars;
+	while (temp != NULL)
 	{
-		//append "/" to the directory
-		location = ft_strjoin(path_tokens[i], "/");
-        //append the command name 
-		location = ft_strjoin(location, cmd);
-        //check if the command exists and if it does return it
-		if (access(location, F_OK) == 0)
-		{
-			ft_free_array(path_tokens);
-			return (location);
-		}
-		free(location);
-		i++;
-    }
-	ft_free_array(path_tokens);
-    free(location);
+		if (ft_strcmp(temp->name, name) == 0)
+			return (temp);
+		temp = temp->next;
+	}
 	return (NULL);
 }
 
-void execmd(t_program *program)
+static char	*get_path(char const *currentPath, char const *cmd)
 {
-    debugFunctionName("EXECMD");
-    pid_t pid;
-    char *cmd;
-    char    *actual_cmd;
+	debugFunctionName("GET_PATH");
+	char	*rtn;
 
-    pid = fork();
-    if (pid < 0)
-    {
-        perror("Error: fork failed\n");
-    }
-    else if (pid == 0)
-    {
-        cmd = program->token[0];
-        actual_cmd = get_location(cmd);
-        if (actual_cmd == NULL)
-            {
-                error_and_exit("Command not found", 127);
-            }
-        execve(actual_cmd, program->token, program->envp);
-    }
-    else
-    {
-        wait(NULL);
-        return;
-    }
+	if (*cmd == '/')
+		rtn = ft_strdup(cmd);
+	else if (!ft_strncmp(cmd, "./", 2))
+		rtn = ft_strjoin((find_env(g_program.envar, "PWD")->value),
+				ft_strjoin("/", cmd));
+	else
+		rtn = ft_strjoin(currentPath, ft_strjoin("/", cmd));
+	return (rtn);
 }
 
-// void	pipex(void)
-// {
-// 	int		fd[2];
-// 	pid_t 	pid;
+char	**get_full_path(void)
+{
+	debugFunctionName("GET_FULL_PATH");
+	char			**env_paths;
+	t_envar const	*path;
 
-// 	pipe(fd);
-// 	pid = fork();
-// 	if (pid < 0)
-// 		printf("Error: did not fork\n");
-// 	if (pid)
-// 	{
-// 		close(fd[1]);
-// 		dup2(fd[1], 0);
-// 		close(fd[0]);
-// 	}
-// 	else
-// 	{
-// 		close(fd[1]);
-// 		dup2(fd[0], 1);
-// 		close(fd[0]);
-//         execmd(g_program->token);
-// 	}
-// }
+	path = find_env(g_program.envar, "PATH");
+	if (path)
+		env_paths = ft_split(path->value, ':');
+	else
+		env_paths = NULL;
+	return (env_paths);
+}
+
+char	*get_path_for_cmd(char **env_paths, char const *cmd)
+{
+	debugFunctionName("GET_CMD_PATH");
+	char	*path;
+	int		i;
+
+	i = 0;
+	while (env_paths[i])
+	{
+		path = get_path(env_paths[i], cmd);
+		if (access(path, F_OK) == 0)
+			return (path);
+		free(path);
+		i++;
+	}
+	return (NULL);
+}
+
+void	execmd(void)
+{
+	debugFunctionName("EXEC_CMD");
+	char	**paths;
+	char	*exec_path;
+    char	*cmds;
+    pid_t	pid;
+    int		status;
+
+	pid = fork();
+	cmds = g_program.token[0];
+    if (pid == 0)
+    {
+    if (cmds[0] == '/')
+	{
+		if (execve(&cmds[0], g_program.token, g_program.envp) == -1)
+			error_and_exit("command cannot be executed", 126);
+	}
+	paths = get_full_path();
+	exec_path = get_path_for_cmd(paths, &cmds[0]);
+	if (!paths || !exec_path)
+		    error_and_exit("command not found", 127);
+	if (execve(exec_path, g_program.token, g_program.envp) == -1)
+		error_and_exit("command cannot be executed", 126);
+	}
+    else
+    {
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status))
+        {
+			g_program.exit_status = WEXITSTATUS(status);
+        }
+        return;
+    }
+	exit(EXIT_SUCCESS);
+}
