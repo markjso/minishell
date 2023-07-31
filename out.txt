@@ -1,2 +1,0 @@
-outfile number: 1
-std out is : out.txt
