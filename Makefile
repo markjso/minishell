@@ -37,7 +37,6 @@ SRCS=minishell.c \
 	error.c \
 	redirection.c \
 	heredoc.c \
-	pipes.c \
 	redirection_utils.c \
 	leaks.c \
 	exit_and_free.c

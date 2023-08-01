@@ -87,7 +87,6 @@ void	execmd(void)
 
 	pid = fork();
 	cmds = g_program.token[0];
-	printf("the token is %s\n", g_program.token[0]);
     if (pid == 0)
     {
     if (cmds[0] == '/')

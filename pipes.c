@@ -148,4 +148,3 @@ void do_pipe(void)
 		exepipe();
 		g_program.redir_out_flag = 1;
 	}
-}

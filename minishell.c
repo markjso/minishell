@@ -47,7 +47,10 @@ int main(int ac, char **av, char **envp)
             process_input(input, &root);
             check_for_redirect(&root);
             ft_continue(&root);
+<<<<<<< HEAD
 			
+=======
+>>>>>>> ec836a7ab1e721276dd680a7773d85083027d1d7
         }
     }
 }

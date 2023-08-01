@@ -62,6 +62,7 @@ void	make_tokens(char *str, t_token_list **root)
 	int				input_index;
 	t_token_list	*new_node;
 
+<<<<<<< HEAD
 	input_index = 0;
 	while (str[input_index] != '\0')
 	{
@@ -75,6 +76,8 @@ void	make_tokens(char *str, t_token_list **root)
 	}
 }
 
+=======
+>>>>>>> ec836a7ab1e721276dd680a7773d85083027d1d7
 /*
 copy_int_array
 Moves linked list t_token_list->data* into program->token** array. 
