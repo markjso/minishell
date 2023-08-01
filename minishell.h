@@ -170,6 +170,7 @@ void	replace_node_data(t_token_list *curr, char *new_data);
 void	error_message(char *message, int status);
 void	error_and_exit(char *message, int status);
 void	ft_exit(int exit_number);
+void	ft_free_envp();
 
 void	debugFunctionName(char *function_name);
 

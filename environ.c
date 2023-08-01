@@ -33,7 +33,9 @@ t_envar	*split_env_var(char **envp)
 		if (split_env != NULL && split_env[0] != NULL && split_env[1] != NULL)
 		{
 			// printf("Split: %s=%s\n", split_env[0], split_env[1]);
-			new_node = init_env(ft_strdup(split_env[0]), ft_strdup(split_env[1]));
+			printf("Calling new_node\n");
+			// new_node = init_env(ft_strdup(split_env[0]), ft_strdup(split_env[1]));
+			new_node = init_env(split_env[0], split_env[1]); // Malloc
 			if (new_node == NULL)
 				printf("Error: memory not allocted\n");
 			if (start == NULL)
@@ -62,7 +64,8 @@ void add_env_var(t_envar *node)
         {
             // Update the value of the existing environment variable
             free(tmp->value);
-            tmp->value = strdup(node->value);
+            tmp->value = ft_strdup(node->value);
+			printf("add_env_var while and if\n");
             rebuild_envp();
 			return;
         }
@@ -82,6 +85,7 @@ void add_env_var(t_envar *node)
         }
         tmp->next = node;
     }
+	printf("add_env_var end of function\n");
 	rebuild_envp();
 }
 

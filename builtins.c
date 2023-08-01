@@ -85,11 +85,12 @@ int	export_cmd(char **token)
 	split_env = ft_split(token[1], '=');
 	if (!split_env[1])
 		return (1);
-	name = ft_strdup(split_env[0]);
-	value = ft_strdup(split_env[1]);
+	name = split_env[0];
+	value = split_env[1];
 	node = find_env_var(name);
 	if (node == NULL)
 	{
+		printf("Calling node\n");
 		node = init_env(name, value);
 		add_env_var(node);
 	}
@@ -98,8 +99,6 @@ int	export_cmd(char **token)
 		free(node->value);
 		node->value = value;
 	}
-	// free(name);
-	// free(value);
 	return (0);
 }
 

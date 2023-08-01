@@ -72,8 +72,9 @@ void init_env_vars(void)
         printf("Failed to get current directory\n");
         ft_exit(1);
     }
-	pwd = init_env(ft_strdup("PWD"), ft_strdup(cwd));
-    oldpwd = init_env(ft_strdup("OLDPWD"), ft_strdup(cwd));
+	printf("Calling pwd and old pwd\n");
+	pwd = init_env("PWD", cwd);
+    oldpwd = init_env("OLDPWD", cwd);
     
     add_env_var(pwd);
     add_env_var(oldpwd);
@@ -94,15 +95,16 @@ store data.*/
 void init_global(void)
 {
     g_program.token = (char **)malloc((MAXLIST + 1) * sizeof(char *));
-    for (int i = 0; i < MAXLIST + 1; i++) {
+    for (int i = 0; i < MAXLIST + 1; i++)
         g_program.token[i] = NULL;
 	g_program.envp = NULL;
 	g_program.exit_status = 0;
 	g_program.pipe_fd[0] = -1;
     g_program.pipe_fd[1] = -1;
     g_program.is_first_command = 1;
+	printf("hiiiii\n");
 	init_env_vars();
-    }
+
 }
 
 /*allocates memory for the struct and assigns
@@ -112,11 +114,11 @@ t_envar	*init_env(char *name, char *value)
 {
 	t_envar	*new;
 
-	new = malloc(sizeof(t_envar));
+	new = malloc(sizeof(t_envar)); // Malloc, must be freed in return. 
 	if (!new)
 		return (NULL);
-	new->name = name;
-	new->value = value;
+	new->name = ft_strdup(name); // Malloc
+	new->value = ft_strdup(value); // Malloc
 	new->next = NULL;
 	return (new);
 }

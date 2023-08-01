@@ -30,6 +30,8 @@ int     count_envars(t_envar *envars)
     return (i);
 }
 
+
+
 void	rebuild_envp(void)
 {
 	char		**new_env;
@@ -38,19 +40,18 @@ void	rebuild_envp(void)
 	int			count;
 	int			i;
 
-	if (g_program.envp != NULL)
-		free(g_program.envp);
+	ft_free_envp();
 	tmp = g_program.envar;
 	count = count_envars(tmp);
 	i = 0;
-	new_env = malloc(sizeof(char *) * count + 1);
+	new_env = malloc(sizeof(char *) * count + 1); // Malloc
 	if (!new_env)
 		return ;
 	while (i < count)
 	{
-		name_part = ft_strjoin(tmp->name, "=");
-        new_env[i] = ft_strjoin(name_part, tmp->value);
-		free(name_part);
+		name_part = ft_strjoin(tmp->name, "="); // Malloc freed
+        new_env[i] = ft_strjoin(name_part, tmp->value); // Malloc
+		free(name_part); // Free
 		i++;
 		tmp = tmp->next;
 	}

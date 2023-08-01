@@ -34,8 +34,9 @@ int main(int ac, char **av, char **envp)
     t_token_list *root;
 
     root = NULL;
-    g_program.envar = split_env_var(envp);
+    g_program.envar = split_env_var(envp); // Malloced
     g_program.envp = envp;
+	printf("calling init gloval\n");
     init_global();
     sig_initialiser();
 

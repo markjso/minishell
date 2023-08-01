@@ -32,7 +32,7 @@ char	*make_token(char *str)
 
 	i = 0;
 	int length = find_end(str);
-	return_token = malloc(sizeof(char) * length + 1); //JC MALLOC
+	return_token = malloc(sizeof(char) * length + 1); // malloc freed in return
 	while (i < length)
 	{
 		return_token[i] = str[i];
@@ -59,8 +59,9 @@ and the whole quotation mark.*/
 void make_tokens(char *str, t_token_list **root)
 {
     debugFunctionName("MAKE_TOKENS");
-    int input_index;
-    t_token_list *new_node;
+    int				input_index;
+    t_token_list	*new_node;
+	char			*temp_token_value;
 
     input_index = 0;
     while (str[input_index] != '\0')
@@ -76,7 +77,9 @@ void make_tokens(char *str, t_token_list **root)
             else
             {
                 // If not a pipe symbol, create a regular token
-                new_node = make_new_node(make_token(&str[input_index]));
+				temp_token_value = make_token(&str[input_index]); // Malloc
+                new_node = make_new_node(temp_token_value);
+				free(temp_token_value);
                 input_index = ft_strlen(new_node->data) - 1 + input_index;
             }
             ll_insert_end(root, new_node);
@@ -97,7 +100,6 @@ void	copy_into_array(t_token_list **root)
 	int		i;
 
 	token_number = find_token_number(root);
-	g_program.token = (char**)malloc(sizeof(char*) * token_number + 1);
 	i = 0;
 	curr = *root;
 	while (i < token_number)
