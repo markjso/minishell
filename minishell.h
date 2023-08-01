@@ -89,10 +89,8 @@ char	*get_path_for_cmd(char **env_paths, char const *cmd);
 /*pipes and signals*/
 void	do_pipe(void);
 void	sig_initialiser(void);
-// char	*ft_strtok_r(char **str, char *delim);
 void 	handle_pipe(void);
 bool	has_pipe_token(void);
-// void exe_pipe_cmd(char **command_tokens);
 char	**split_command(const char *command);
 
 /*process_input*/
@@ -157,6 +155,7 @@ void	remove_redirect();
 void	copy_into_array(t_token_list **root);
 int		ft_not_whitespace_not_quote(int c);
 
+/*token list*/
 t_token_list    *make_new_node(char *value);
 void    ll_insert_end(t_token_list **root, t_token_list *new_node);
 void    ll_insert_beginning(t_token_list **root, t_token_list *new_node);
@@ -170,15 +169,8 @@ void	replace_node_data(t_token_list *curr, char *new_data);
 /*errors and exit*/
 void	error_message(char *message, int status);
 void	error_and_exit(char *message, int status);
-<<<<<<< HEAD
-void	error_message_cmd(char *message, int status);
-=======
 void	ft_exit(int exit_number);
-
->>>>>>> 1c9efd5a79e5b9fd15775f0d175c768737493f7c
+void	error_message_cmd(char *message, int status);
 void	debugFunctionName(char *function_name);
 
 #endif
-
-// void	free_dollar_found(char **env_str, char **first, char **first_2, 
-// char **last, char **last_2);

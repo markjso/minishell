@@ -119,16 +119,15 @@ void	do_redirect(t_token_list *curr, int num, int *flag)
 
 void	ft_continue(t_token_list **root)
 {
-	printf("start of ft_continue(root): std out is : %s\n", g_program.redirect_out);
 	remove_quotes(root);
-	copy_into_array(root);
-	if (has_pipe_token())
-	{
-		handle_pipe();
-	}			// if it is one of the builtin commands do it. Found in buitlin_utils.c
+	copy_into_array(root);			// if it is one of the builtin commands do it. Found in buitlin_utils.c
 	if (is_builtin_cmd())
 	{
 		do_builtins(g_program.token, &g_program);
+	}
+	else if (has_pipe_token())
+	{
+		handle_pipe();
 	}
 	else // else it is one of the standard shell commands so execute that with execmd. Found in execmd.c
 	{

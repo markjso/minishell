@@ -76,46 +76,7 @@ char	*get_path_for_cmd(char **env_paths, char const *cmd)
 	return (NULL);
 }
 
-<<<<<<< HEAD
 void	execmd(void)
-=======
-
-void exe_pipe_cmd(char **command_tokens) {
-    debugFunctionName("EXEC_PIPE_CMD");
-    char **paths;
-    char *exec_path;
-    pid_t pid;
-    int status;
-
-    pid = fork();
-    if (pid == 0) {
-        if (command_tokens[0][0] == '/') {
-            if (execve(command_tokens[0], command_tokens, g_program.envp) == -1) {
-                perror("Error");
-                ft_exit(EXIT_FAILURE);
-            }
-        }
-
-        paths = get_full_path();
-        exec_path = get_path_for_cmd(paths, command_tokens[0]);
-        if (!paths || !exec_path) {
-            perror("Command not found");
-            ft_exit(EXIT_FAILURE);
-        }
-        if (execve(exec_path, command_tokens, g_program.envp) == -1) {
-            perror("Error");
-            ft_exit(EXIT_FAILURE);
-        }
-    } else {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status)) {
-            g_program.exit_status = WEXITSTATUS(status);
-        }
-    }
-}
-
-void	execmd(t_program *program)
->>>>>>> 1c9efd5a79e5b9fd15775f0d175c768737493f7c
 {
 	debugFunctionName("EXEC_CMD");
 	char	**paths;
@@ -126,6 +87,7 @@ void	execmd(t_program *program)
 
 	pid = fork();
 	cmds = g_program.token[0];
+	printf("the token is %s\n", g_program.token[0]);
     if (pid == 0)
     {
     if (cmds[0] == '/')

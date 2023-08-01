@@ -20,75 +20,39 @@ void exepipe(void)
 	char **paths;
 	char *exec_path;
     char *cmds;
+    int status;
 
-	cmds = g_program.commands[0];
+	cmds = g_program.token[0];
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, &cmds[0]);
-	if (execve(exec_path, g_program.commands, g_program.envp) < 0)
+	if (exec_path)
 	{
-		perror("execve failed"); 
+		execve(exec_path, g_program.commands, g_program.envp);
+		perror("execve"); 
 		exit(EXIT_FAILURE); 
 	}
-	else
+	waitpid(g_program.pid, &status, 0);
+	if (WIFEXITED(status))
 	{
-		waitpid(g_program.pid, &g_program.exit_status, 0);
+		g_program.exit_status = WEXITSTATUS(status);
 	}
-	// if (WIFEXITED(status))
-	// {
-	// 	g_program.exit_status = WEXITSTATUS(status);
-	// }
 	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
 }
-
-
-char	**realloc_back(char **arr, char *delim)
-{
-	char	**ret;
-	int		i;
-	int		len;
-
-	if (!delim || !ft_strcmp(arr[0], delim))
-		return (arr);
-	i = 0;
-	while (arr[i] && ft_strcmp(arr[i], delim))
-		i++;
-	len = i;
-	while (arr[len] && ft_strcmp(arr[len], ""))
-		len++;
-	ret = malloc(sizeof(*ret) * (len - i + 1));
-	len = 0;
-	while (arr[i] && ft_strcmp(arr[i], ""))
-		ret[len++] = ft_strdup(arr[i++]);
-	ret[len] = NULL;
-	ft_free_array(arr);
-	if (!ret[1] && !ft_strcmp(ret[0], ")"))
-	{
-		ft_free_array(ret);
-		return (NULL);
-	}
-	return (ret);
-}
-
 
 void last_command(void)
 {
 	debugFunctionName("LAST_CMD");
-	int pid;
+	int status;
 
-	if (!g_program.pid)
-			exepipe();
-		pid = fork();
-		if (!pid)
-			exepipe();
-		waitpid(g_program.pid, &g_program.exit_status, 0);
-		waitpid(pid, &g_program.exit_status, 0);
-		g_program.exit_status = g_program.exit_status;
+	waitpid(g_program.pid, &status, 0);
+	if (WIFEXITED(status))
+		g_program.exit_status = WEXITSTATUS(status);
 		ft_free_array(g_program.token);
 }
 
 void	set_commands(void)
 {
-    // debugFunctionName("SET_CMDS");
+    debugFunctionName("SET_CMDS");
     char **tokens;
     int i;
 	int j;
@@ -116,24 +80,15 @@ void	set_commands(void)
 
 void	execute_commands(void)
 {
-	//  debugFunctionName("EXEXUTE_PIPE_COMMAND");
-    int	i;
+	 debugFunctionName("EXEXUTE_PIPE_COMMAND");
+     int	i = 0;
 
+	sig_initialiser();
 	set_commands();
+	printf("commmands in g_program.commands: %s\n", g_program.commands[i]);
 	do_pipe();
-	i = 0;
-	while (g_program.token[i] && ft_strcmp("|", g_program.token[i]))
-	{
-		i++;
-	}
-	if (!ft_strcmp("|", g_program.token[i]))
-	{
-		g_program.token = realloc_back(g_program.token, "|");
-		g_program.token = realloc_back(g_program.token,
-				g_program.token[0]);
-	}
-	i = 0;
-	free(g_program.commands);
+	last_command();
+	execmd();
 }
 
 void handle_pipe(void) 
@@ -166,11 +121,10 @@ void do_pipe(void)
     g_program.pid = fork();
     if (g_program.pid < 0)
     {
-<<<<<<< HEAD
         perror("Fork Error");
         exit(EXIT_FAILURE);
     }
-	if (g_program.pid == 0)
+	if (!g_program.pid)
 	{
 		close(pipe_fd[1]);
 		if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
@@ -180,7 +134,7 @@ void do_pipe(void)
 		}
 		close(pipe_fd[0]);
 		exepipe();
-		// g_program.redir_in_flag = 1;
+		g_program.redir_in_flag = 1;
 	}
 	else
 	{
@@ -191,45 +145,7 @@ void do_pipe(void)
 			exit(EXIT_FAILURE);
 		}
 		close(pipe_fd[1]);
-		// exepipe();
-		// g_program.redir_out_flag = 1;
+		exepipe();
+		g_program.redir_out_flag = 1;
 	}
-=======
-        perror("Error");
-        ft_exit(EXIT_FAILURE);
-    }
-
-    if (g_program.pid == 0)
-    {
-        // Child process
-        if (!is_first_command)
-        {
-            close(g_program.pipe_fd[1]);
-            if (dup2(g_program.pipe_fd[0], STDIN_FILENO) < 0)
-            {
-                perror("Error");
-                ft_exit(EXIT_FAILURE);
-            }
-            close(g_program.pipe_fd[0]);
-        }
-        if (current->next != NULL)
-        {
-            close(pipe_fd[0]);
-            if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
-            {
-                perror("Error");
-                ft_exit(EXIT_FAILURE);
-            }
-            close(pipe_fd[1]);
-        }
-        // Execute the command
-        char **command_tokens = split_command(current->data);
-        execvp(command_tokens[0], command_tokens);
-    }
-    else
-    {
-        // Parent process
-        exit_pipe(current);
-    }
->>>>>>> 1c9efd5a79e5b9fd15775f0d175c768737493f7c
 }
