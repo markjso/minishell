@@ -117,7 +117,7 @@ void do_pipe(t_token_list *current)
     if (g_program.pid < 0)
     {
         perror("Error");
-        exit(EXIT_FAILURE);
+        ft_exit(EXIT_FAILURE);
     }
 
     if (g_program.pid == 0)
@@ -129,7 +129,7 @@ void do_pipe(t_token_list *current)
             if (dup2(g_program.pipe_fd[0], STDIN_FILENO) < 0)
             {
                 perror("Error");
-                exit(EXIT_FAILURE);
+                ft_exit(EXIT_FAILURE);
             }
             close(g_program.pipe_fd[0]);
         }
@@ -139,7 +139,7 @@ void do_pipe(t_token_list *current)
             if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
             {
                 perror("Error");
-                exit(EXIT_FAILURE);
+                ft_exit(EXIT_FAILURE);
             }
             close(pipe_fd[1]);
         }
