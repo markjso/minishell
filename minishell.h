@@ -47,6 +47,7 @@ typedef struct s_program
     struct s_envar *envar;
 	char	**token;
 	char	**envp;
+	char	**commands;
 	char	*prompt;
 	int		exit_status;
 	pid_t			pid;
@@ -61,9 +62,6 @@ typedef struct s_program
 	int		in_backup;
 	int		redir_out_flag;
 	int		redir_in_flag;
-	int 	pipe_fd[2];
-	int		is_first_command;
-    // Other fields related to the shell's configuration and data
 } 	t_program;
 
 typedef struct s_envar
@@ -79,6 +77,7 @@ t_program	g_program;
 int		take_input(char *input);
 void	init_global(void);
 t_envar	*init_env(char *name, char *value);
+void	get_user_prompt(void);
 
 // char	*get_command(char *path);
 void	process_input(char *str, t_token_list **root);
@@ -170,7 +169,6 @@ void	replace_node_data(t_token_list *curr, char *new_data);
 void	error_message(char *message, int status);
 void	error_and_exit(char *message, int status);
 void	ft_exit(int exit_number);
-
 void	debugFunctionName(char *function_name);
 
 #endif

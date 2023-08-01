@@ -85,7 +85,6 @@ void make_tokens(char *str, t_token_list **root)
     }
 }
 
-
 /*
 copy_int_array
 Moves linked list t_token_list->data* into program->token** array. 
@@ -120,13 +119,15 @@ void	copy_into_array(t_token_list **root)
 }
 
 // Implementation of has_pipe_token function
-bool has_pipe_token(char *str)
+bool has_pipe_token(void)
 {
     debugFunctionName("HAS_PIPE_TOKEN");
-	while (*str) {
-        if (*str == '|')
+	int i = 0;
+	while (g_program.token[i])
+	{
+        if (g_program.token[i][0] == '|')
             return true;
-        str++;
+        i++;
     }
     return false;
 }
