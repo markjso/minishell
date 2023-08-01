@@ -47,7 +47,6 @@ int main(int ac, char **av, char **envp)
             process_input(input, &root);
             check_for_redirect(&root);
             ft_continue(&root);
-			
         }
     }
 }

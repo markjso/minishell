@@ -23,7 +23,7 @@ void	get_heredoc(int pipefd[2], char *delimiter)
     if (pipe(pipefd) == -1)
 	{
         perror("pipe");
-        exit(2);
+        ft_exit(2);
     }
     pid = fork();
     if (pid == 0) // CHILD PROCESS
@@ -42,7 +42,7 @@ void	get_heredoc(int pipefd[2], char *delimiter)
 		}
 		free(curr_line);
 		close(pipefd[1]); // close the write end of the pipe in the child process. Ends writing to the pipe.
-        exit(EXIT_SUCCESS); // child process ends
+        ft_exit(EXIT_SUCCESS); // child process ends
     }
 }
 

@@ -28,6 +28,7 @@
 # include <fcntl.h>
 # include "libft.h"
 # include <errno.h>
+# include "leaks.h"
 
 # define MAXCOM 5000 // max number of letters to be supported
 # define MAXLIST 100 // max number of commands to be supported
@@ -49,7 +50,7 @@ typedef struct s_program
 	char	**commands;
 	char	*prompt;
 	int		exit_status;
-	int		pid;
+	pid_t			pid;
 	char    *redirect_file;
 	char	*redirect_in;
 	char	*redirect_out;
@@ -80,19 +81,18 @@ void	get_user_prompt(void);
 
 // char	*get_command(char *path);
 void	process_input(char *str, t_token_list **root);
-void	execmd(void);
+void	execmd(t_program *program);
 t_envar	*find_env(t_envar *envars, char *name);
-char	**get_full_path(void);
-char	*get_path_for_cmd(char **env_paths, char const *cmd);
 
 /*pipes and signals*/
-void	do_pipe(void);
+void	do_pipe(t_token_list *current);
 void	sig_initialiser(void);
-// char	*ft_strtok_r(char **str, char *delim);
-void 	handle_pipe(void);
-bool	has_pipe_token(void);
+char	*ft_strtok_r(char **str, char *delim);
+void 	handle_pipe(t_token_list *current);
+bool	has_pipe_token(char *str);
 // void exe_pipe_cmd(char **command_tokens);
 char	**split_command(const char *command);
+void	reset_pipe_state();
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);
@@ -165,10 +165,10 @@ void    ll_deallocate(t_token_list **root);
 void	ll_print_token(t_token_list **root);
 void	replace_node_data(t_token_list *curr, char *new_data);
 
-/*errors*/
+/*errors and exit*/
 void	error_message(char *message, int status);
 void	error_and_exit(char *message, int status);
-
+void	ft_exit(int exit_number);
 void	debugFunctionName(char *function_name);
 
 #endif

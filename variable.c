@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-t_program g_program;
+// t_program g_program;
 
 char	*ft_first_and_second(char *str, int *start, int env_start, int *end)
 {

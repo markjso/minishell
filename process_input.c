@@ -56,23 +56,33 @@ The quotation is treated as one word.
 Any word that has no space or no tab and is next to the "outside" of a 
 quotation mark: One token will be created to encompas the outside word 
 and the whole quotation mark.*/
-void	make_tokens(char *str, t_token_list **root)
+void make_tokens(char *str, t_token_list **root)
 {
-	debugFunctionName("MAKE_TOKENS");
-	int				input_index;
-	t_token_list	*new_node;
+    debugFunctionName("MAKE_TOKENS");
+    int input_index;
+    t_token_list *new_node;
 
-	input_index = 0;
-	while (str[input_index] != '\0')
-	{
-		if (ft_is_not_white_space(str[input_index]) == 1)
-		{
-			new_node = make_new_node(make_token(&str[input_index]));
-			ll_insert_end(root, new_node);
-			input_index = ft_strlen(new_node->data) - 1 + input_index;
-		}
-		input_index++; // if whitespace
-	}
+    input_index = 0;
+    while (str[input_index] != '\0')
+    {
+        if (ft_is_not_white_space(str[input_index]) == 1)
+        {
+            // Check if the current character is a pipe symbol '|'
+            if (str[input_index] == '|')
+            {
+                char pipe_token[2] = {'|', '\0'};
+                new_node = make_new_node(pipe_token);
+            }
+            else
+            {
+                // If not a pipe symbol, create a regular token
+                new_node = make_new_node(make_token(&str[input_index]));
+                input_index = ft_strlen(new_node->data) - 1 + input_index;
+            }
+            ll_insert_end(root, new_node);
+        }
+        input_index++;
+    }
 }
 
 /*
