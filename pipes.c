@@ -39,51 +39,14 @@ void exepipe(void)
 	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
 }
 
-
-char	**realloc_back(char **arr, char *delim)
-{
-	char	**ret;
-	int		i;
-	int		len;
-
-	if (!delim || !ft_strcmp(arr[0], delim))
-		return (arr);
-	i = 0;
-	while (arr[i] && ft_strcmp(arr[i], delim))
-		i++;
-	len = i;
-	while (arr[len] && ft_strcmp(arr[len], ""))
-		len++;
-	ret = malloc(sizeof(*ret) * (len - i + 1));
-	len = 0;
-	while (arr[i] && ft_strcmp(arr[i], ""))
-		ret[len++] = ft_strdup(arr[i++]);
-	ret[len] = NULL;
-	ft_free_array(arr);
-	if (!ret[1] && !ft_strcmp(ret[0], ")"))
-	{
-		ft_free_array(ret);
-		return (NULL);
-	}
-	return (ret);
-}
-
-
 void last_command(void)
 {
 	debugFunctionName("LAST_CMD");
 	int status;
 
-	if (!g_program.pid)
-			exepipe();
-		else
-	{
-		waitpid(g_program.pid, &status, 0);
-		if (WIFEXITED(status))
-		{
-			g_program.exit_status = WEXITSTATUS(status);
-		}
-	}
+	waitpid(g_program.pid, &status, 0);
+	if (WIFEXITED(status))
+		g_program.exit_status = WEXITSTATUS(status);
 		ft_free_array(g_program.token);
 }
 
@@ -118,23 +81,14 @@ void	set_commands(void)
 void	execute_commands(void)
 {
 	 debugFunctionName("EXEXUTE_PIPE_COMMAND");
-    int	i;
+     int	i = 0;
 
+	sig_initialiser();
 	set_commands();
+	printf("commmands in g_program.commands: %s\n", g_program.commands[i]);
 	do_pipe();
-	i = 0;
-	while (g_program.token[i] && ft_strcmp("|", g_program.token[i]))
-	{
-		i++;
-	}
-	if (!ft_strcmp("|", g_program.token[i]))
-	{
-		g_program.token = realloc_back(g_program.token, "|");
-		g_program.token = realloc_back(g_program.token,
-				g_program.token[0]);
-	}
-	i = 0;
-	free(g_program.commands);
+	last_command();
+	execmd();
 }
 
 void handle_pipe(void) 

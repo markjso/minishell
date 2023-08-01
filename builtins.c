@@ -19,52 +19,29 @@ void	printpwd(void)
 	char	pwd[256];
 
 	getcwd(pwd, sizeof(pwd));
-	printf("Dir: %s\n", pwd);
-    g_program.exit_status = 0;
+	printf("Dir: %s", pwd);
+	g_program.exit_status = 0;
 }
 
-/*
-Write to screen the text folloing the command `echo`. 
-Checks for the -n flag. Must expand this description.
-*/
-
-static	bool	check_n_flag(char *str)
+void	echo_cmd(char **token)
 {
-	if (!*str)
-		return (false);
-	if (*str == '-' && *(str + 1))
+	int		i;
+	bool	flag;
+
+	i = 1;
+	flag = false;
+	while (token[i] && check_n_flag(token[i]))
 	{
-		str++;
-		while (*str == 'n')
-			str++;
+		flag = true;
+		i++;
 	}
-	if (*str)
-		return (false);
-	return (true);
-}
-
-void echo_cmd(char **token)
-{
-    debugFunctionName("ECHO_CMD");
-    int i = 1;
-    bool    flag;
-    flag = false;
-
-    // Check if -n option was passed
-    while (token[i] && check_n_flag(token[i]))
-    {
-        flag = true;
-        i++;
-    }
-    // Print the arguments
-    while (token[i])
-    {
-        printf("%s ", token[i]);
-        if (token[i])
-        i++;
-    }
-    // Print a new line only if -n option was not passed and there are arguments
-    if (!flag && (i > 1))
+	while (token[i])
+	{
+		printf("%s ", token[i]);
+		if (token[i])
+			i++;
+	}
+	if (!flag && (i > 1))
 		printf("\n");
 	g_program.exit_status = 0;
 }
@@ -82,6 +59,8 @@ int	export_cmd(char **token)
         print_env();
         return (0);
     }
+	if (ft_strcmp(token[1],"#"))
+		error_message_cmd("not valid in this context", 1);
 	split_env = ft_split(token[1], '=');
 	if (!split_env[1])
 		return (1);
@@ -103,12 +82,24 @@ int	export_cmd(char **token)
 	return (0);
 }
 
+void	unset_cmd(char **token)
+{
+	if (ft_strcmp(token[1],"#"))
+		error_message_cmd("invalid parameter name", 1);
+	else
+		remove_env_var(g_program.token[1]);
+}
+
 void	exit_cmd(char **token)
 {
 	if (token[1] && token[2])
 		(ft_putstr_fd("exit", 2), error_message("too many arguments", 255));
 	else if (token[1])
-		exit(0);
+	{
+		ft_exit(0);
+	}
 	else
-		exit(0);
+	{
+		ft_exit(0);
+	}
 }
