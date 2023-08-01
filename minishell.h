@@ -108,6 +108,7 @@ int		cd_command(char **token);
 int		export_cmd(char **token);
 void	echo_cmd(char **token);
 void	printpwd(void);
+void	unset_cmd(char **token);
 void	exit_cmd(char **token);
 
 /*utils*/
@@ -168,7 +169,7 @@ void	replace_node_data(t_token_list *curr, char *new_data);
 /*errors*/
 void	error_message(char *message, int status);
 void	error_and_exit(char *message, int status);
-
+void	error_message_cmd(char *message, int status);
 void	debugFunctionName(char *function_name);
 
 #endif

@@ -20,22 +20,23 @@ void exepipe(void)
 	char **paths;
 	char *exec_path;
     char *cmds;
-    int status;
 
-	cmds = g_program.token[0];
+	cmds = g_program.commands[0];
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, &cmds[0]);
-	if (exec_path)
+	if (execve(exec_path, g_program.commands, g_program.envp) < 0)
 	{
-		execve(exec_path, g_program.commands, g_program.envp);
-		perror("execve"); 
+		perror("execve failed"); 
 		exit(EXIT_FAILURE); 
 	}
-	waitpid(g_program.pid, &status, 0);
-	if (WIFEXITED(status))
+	else
 	{
-		g_program.exit_status = WEXITSTATUS(status);
+		waitpid(g_program.pid, &g_program.exit_status, 0);
 	}
+	// if (WIFEXITED(status))
+	// {
+	// 	g_program.exit_status = WEXITSTATUS(status);
+	// }
 	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
 }
 
@@ -72,24 +73,22 @@ char	**realloc_back(char **arr, char *delim)
 void last_command(void)
 {
 	debugFunctionName("LAST_CMD");
-	int status;
+	int pid;
 
 	if (!g_program.pid)
 			exepipe();
-		else
-	{
-		waitpid(g_program.pid, &status, 0);
-		if (WIFEXITED(status))
-		{
-			g_program.exit_status = WEXITSTATUS(status);
-		}
-	}
+		pid = fork();
+		if (!pid)
+			exepipe();
+		waitpid(g_program.pid, &g_program.exit_status, 0);
+		waitpid(pid, &g_program.exit_status, 0);
+		g_program.exit_status = g_program.exit_status;
 		ft_free_array(g_program.token);
 }
 
 void	set_commands(void)
 {
-    debugFunctionName("SET_CMDS");
+    // debugFunctionName("SET_CMDS");
     char **tokens;
     int i;
 	int j;
@@ -117,7 +116,7 @@ void	set_commands(void)
 
 void	execute_commands(void)
 {
-	 debugFunctionName("EXEXUTE_PIPE_COMMAND");
+	//  debugFunctionName("EXEXUTE_PIPE_COMMAND");
     int	i;
 
 	set_commands();
@@ -170,7 +169,7 @@ void do_pipe(void)
         perror("Fork Error");
         exit(EXIT_FAILURE);
     }
-	if (!g_program.pid)
+	if (g_program.pid == 0)
 	{
 		close(pipe_fd[1]);
 		if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
@@ -180,7 +179,7 @@ void do_pipe(void)
 		}
 		close(pipe_fd[0]);
 		exepipe();
-		g_program.redir_in_flag = 1;
+		// g_program.redir_in_flag = 1;
 	}
 	else
 	{
@@ -191,7 +190,7 @@ void do_pipe(void)
 			exit(EXIT_FAILURE);
 		}
 		close(pipe_fd[1]);
-		exepipe();
-		g_program.redir_out_flag = 1;
+		// exepipe();
+		// g_program.redir_out_flag = 1;
 	}
 }

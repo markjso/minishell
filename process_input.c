@@ -115,7 +115,9 @@ bool has_pipe_token(void)
 	int i = 0;
 	while (g_program.token[i])
 	{
-        if (g_program.token[i][0] == '|')
+        if (g_program.token[0][0] == '|')
+			error_message("command not found", 127);
+		else if (g_program.token[i][0] == '|')
             return true;
         i++;
     }
