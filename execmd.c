@@ -89,7 +89,7 @@ void exe_pipe_cmd(char **command_tokens) {
         if (command_tokens[0][0] == '/') {
             if (execve(command_tokens[0], command_tokens, g_program.envp) == -1) {
                 perror("Error");
-                exit(EXIT_FAILURE);
+                ft_exit(EXIT_FAILURE);
             }
         }
 
@@ -97,11 +97,11 @@ void exe_pipe_cmd(char **command_tokens) {
         exec_path = get_path_for_cmd(paths, command_tokens[0]);
         if (!paths || !exec_path) {
             perror("Command not found");
-            exit(EXIT_FAILURE);
+            ft_exit(EXIT_FAILURE);
         }
         if (execve(exec_path, command_tokens, g_program.envp) == -1) {
             perror("Error");
-            exit(EXIT_FAILURE);
+            ft_exit(EXIT_FAILURE);
         }
     } else {
         waitpid(pid, &status, 0);

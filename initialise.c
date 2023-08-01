@@ -42,7 +42,7 @@ int	take_input(char *input)
 	if (!user_input) // Input is username and '$'.  IF username doesn't exist or Ctrl-d, exit program in error. 
 	{
 		printf("%sexit\n", input);
-		exit(1);
+		ft_exit(1);
 	}
 	if (ft_strlen(user_input) != 0) // If user inputs text, even nonsense, this is called. 
 	{
@@ -70,7 +70,7 @@ void init_env_vars(void)
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
     {
         printf("Failed to get current directory\n");
-        exit(1);
+        ft_exit(1);
     }
 	pwd = init_env(ft_strdup("PWD"), ft_strdup(cwd));
     oldpwd = init_env(ft_strdup("OLDPWD"), ft_strdup(cwd));
