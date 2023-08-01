@@ -98,7 +98,11 @@ void	exit_cmd(char **token)
 	if (token[1] && token[2])
 		(ft_putstr_fd("exit", 2), error_message("too many arguments", 255));
 	else if (token[1])
-		exit(0);
+	{
+		ft_exit(0);
+	}
 	else
-		exit(0);
+	{
+		ft_exit(0);
+	}
 }

@@ -166,6 +166,7 @@ void do_pipe(void)
     g_program.pid = fork();
     if (g_program.pid < 0)
     {
+<<<<<<< HEAD
         perror("Fork Error");
         exit(EXIT_FAILURE);
     }
@@ -193,4 +194,42 @@ void do_pipe(void)
 		// exepipe();
 		// g_program.redir_out_flag = 1;
 	}
+=======
+        perror("Error");
+        ft_exit(EXIT_FAILURE);
+    }
+
+    if (g_program.pid == 0)
+    {
+        // Child process
+        if (!is_first_command)
+        {
+            close(g_program.pipe_fd[1]);
+            if (dup2(g_program.pipe_fd[0], STDIN_FILENO) < 0)
+            {
+                perror("Error");
+                ft_exit(EXIT_FAILURE);
+            }
+            close(g_program.pipe_fd[0]);
+        }
+        if (current->next != NULL)
+        {
+            close(pipe_fd[0]);
+            if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
+            {
+                perror("Error");
+                ft_exit(EXIT_FAILURE);
+            }
+            close(pipe_fd[1]);
+        }
+        // Execute the command
+        char **command_tokens = split_command(current->data);
+        execvp(command_tokens[0], command_tokens);
+    }
+    else
+    {
+        // Parent process
+        exit_pipe(current);
+    }
+>>>>>>> 1c9efd5a79e5b9fd15775f0d175c768737493f7c
 }

@@ -48,5 +48,5 @@ void	error_and_exit(char *message, int status)
 	ft_putstr_fd(" : ", 2);
 	ft_putstr_fd(cmd, 2);
 	write(2, "\n", 1);
-	exit(status);
+	ft_exit(status);
 }

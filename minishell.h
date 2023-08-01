@@ -28,6 +28,7 @@
 # include <fcntl.h>
 # include "libft.h"
 # include <errno.h>
+# include "leaks.h"
 
 # define MAXCOM 5000 // max number of letters to be supported
 # define MAXLIST 100 // max number of commands to be supported
@@ -166,10 +167,15 @@ void    ll_deallocate(t_token_list **root);
 void	ll_print_token(t_token_list **root);
 void	replace_node_data(t_token_list *curr, char *new_data);
 
-/*errors*/
+/*errors and exit*/
 void	error_message(char *message, int status);
 void	error_and_exit(char *message, int status);
+<<<<<<< HEAD
 void	error_message_cmd(char *message, int status);
+=======
+void	ft_exit(int exit_number);
+
+>>>>>>> 1c9efd5a79e5b9fd15775f0d175c768737493f7c
 void	debugFunctionName(char *function_name);
 
 #endif

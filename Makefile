@@ -38,7 +38,9 @@ SRCS=minishell.c \
 	redirection.c \
 	heredoc.c \
 	pipes.c \
-	redirection_utils.c
+	redirection_utils.c \
+	leaks.c \
+	exit_and_free.c
 	
 dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
