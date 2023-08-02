@@ -26,6 +26,10 @@ t_program	g_program;
 	// 	free(prompt);
 // }
 
+int pipe_count;
+int I;
+bool is_background;
+
 int main(int ac, char **av, char **envp)
 {
     (void)ac;
@@ -34,27 +38,19 @@ int main(int ac, char **av, char **envp)
     t_token_list *root;
 
     root = NULL;
-    g_program.envar = split_env_var(envp); // Malloced
+    g_program.envar = split_env_var(envp);
     g_program.envp = envp;
-	printf("calling init gloval\n");
     init_global();
     sig_initialiser();
 
-    while (1) {
-        if (take_input(input) == 0) {
+    while (1)
+    {
+        if (take_input(input) == 0)
+        {
             g_program.redirect_index = 0;
             process_input(input, &root);
-            
-			if (has_pipe_token(input)) 
-			{
-                handle_pipe(root); // Handle multiple pipe commands
-            } 
-			else 
-			{
-                ft_continue(&root);
-            }
-            reset_pipe_state(); // Reset pipe-related state for non-pipe commands
-			// check_for_redirect(&root);
+            check_for_redirect(&root);
+            ft_continue(&root);
         }
     }
 }

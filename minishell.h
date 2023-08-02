@@ -35,6 +35,23 @@
 # define MAX_BUFFER 4096
 # define MAXARGS 20
 
+#define ERROR -1
+#define INTERACTIVE 0
+#define COMMANDLINE 1
+#define CHILD 0
+#define CURRENT 0
+#define PREVIOUS 1
+#define READ 0
+#define WRITE 1
+
+#define is_same !strcmp
+
+typedef int io[2];
+
+extern int I;
+extern int pipe_count;
+extern bool is_background;
+
 /*Struct for holding tokenised user input.*/
 typedef struct s_token_list
 {
@@ -47,6 +64,7 @@ typedef struct s_program
     struct s_envar *envar;
 	char	**token;
 	char	**envp;
+	char	**commands;
 	char	*prompt;
 	int		exit_status;
 	pid_t			pid;
@@ -82,18 +100,22 @@ t_envar	*init_env(char *name, char *value);
 
 // char	*get_command(char *path);
 void	process_input(char *str, t_token_list **root);
-void	execmd(t_program *program);
+void	execmd(void);
 t_envar	*find_env(t_envar *envars, char *name);
+char	**get_full_path(void);
+char	*get_path_for_cmd(char **env_paths, char const *cmd);
 
 /*pipes and signals*/
-void	do_pipe(t_token_list *current);
+// void	do_pipe(void);
 void	sig_initialiser(void);
-char	*ft_strtok_r(char **str, char *delim);
-void 	handle_pipe(t_token_list *current);
-bool	has_pipe_token(char *str);
-// void exe_pipe_cmd(char **command_tokens);
-char	**split_command(const char *command);
-void	reset_pipe_state();
+// void 	handle_pipe(void);
+// bool	has_pipe_token(void);
+// char	**split_command(const char *command);
+bool connect(io pipes[2]);
+void close_(io pipes[2]);
+void alternate(int **pipes);
+bool has_pipe_token(void);
+void	execute_commands(char **token);
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);
@@ -109,6 +131,7 @@ int		cd_command(char **token);
 int		export_cmd(char **token);
 void	echo_cmd(char **token);
 void	printpwd(void);
+void	unset_cmd(char **token);
 void	exit_cmd(char **token);
 
 /*utils*/
@@ -171,7 +194,7 @@ void	error_message(char *message, int status);
 void	error_and_exit(char *message, int status);
 void	ft_exit(int exit_number);
 void	ft_free_envp();
-
+void	error_message_cmd(char *message, int status);
 void	debugFunctionName(char *function_name);
 
 #endif

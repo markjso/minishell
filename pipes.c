@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 14:34:44 by jmarks            #+#    #+#             */
-/*   Updated: 2023/07/11 14:36:19 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/07/28 22:03:46 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,142 +14,197 @@
 
 extern	t_program	g_program;
 
-void setup_pipes(int *current_pipe, int *next_pipe) {
-    if (current_pipe[0] != -1) {
-        close(current_pipe[0]); // Close the read end of the current pipe
-        close(current_pipe[1]); // Close the write end of the current pipe
-    }
+#define is_last_command (I == pipe_count)
 
-    if (next_pipe[0] != -1) {
-        current_pipe[0] = next_pipe[0]; // Update read end with the next pipe's read end
-        current_pipe[1] = next_pipe[1]; // Update write end with the next pipe's write end
-    }
-}
-
-void exit_pipe(t_token_list *current)
+bool connect(io pipes[2])
 {
-    debugFunctionName("CLOSE_PIPE");
-    int pipe_fd[2];
-    if (current->next) 
-    {
-        close(g_program.pipe_fd[0]);
-        g_program.pipe_fd[0] = pipe_fd[0];
-        g_program.pipe_fd[1] = pipe_fd[1];
-    }
-    waitpid(g_program.pid, &g_program.exit_status, 0);
+	if (pipe_count)
+	{
+		if (is_last_command || I != 0)
+			dup2(pipes[PREVIOUS][READ], STDIN_FILENO);
+		if (I == 0 || !is_last_command)
+			dup2(pipes[CURRENT][WRITE], STDOUT_FILENO);
+	}
+	return (true);
 }
 
-/*tokenises the input string "str" based on the delimiter "|"
-trims each command of any whitespace and creates the pipe for 
-communication between commands if the string contains more than
-one command*/
-void handle_pipe(t_token_list *current) 
+void close_(io pipes[2])
 {
-    debugFunctionName("HANDLE_PIPE");
-    // t_token_list *curr = root;
-    int is_first_command = 1;
-
-    while (current != NULL)
-    {
-        if (current->data[0] == '|') 
-        {
-            if (!is_first_command)
-            {
-                close(g_program.pipe_fd[1]);
-            }
-            if (pipe(g_program.pipe_fd) == -1)
-            {
-                perror("Error creating pipe");
-            }
-            is_first_command = 0;
-            current = current->next;
-        } else
-        {
-            // Only execute the first command
-            do_pipe(current);
-            if (current->next && current->next->data[0] == '|')
-            {
-                current = current->next->next; // Skip the pipe symbol '|'
-            }
-            else
-            {
-                current = current->next;
-            }
-        }
-    }
+	if (pipe_count)
+	{
+		if (is_last_command || I != 0)
+			close(pipes[PREVIOUS][READ]);
+		if (I == 0 || !is_last_command)
+			close(pipes[CURRENT][WRITE]);
+	}
 }
 
-void reset_pipe_state() {
-    g_program.pipe_fd[0] = -1;
-    g_program.pipe_fd[1] = -1;
-    g_program.is_first_command = 1;
-}
-
-char **split_command(const char *command)
+void alternate(int **pipes)
 {
-    debugFunctionName("SPLIT_CMDS");
-    char **tokens = malloc(MAXARGS * sizeof(char *));
-    char *token;
-    int i = 0;
+	int	*pipe_current;
 
-    token = strtok(ft_strdup(command), " "); // Split the command using spaces as delimiters
-    while (token != NULL)
-    {
-        tokens[i++] = ft_strdup(token);
-        token = strtok(NULL, " ");
-    }
-    tokens[i] = NULL;
-
-    return tokens;
+	pipe_current = pipes[CURRENT];
+	pipes[CURRENT] = pipes[PREVIOUS];
+	pipes[PREVIOUS] = pipe_current;
 }
 
-void do_pipe(t_token_list *current)
+// void exepipe(void)
+// {
+// 	debugFunctionName("EXEC_PIPE");
+// 	char **paths;
+// 	char *exec_path;
+//     char *cmds;
+//     int status;
+
+// 	cmds = g_program.token[0];
+// 	paths = get_full_path();
+// 	exec_path = get_path_for_cmd(paths, &cmds[0]);
+// 	if (exec_path)
+// 	{
+// 		execve(exec_path, g_program.commands, g_program.envp);
+// 		perror("execve"); 
+// 		exit(EXIT_FAILURE); 
+// 	}
+// 	waitpid(g_program.pid, &status, 0);
+// 	if (WIFEXITED(status))
+// 	{
+// 		g_program.exit_status = WEXITSTATUS(status);
+// 	}
+// 	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
+// }
+
+// void last_command(void)
+// {
+// 	debugFunctionName("LAST_CMD");
+// 	int status;
+
+// 	waitpid(g_program.pid, &status, 0);
+// 	if (WIFEXITED(status))
+// 		g_program.exit_status = WEXITSTATUS(status);
+// 		ft_free_array(g_program.token);
+// }
+
+// void	set_commands(void)
+// {
+//     debugFunctionName("SET_CMDS");
+//     char **tokens;
+//     int i;
+// 	int j;
+
+//     i = 0; 
+// 	tokens = &g_program.token[i];
+// 	while (tokens[i] && ft_strcmp("|", tokens[i]))
+// 		i++;
+// 	if (!tokens[i])
+//     {
+//         g_program.commands = tokens;
+//     }
+// 	else
+// 	{
+// 		g_program.commands = malloc(sizeof(*g_program.commands) * (i + 1));
+// 		j = 0;
+// 		while (j < i)
+// 		{
+// 			g_program.commands[j] = tokens[j];
+// 			j++;
+// 		}
+// 		g_program.commands[i] = NULL;
+// 	}
+// }
+
+static bool fork_pipe_redirect(io pipes[2])
 {
-    debugFunctionName("DO_PIPE");
-    int is_first_command = 1;
-
-    int pipe_fd[2];
-    if (pipe(pipe_fd) == -1)
-    {
-        perror("Error creating pipe");
-    }
-    g_program.pid = fork();
-    if (g_program.pid < 0)
-    {
-        perror("Error");
-        ft_exit(EXIT_FAILURE);
-    }
-
-    if (g_program.pid == 0)
-    {
-        // Child process
-        if (!is_first_command)
-        {
-            close(g_program.pipe_fd[1]);
-            if (dup2(g_program.pipe_fd[0], STDIN_FILENO) < 0)
-            {
-                perror("Error");
-                ft_exit(EXIT_FAILURE);
-            }
-            close(g_program.pipe_fd[0]);
-        }
-        if (current->next != NULL)
-        {
-            close(pipe_fd[0]);
-            if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
-            {
-                perror("Error");
-                ft_exit(EXIT_FAILURE);
-            }
-            close(pipe_fd[1]);
-        }
-        // Execute the command
-        char **command_tokens = split_command(current->data);
-        execvp(command_tokens[0], command_tokens);
-    }
-    else
-    {
-        // Parent process
-        exit_pipe(current);
-    }
+	if (fork() == CHILD)
+		if (connect(pipes))
+			return (true);
+	return (false);
 }
+
+void	execute_commands(char **token)
+{
+	debugFunctionName("EXEXUTE_PIPE_COMMAND");
+    static io pipes[2];
+	bool is_child_process;
+
+	if (pipe_count && pipe(pipes[CURRENT]) == ERROR)
+		perror("pipe");
+	is_child_process = fork_pipe_redirect(pipes);
+	if (is_child_process)
+	{
+		execvp(token[0], token);
+		perror("execvp");
+        exit(EXIT_FAILURE);
+	}
+	if (!is_background)
+		while (wait(NULL) >= 0);
+	close_(pipes);
+	alternate((int **)pipes);
+}
+    //  int	i = 0;
+
+	// sig_initialiser();
+	// set_commands();
+	// printf("commmands in g_program.commands: %s\n", g_program.commands[i]);
+	// do_pipe();
+	// last_command();
+	// exepipe();
+// }
+
+// void handle_pipe(void) 
+// {
+//     debugFunctionName("HANDLE_PIPE");
+//     int i = 0;
+//     printf("this is the token: %s\n", g_program.token[i]);
+// 	if (!g_program.token[i])
+// 		exit (0);
+//     while (g_program.token[i])
+//     {
+//         if (!ft_strcmp("|", g_program.token[i])) 
+//         {
+//             execute_commands();
+// 			i = -1;
+// 		}
+// 		i++;
+// 	}
+// 	printf("do we get to here?\n");
+// 	g_program.commands = g_program.token;
+// 	last_command();
+// }
+
+// void do_pipe(void)
+// {
+//     debugFunctionName("DO_PIPE");
+
+//     int pipe_fd[2];
+//     pipe(pipe_fd);
+//     g_program.pid = fork();
+//     if (g_program.pid < 0)
+//     {
+//         perror("Fork Error");
+//         exit(EXIT_FAILURE);
+//     }
+// 	if (!g_program.pid)
+// 	{
+// 		close(pipe_fd[1]);
+// 		if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
+// 		{
+// 			perror("Child Dup Error");
+// 			exit(EXIT_FAILURE);
+// 		}
+// 		close(pipe_fd[0]);
+// 		exepipe();
+// 		g_program.redir_in_flag = 1;
+// 	}
+// 	else
+// 	{
+// 		close(pipe_fd[0]);
+// 		if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
+// 		{
+// 			perror("Parent Dup Error");
+// 			exit(EXIT_FAILURE);
+// 		}
+// 		close(pipe_fd[1]);
+// 		exepipe();
+// 		g_program.redir_out_flag = 1;
+// 	}
+// }

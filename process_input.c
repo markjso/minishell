@@ -122,13 +122,17 @@ void	copy_into_array(t_token_list **root)
 }
 
 // Implementation of has_pipe_token function
-bool has_pipe_token(char *str)
+bool has_pipe_token(void)
 {
     debugFunctionName("HAS_PIPE_TOKEN");
-	while (*str) {
-        if (*str == '|')
+	int i = 0;
+	while (g_program.token[i])
+	{
+        if (g_program.token[0][0] == '|')
+			error_message("command not found", 127);
+		else if (g_program.token[i][0] == '|')
             return true;
-        str++;
+        i++;
     }
     return false;
 }

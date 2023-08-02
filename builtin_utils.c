@@ -55,7 +55,7 @@ void	do_builtins(char **builtin_id, t_program *program)
     if (ft_strcmp(builtin_id[0], "export") == 0)
 	    export_cmd(program->token);
     if (ft_strcmp(builtin_id[0], "unset") == 0)
-	    remove_env_var(program->token[1]);
+	    unset_cmd(program->token);
     if (ft_strcmp(builtin_id[0], "env") == 0)
         print_env();
     if (ft_strcmp(builtin_id[0], "exit") == 0)
