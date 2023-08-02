@@ -35,23 +35,6 @@
 # define MAX_BUFFER 4096
 # define MAXARGS 20
 
-#define ERROR -1
-#define INTERACTIVE 0
-#define COMMANDLINE 1
-#define CHILD 0
-#define CURRENT 0
-#define PREVIOUS 1
-#define READ 0
-#define WRITE 1
-
-#define is_same !strcmp
-
-typedef int io[2];
-
-extern int I;
-extern int pipe_count;
-extern bool is_background;
-
 /*Struct for holding tokenised user input.*/
 typedef struct s_token_list
 {
@@ -61,28 +44,25 @@ typedef struct s_token_list
 
 typedef struct s_program
 {
-    struct s_envar *envar;
-	char	**token;
-	char	**envp;
-	char	**commands;
-	char	*prompt;
-	int		exit_status;
+	struct s_envar	*envar;
+	char			**token;
+	char			**envp;
+	char			**commands;
+	char			*prompt;
+	int				exit_status;
 	pid_t			pid;
-	char    *redirect_file;
-	char	*redirect_in;
-	char	*redirect_out;
-	int		is_redirect;
-	int		redirect_index;
-	int		out_file;
-	int		out_backup;
-	int		in_file;
-	int		in_backup;
-	int		redir_out_flag;
-	int		redir_in_flag;
-	int 	pipe_fd[2];
-	int		is_first_command;
-    // Other fields related to the shell's configuration and data
-} 	t_program;
+	char			*redirect_file;
+	char			*redirect_in;
+	char			*redirect_out;
+	int				is_redirect;
+	int				redirect_index;
+	int				out_file;
+	int				out_backup;
+	int				in_file;
+	int				in_backup;
+	int				redir_out_flag;
+	int				redir_in_flag;
+}	t_program;
 
 typedef struct s_envar
 {
@@ -106,15 +86,11 @@ char	**get_full_path(void);
 char	*get_path_for_cmd(char **env_paths, char const *cmd);
 
 /*pipes and signals*/
-// void	do_pipe(void);
+void	do_pipe(void);
 void	sig_initialiser(void);
-// void 	handle_pipe(void);
-// bool	has_pipe_token(void);
-// char	**split_command(const char *command);
-bool connect(io pipes[2]);
-void close_(io pipes[2]);
-void alternate(int **pipes);
-bool has_pipe_token(void);
+void	handle_pipe(void);
+bool	has_pipe_token(void);
+char	**split_command(const char *command);
 void	execute_commands(char **token);
 
 /*process_input*/
@@ -125,8 +101,8 @@ int		find_end(char *str);
 void	remove_quotes(t_token_list **root);
 
 /*builtins*/
-void	do_builtins(char **builtin_id, t_program *program);
-int		is_builtin_cmd();
+void	do_builtins(char **builtin_id);
+int		is_builtin_cmd(void);
 int		cd_command(char **token);
 int		export_cmd(char **token);
 void	echo_cmd(char **token);
@@ -143,11 +119,13 @@ int		ft_strcmp(char *s1, char *s2);
 /*redirections*/
 void	check_for_redirect(t_token_list **root);
 void	do_redirect(t_token_list *curr, int num, int *flag);
-void	remove_redirect();
+void	remove_redirect(void);
 int		input_heredoc(char *delimiter);
 char	*get_file_name(char *str);
 void	locate_second_quote(char *str);
 void	ft_continue(t_token_list **root);
+void	remove_redirect_tokens(t_token_list **root,
+			t_token_list *operator_node);
 
 /*environment variables*/
 t_envar	*split_env_var(char **envp);
@@ -175,17 +153,18 @@ int		ft_is_white_space(int c);
 int		ft_is_quote(int c);
 int		ft_is_not_quote(int c);
 int		ft_env_word_len(char *str);
-void	remove_redirect();
+void	remove_redirect(void);
 void	copy_into_array(t_token_list **root);
 int		ft_not_whitespace_not_quote(int c);
 
-t_token_list    *make_new_node(char *value);
-void    ll_insert_end(t_token_list **root, t_token_list *new_node);
-void    ll_insert_beginning(t_token_list **root, t_token_list *new_node);
-void    ll_insert_after(t_token_list *this_node, t_token_list *new_node);
-void	ll_insert_before(t_token_list **root, t_token_list *this_node, t_token_list *new_node);
-void    ll_remove_node(t_token_list **root, t_token_list *this_node);
-void    ll_deallocate(t_token_list **root);
+t_token_list	*make_new_node(char *value);
+void	ll_insert_end(t_token_list **root, t_token_list *new_node);
+void	ll_insert_beginning(t_token_list **root, t_token_list *new_node);
+void	ll_insert_after(t_token_list *this_node, t_token_list *new_node);
+void	ll_insert_before(t_token_list **root,
+			t_token_list *this_node, t_token_list *new_node);
+void	ll_remove_node(t_token_list **root, t_token_list *this_node);
+void	ll_deallocate(t_token_list **root);
 void	ll_print_token(t_token_list **root);
 void	replace_node_data(t_token_list *curr, char *new_data);
 
@@ -193,11 +172,8 @@ void	replace_node_data(t_token_list *curr, char *new_data);
 void	error_message(char *message, int status);
 void	error_and_exit(char *message, int status);
 void	ft_exit(int exit_number);
-void	ft_free_envp();
+void	ft_free_envp(void);
 void	error_message_cmd(char *message, int status);
 void	debugFunctionName(char *function_name);
 
 #endif
-
-// void	free_dollar_found(char **env_str, char **first, char **first_2, 
-// char **last, char **last_2);

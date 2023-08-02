@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-int		ft_is_special_char(char *s1)
+int	ft_is_special_char(char *s1)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (s1[i] != '\0')

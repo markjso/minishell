@@ -14,39 +14,39 @@
 
 extern	t_program	g_program;
 
-#define is_last_command (I == pipe_count)
+// #define is_last_command (I == pipe_count)
 
-bool connect(io pipes[2])
-{
-	if (pipe_count)
-	{
-		if (is_last_command || I != 0)
-			dup2(pipes[PREVIOUS][READ], STDIN_FILENO);
-		if (I == 0 || !is_last_command)
-			dup2(pipes[CURRENT][WRITE], STDOUT_FILENO);
-	}
-	return (true);
-}
+// bool connect(io pipes[2])
+// {
+// 	if (pipe_count)
+// 	{
+// 		if (is_last_command || I != 0)
+// 			dup2(pipes[PREVIOUS][READ], STDIN_FILENO);
+// 		if (I == 0 || !is_last_command)
+// 			dup2(pipes[CURRENT][WRITE], STDOUT_FILENO);
+// 	}
+// 	return (true);
+// }
 
-void close_(io pipes[2])
-{
-	if (pipe_count)
-	{
-		if (is_last_command || I != 0)
-			close(pipes[PREVIOUS][READ]);
-		if (I == 0 || !is_last_command)
-			close(pipes[CURRENT][WRITE]);
-	}
-}
+// void close_(io pipes[2])
+// {
+// 	if (pipe_count)
+// 	{
+// 		if (is_last_command || I != 0)
+// 			close(pipes[PREVIOUS][READ]);
+// 		if (I == 0 || !is_last_command)
+// 			close(pipes[CURRENT][WRITE]);
+// 	}
+// }
 
-void alternate(int **pipes)
-{
-	int	*pipe_current;
+// void alternate(int **pipes)
+// {
+// 	int	*pipe_current;
 
-	pipe_current = pipes[CURRENT];
-	pipes[CURRENT] = pipes[PREVIOUS];
-	pipes[PREVIOUS] = pipe_current;
-}
+// 	pipe_current = pipes[CURRENT];
+// 	pipes[CURRENT] = pipes[PREVIOUS];
+// 	pipes[PREVIOUS] = pipe_current;
+// }
 
 // void exepipe(void)
 // {
@@ -112,34 +112,34 @@ void alternate(int **pipes)
 // 	}
 // }
 
-static bool fork_pipe_redirect(io pipes[2])
-{
-	if (fork() == CHILD)
-		if (connect(pipes))
-			return (true);
-	return (false);
-}
+// static bool fork_pipe_redirect(io pipes[2])
+// {
+// 	if (fork() == CHILD)
+// 		if (connect(pipes))
+// 			return (true);
+// 	return (false);
+// }
 
-void	execute_commands(char **token)
-{
-	debugFunctionName("EXEXUTE_PIPE_COMMAND");
-    static io pipes[2];
-	bool is_child_process;
+// void	execute_commands(char **token)
+// {
+// 	debugFunctionName("EXEXUTE_PIPE_COMMAND");
+//     static io pipes[2];
+// 	bool is_child_process;
 
-	if (pipe_count && pipe(pipes[CURRENT]) == ERROR)
-		perror("pipe");
-	is_child_process = fork_pipe_redirect(pipes);
-	if (is_child_process)
-	{
-		execvp(token[0], token);
-		perror("execvp");
-        ft_exit(EXIT_FAILURE);
-	}
-	if (!is_background)
-		while (wait(NULL) >= 0);
-	close_(pipes);
-	alternate((int **)pipes);
-}
+// 	if (pipe_count && pipe(pipes[CURRENT]) == ERROR)
+// 		perror("pipe");
+// 	is_child_process = fork_pipe_redirect(pipes);
+// 	if (is_child_process)
+// 	{
+// 		execvp(token[0], token);
+// 		perror("execvp");
+//         ft_exit(EXIT_FAILURE);
+// 	}
+// 	if (!is_background)
+// 		while (wait(NULL) >= 0);
+// 	close_(pipes);
+// 	alternate((int **)pipes);
+// }
     //  int	i = 0;
 
 	// sig_initialiser();

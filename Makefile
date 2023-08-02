@@ -24,7 +24,6 @@ SRCS=minishell.c \
 	initialise.c \
 	debug.c \
 	process_input.c \
-	ft_strtok.c \
 	token_linked_list.c \
 	token_linked_list_create.c \
 	token_linked_list_delete.c \

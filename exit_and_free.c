@@ -1,10 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit_and_free.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/02 15:55:31 by jmarks            #+#    #+#             */
+/*   Updated: 2023/08/02 15:55:42 by jmarks           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-t_program	g_program;
-
-void	ft_free_envp()
+void	ft_free_envp(void)
 {
 	int	i;
 
@@ -20,10 +28,10 @@ void	ft_free_envp()
 	}
 }
 
-void	ft_free_envar()
+void	ft_free_envar(void)
 {
 	t_envar	*temp;
-	int	i;
+	int		i;
 
 	i = 0;
 	while (g_program.envar != 0)
@@ -36,18 +44,20 @@ void	ft_free_envar()
 	}
 }
 
-void	ft_token_free()
+void	ft_token_free(void)
 {
+	int	i;
+
+	i = 0;
 	if (g_program.token)
 	{
-		for (int i = 0; i < MAXLIST + 1; i++) {
-			// printf("token[%d] on exit being freed %s\n", i, g_program.token[i]);
-        	free(g_program.token[i]);
+		while (i < MAXLIST + 1)
+		{
+			free(g_program.token[i]);
+			i++;
 		}
-
 		if (g_program.token)
 		{
-			// printf("g_program.token being freed\n");
 			free (g_program.token);
 		}
 		if (g_program.token)
@@ -57,13 +67,11 @@ void	ft_token_free()
 	}
 }
 
-
-void	ft_free()
+void	ft_free(void)
 {
 	ft_token_free();
 	ft_free_envp();
 	ft_free_envar();
-
 }
 
 void	ft_exit(int exit_number)

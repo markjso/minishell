@@ -6,7 +6,7 @@
 /*   By: jchurch <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 09:33:55 by jchurch           #+#    #+#             */
-/*   Updated: 2023/07/14 09:33:55 by jchurch          ###   ########.fr       */
+/*   Updated: 2023/07/18 15:36:47 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Checks if the char is not printable: ASCII 32 (space) and less; and 127 (del).
 Returns 1 if true: it 32 or less; or 127. 
 Returns 0 otherwise. 
 */
-int ft_is_white_space(int c)
+int	ft_is_white_space(int c)
 {
 	if (c >= 33 && c <= 126)
 		return (0);
@@ -64,7 +64,6 @@ int	ft_is_not_quote(int c)
 	else
 		return (1);
 }
-
 
 /*
 Checks if char agains the ASCII table. 

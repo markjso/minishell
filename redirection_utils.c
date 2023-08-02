@@ -12,48 +12,30 @@
 
 #include "minishell.h"
 
-t_program	g_program;
-
 /*
 If either STDOUT_FILENO or STDIN_FILENO were modified:
 Reset to defualt. 
 */
-void remove_redirect()
+void	remove_redirect(void)
 {
-    debugFunctionName("REMOVE_REDIRECT");
 	if (g_program.redir_out_flag == 1)
-    {
-        printf("REMOVE_REDIRECT OUT\n");
-        close(g_program.out_file);
-        dup2(g_program.out_backup, STDOUT_FILENO);
-        printf("STDOUT_FILENO: %d\n", STDOUT_FILENO);
-        close(g_program.out_backup);
-        g_program.out_backup = -1;
-        free(g_program.redirect_out);
-        g_program.redir_out_flag = 0;
-    }
-
-    if (g_program.redir_in_flag == 1)
-    {
-        printf("REMOVE_REDIRECT IN\n");
-        close(g_program.in_file);
-        dup2(g_program.in_backup, STDIN_FILENO);
-        printf("STDIN_FILENO: %d\n", STDIN_FILENO);
-        close(g_program.in_backup);
-        g_program.in_backup = -1;
-        free(g_program.redirect_in);
-        g_program.redir_in_flag = 0;
-    }
-	if (g_program.pipe_fd[0] != -1)
-    {
-        close(g_program.pipe_fd[0]);
-        g_program.pipe_fd[0] = -1;
-    }
-    if (g_program.pipe_fd[1] != -1)
-    {
-        close(g_program.pipe_fd[1]);
-        g_program.pipe_fd[1] = -1;
-    }
+	{
+		close(g_program.out_file);
+		dup2(g_program.out_backup, STDOUT_FILENO);
+		close(g_program.out_backup);
+		g_program.out_backup = -1;
+		free(g_program.redirect_out);
+		g_program.redir_out_flag = 0;
+	}
+	if (g_program.redir_in_flag == 1)
+	{
+		close(g_program.in_file);
+		dup2(g_program.in_backup, STDIN_FILENO);
+		close(g_program.in_backup);
+		g_program.in_backup = -1;
+		free(g_program.redirect_in);
+		g_program.redir_in_flag = 0;
+	}
 }
 
 /*
@@ -65,30 +47,28 @@ If no matching close quote is found:
 */
 void	locate_second_quote(char *str)
 {
-	debugFunctionName("LOCATE_SECOND_QUOTE");
 	int		second;
 
-	second = g_program.redirect_index + 1; // One after the quote
-	while (str[second] != '\0') // For the length of the string
+	second = g_program.redirect_index + 1;
+	while (str[second] != '\0')
 	{
-		if (str[second] == str[g_program.redirect_index]) // If matching quote found
+		if (str[second] == str[g_program.redirect_index])
 		{
-			g_program.redirect_index = second + 1; // Make first be the index of the 2nd quote plus one next outside of the quote. 
-			break ; // First will now be one after the matching quote. 
+			g_program.redirect_index = second + 1;
+			break ;
 		}
 		second++;
 	}
-	if (str[second] == '\0') // At end and therefore no matching quote was found.
+	if (str[second] == '\0')
 	{
-		g_program.redirect_index++; // One after the current quote. 
-        return ; // Can remove this return if norm error. 
+		g_program.redirect_index++;
+		return ;
 	}
 }
 
 char	*get_file_name(char *str)
 {
-	debugFunctionName("GET_FILE_NAME");
-	int 	end_of_name;
+	int		end_of_name;
 	char	*file_name;
 
 	g_program.redirect_index++;
@@ -96,11 +76,67 @@ char	*get_file_name(char *str)
 		g_program.redirect_index++;
 	end_of_name = g_program.redirect_index;
 	while (ft_is_not_white_space(str[end_of_name]) == 1)
-		end_of_name++;	
-	file_name = ft_substr(str, g_program.redirect_index, end_of_name - g_program.redirect_index);
+		end_of_name++;
+	file_name = ft_substr(str, g_program.redirect_index, 
+			end_of_name - g_program.redirect_index);
 	if (file_name)
-		return (file_name); // MALLOC
+		return (file_name); 
 	else
 		return (NULL);
 }
 
+void	ft_continue(t_token_list **root)
+{
+	remove_quotes(root);
+	copy_into_array(root);
+	// if (has_pipe_token())
+	// {
+	// 	execute_commands(g_program.token);
+	// }
+	if (is_builtin_cmd())
+	{
+		do_builtins(g_program.token);
+	}
+	else
+	{
+		execmd();
+	}
+	remove_redirect();
+}
+
+void	check_for_redirect(t_token_list **root)
+{
+	t_token_list	*curr;
+	t_token_list	*prev;
+	t_token_list	*temp_token;
+	int				flag;
+
+	curr = *root;
+	while (curr != NULL)
+	{
+		flag = 0;
+		if (curr == NULL)
+			break ;
+		if (curr->data[0] == '<' && curr->data[1] == '<')
+		{
+			ll_remove_node(root, prev);
+			do_redirect(curr, 4, &flag);
+		}
+		else if (curr->data[0] == '<')
+			do_redirect(curr, 3, &flag);
+		else if (curr->data[0] == '>' && curr->data[1] == '>')
+			do_redirect(curr, 2, &flag);
+		else if (curr->data[0] == '>')
+			do_redirect(curr, 1, &flag);
+		if (flag == 1)
+		{
+			temp_token = curr;
+			curr = curr->next->next;
+			remove_redirect_tokens(root, temp_token);
+			continue ;
+		}
+		prev = curr;
+		curr = curr->next;
+	}
+	ft_continue(root);
+}

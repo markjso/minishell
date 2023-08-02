@@ -6,13 +6,11 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/13 14:11:00 by jchurch           #+#    #+#             */
-/*   Updated: 2023/07/13 14:11:00 by jchurch          ###   ########.fr       */
+/*   Updated: 2023/08/02 16:47:03 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// extern	t_program	g_program;
 
 /*Input: string to return an integer the number of "tokens" that can be 
 created. A token is seperated by a space or tab, unless the space or tab 
@@ -23,8 +21,8 @@ quotation mark: One token will be created to encompas the outside word
 and the whole quotation mark.*/
 int	find_token_number(t_token_list **root)
 {
-	int			i;
-	t_token_list *curr;
+	int				i;
+	t_token_list	*curr;
 
 	i = 0;
 	curr = *root;
@@ -62,45 +60,30 @@ int	find_end(char *str)
 
 	i = 0;
 	while (str[i] != '\0')
-	{	
-		if (i == 0 && ft_is_pipe_or_redirect(str[i]) == 1) // if at start of new string and is special
+	{
+		if (i == 0 && ft_is_pipe_or_redirect(str[i]) == 1)
 		{
-			i++;			// Increment over special
-			//>bb
-			// i			<- return this to make token: '>'
-			if (str[i] == str[i - 1]) // If this one is same type as previous we just incremented over
+			i++;
+			if (str[i] == str[i - 1])
 			{
-				i++;		// Increment 2nd over special
-				//>>bb
-				//  i			<- return this to make token: '>>'
+				i++;
 			}
 			break ;
 		}
-		if (ft_is_pipe_or_redirect(str[i]) == 1) // Not index 0, Current is special, next is not
+		if (ft_is_pipe_or_redirect(str[i]) == 1)
 		{
-			//aa>>bb
-			//  i		<- return that to make token: aa
 			break ;
 		}
-		if (ft_is_white_space(str[i]) == 1) // IF whitespace, stop. 
+		if (ft_is_white_space(str[i]) == 1)
 			break ;
-		if (ft_is_quote(str[i]) == 1) // IF quote, ignore white space
+		if (ft_is_quote(str[i]) == 1)
 		{
-			type = str[i]; // Set type to quote type. 
+			type = str[i];
 			i++;
-			while (str[i] != type && str[i] != '\0') // WHILE index i exists and is not (matching/closing) double quote. 
+			while (str[i] != type && str[i] != '\0')
 				i++;
 		}
 		i++;
 	}
 	return (i);
 }
-
-/*
-012346789
-aaaa>>bbbb \0
-
-37 - 10 = 27 lines
-
-*/
-

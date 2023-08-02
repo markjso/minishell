@@ -6,36 +6,31 @@
 /*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 16:04:38 by jmarks            #+#    #+#             */
-/*   Updated: 2023/06/27 16:04:40 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/02 15:38:38 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// t_program g_program;
-
-int     count_envars(t_envar *envars)
+int	count_envars(t_envar *envars)
 {
-    int     i;
-    t_envar *tmp;
+	int		i;
+	t_envar	*tmp;
 
-    tmp = envars;
-    i = 0;
-
-    while (tmp)
-    {
-        i++;
-        tmp = tmp->next;
-    }
-    return (i);
+	tmp = envars;
+	i = 0;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
 }
-
-
 
 void	rebuild_envp(void)
 {
 	char		**new_env;
-	char 		*name_part;
+	char		*name_part;
 	t_envar		*tmp;
 	int			count;
 	int			i;
@@ -44,14 +39,14 @@ void	rebuild_envp(void)
 	tmp = g_program.envar;
 	count = count_envars(tmp);
 	i = 0;
-	new_env = malloc(sizeof(char *) * count + 1); // Malloc
+	new_env = malloc(sizeof(char *) * count + 1);
 	if (!new_env)
 		return ;
 	while (i < count)
 	{
-		name_part = ft_strjoin(tmp->name, "="); // Malloc freed
-        new_env[i] = ft_strjoin(name_part, tmp->value); // Malloc
-		free(name_part); // Free
+		name_part = ft_strjoin(tmp->name, "=");
+		new_env[i] = ft_strjoin(name_part, tmp->value);
+		free(name_part);
 		i++;
 		tmp = tmp->next;
 	}
@@ -64,16 +59,16 @@ Initialisses tmp to the head of the list and iterates
 through printing the name and value fields. I then updates
 tmp to point to the next sturct in the list */
 
-void print_env(void)
+void	print_env(void)
 {
-	t_envar *tmp;
+	t_envar	*tmp;
 
 	tmp = g_program.envar;
-    while (tmp)
-    {
-        printf("%s=%s\n", tmp->name, tmp->value);
-        tmp = tmp->next;
-    }
+	while (tmp)
+	{
+		printf("%s=%s\n", tmp->name, tmp->value);
+		tmp = tmp->next;
+	}
 	g_program.exit_status = 0;
 	return ;
 }

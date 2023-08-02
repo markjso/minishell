@@ -6,17 +6,14 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 15:30:25 by jmarks            #+#    #+#             */
-/*   Updated: 2023/06/20 18:26:35 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/02 15:54:31 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// t_program g_program;
-
 t_envar	*find_env(t_envar *envars, char *name)
 {
-	debugFunctionName("FIND_ENV");
 	t_envar		*temp;
 
 	temp = envars;
@@ -31,7 +28,6 @@ t_envar	*find_env(t_envar *envars, char *name)
 
 static char	*get_path(char const *currentPath, char const *cmd)
 {
-	debugFunctionName("GET_PATH");
 	char	*rtn;
 
 	if (*cmd == '/')
@@ -46,7 +42,6 @@ static char	*get_path(char const *currentPath, char const *cmd)
 
 char	**get_full_path(void)
 {
-	debugFunctionName("GET_FULL_PATH");
 	char			**env_paths;
 	t_envar const	*path;
 
@@ -60,7 +55,6 @@ char	**get_full_path(void)
 
 char	*get_path_for_cmd(char **env_paths, char const *cmd)
 {
-	debugFunctionName("GET_CMD_PATH");
 	char	*path;
 	int		i;
 
@@ -78,37 +72,36 @@ char	*get_path_for_cmd(char **env_paths, char const *cmd)
 
 void	execmd(void)
 {
-	debugFunctionName("EXEC_CMD");
 	char	**paths;
 	char	*exec_path;
-    char	*cmds;
-    pid_t	pid;
-    int		status;
+	char	*cmds;
+	pid_t	pid;
+	int		status;
 
 	pid = fork();
 	cmds = g_program.token[0];
-    if (pid == 0)
-    {
-    if (cmds[0] == '/')
+	if (pid == 0)
 	{
-		if (execve(&cmds[0], g_program.token, g_program.envp) == -1)
+		if (cmds[0] == '/')
+		{
+			if (execve(&cmds[0], g_program.token, g_program.envp) == -1)
+				error_and_exit("command cannot be executed", 126);
+		}
+		paths = get_full_path();
+		exec_path = get_path_for_cmd(paths, &cmds[0]);
+		if (!paths || !exec_path)
+			error_and_exit("command not found", 127);
+		if (execve(exec_path, g_program.token, g_program.envp) == -1)
 			error_and_exit("command cannot be executed", 126);
 	}
-	paths = get_full_path();
-	exec_path = get_path_for_cmd(paths, &cmds[0]);
-	if (!paths || !exec_path)
-		    error_and_exit("command not found", 127);
-	if (execve(exec_path, g_program.token, g_program.envp) == -1)
-		error_and_exit("command cannot be executed", 126);
-	}
-    else
-    {
-        waitpid(pid, &status, 0);
-        if (WIFEXITED(status))
-        {
+	else
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+		{
 			g_program.exit_status = WEXITSTATUS(status);
-        }
-        return;
-    }
+		}
+		return ;
+	}
 	exit(EXIT_SUCCESS);
 }

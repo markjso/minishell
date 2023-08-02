@@ -6,7 +6,7 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 13:55:05 by jmarks            #+#    #+#             */
-/*   Updated: 2023/06/21 15:12:38 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/02 15:06:24 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	printpwd(void)
 
 	getcwd(pwd, sizeof(pwd));
 	printf("Dir: %s\n", pwd);
-    g_program.exit_status = 0;
+	g_program.exit_status = 0;
 }
 
 /*
@@ -59,11 +59,12 @@ int	export_cmd(char **token)
 	t_envar	*node;
 
 	if (token[1] == NULL)
-    {
-        // No arguments provided, print the environment variables
-        print_env();
-        return (0);
-    }
+	{
+		print_env();
+		return (0);
+	}
+	if (ft_strcmp(token[1], "#"))
+		error_message_cmd("invalid parameter name", 1);
 	split_env = ft_split(token[1], '=');
 	if (!split_env[1])
 		return (1);
@@ -72,7 +73,6 @@ int	export_cmd(char **token)
 	node = find_env_var(name);
 	if (node == NULL)
 	{
-		printf("Calling node\n");
 		node = init_env(name, value);
 		add_env_var(node);
 	}
@@ -84,10 +84,9 @@ int	export_cmd(char **token)
 	return (0);
 }
 
-
 void	unset_cmd(char **token)
 {
-	if (ft_strcmp(token[1],"#"))
+	if (ft_strcmp(token[1], "#"))
 		error_message_cmd("invalid parameter name", 1);
 	else
 		remove_env_var(g_program.token[1]);

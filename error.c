@@ -6,13 +6,11 @@
 /*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 13:19:54 by jmarks            #+#    #+#             */
-/*   Updated: 2023/07/03 13:30:56 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/02 15:50:50 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// t_program g_program;
 
 void	error_message(char *message, int status)
 {
