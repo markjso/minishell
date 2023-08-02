@@ -133,7 +133,7 @@ void	execute_commands(char **token)
 	{
 		execvp(token[0], token);
 		perror("execvp");
-        exit(EXIT_FAILURE);
+        ft_exit(EXIT_FAILURE);
 	}
 	if (!is_background)
 		while (wait(NULL) >= 0);
