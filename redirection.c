@@ -94,8 +94,11 @@ void	do_redirect(t_token_list *curr, int num, int *flag)
 
 	*flag = 1;
 	if (curr->next == NULL)
-		perror("File not found\n");
-	if (num == 1) // >
+	{
+		*flag = 2;
+		return ;
+	}
+	else if (num == 1) // >
 	{
 		g_program.redirect_out = ft_strdup(curr->next->data); // Malloc freed
 		std_output();
@@ -162,6 +165,11 @@ void check_for_redirect(t_token_list **root)
             do_redirect(curr, 2, &flag);
         else if (curr->data[0] == '>')
             do_redirect(curr, 1, &flag);
+		if (flag == 2)
+		{
+			ll_deallocate(root);
+			return ;
+		}
         if (flag == 1)
         {
             temp_token = curr;
