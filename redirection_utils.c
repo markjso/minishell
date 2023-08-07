@@ -89,10 +89,10 @@ void	ft_continue(t_token_list **root)
 {
 	remove_quotes(root);
 	copy_into_array(root);
-	// if (has_pipe_token())
-	// {
-	// 	execute_commands(g_program.token);
-	// }
+	if (has_pipe_token())
+	{
+		execute_commands();
+	}
 	if (is_builtin_cmd())
 	{
 		do_builtins(g_program.token);

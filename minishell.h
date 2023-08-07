@@ -91,7 +91,7 @@ void	sig_initialiser(void);
 void	handle_pipe(void);
 bool	has_pipe_token(void);
 char	**split_command(const char *command);
-void	execute_commands(char **token);
+void	execute_commands(void);
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);
