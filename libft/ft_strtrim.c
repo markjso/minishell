@@ -38,7 +38,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 		start++;
 	finish = ft_strlen(s1);
 	while (finish > start && ft_setchar(s1[finish - 1], set))
-			finish--;
+		finish--;
 	s2 = malloc(sizeof(*s1) * (finish - start + 1));
 	if (!s2)
 		return (NULL);
@@ -49,6 +49,6 @@ char	*ft_strtrim(char const *s1, char const *set)
 		i++;
 		start++;
 	}
-		s2[i] = '\0';
+	s2[i] = '\0';
 	return (s2);
 }

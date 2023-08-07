@@ -22,11 +22,11 @@ static int	ft_wordcount(const char *str, char c)
 	while (*str)
 	{
 		while (*str == c)
-				str++;
+			str++;
 		if (*str)
-				count++;
+			count++;
 		while (*str != c && *str)
-					str++;
+			str++;
 	}
 	return (count);
 }

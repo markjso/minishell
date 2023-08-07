@@ -27,11 +27,11 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 		{
 			if (haystack[h + n] == '\0' && needle[n] == '\0')
 				return ((char *)&haystack[h]);
-		n++;
+			n++;
 		}
 		if (!needle[n])
 			return ((char *)haystack + h);
-	h++;
+		h++;
 	}
 	return (NULL);
 }
