@@ -105,6 +105,7 @@ void	do_builtins(char **builtin_id);
 int		is_builtin_cmd(void);
 int		cd_command(char **token);
 int		export_cmd(char **token);
+int		parse_env_var(char **token, char **name, char **value);
 void	echo_cmd(char **token);
 void	printpwd(void);
 void	unset_cmd(char **token);

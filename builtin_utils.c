@@ -14,11 +14,31 @@
 
 // t_program g_program;
 
+int	parse_env_var(char **token, char **name, char **value)
+{
+	char	**split_env;
+
+	if (token[1] == NULL)
+	{
+		print_env();
+		return (0);
+	}
+	if (ft_strcmp(token[1], "#") == 0)
+	{
+		error_message_cmd("invalid parameter name", 1);
+	}
+	split_env = ft_split(token[1], '=');
+	if (!split_env[1])
+		return (1);
+	*name = split_env[0];
+	*value = split_env[1];
+	return (0);
+}
+
 /* checks if the input in position token[0]
 is one of the builtin shell functions.
 Returns 1 if it is and 0 if it is not.
 */
-
 int	is_builtin_cmd(void)
 {
 	if (!g_program.token || !g_program.token[0])

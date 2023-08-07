@@ -53,23 +53,12 @@ void	echo_cmd(char **token)
 
 int	export_cmd(char **token)
 {
-	char	**split_env;
 	char	*name;
 	char	*value;
 	t_envar	*node;
 
-	if (token[1] == NULL)
-	{
-		print_env();
-		return (0);
-	}
-	if (ft_strcmp(token[1], "#"))
-		error_message_cmd("invalid parameter name", 1);
-	split_env = ft_split(token[1], '=');
-	if (!split_env[1])
+	if (parse_env_var(token, &name, &value) != 0)
 		return (1);
-	name = split_env[0];
-	value = split_env[1];
 	node = find_env_var(name);
 	if (node == NULL)
 	{
@@ -86,8 +75,10 @@ int	export_cmd(char **token)
 
 void	unset_cmd(char **token)
 {
-	if (ft_strcmp(token[1], "#"))
+	if (ft_strcmp(token[1], "#") == 0)
+	{
 		error_message_cmd("invalid parameter name", 1);
+	}
 	else
 		remove_env_var(g_program.token[1]);
 }
