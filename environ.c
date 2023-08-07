@@ -30,17 +30,14 @@ t_envar	*split_env_var(char **envp)
 	while (envp[i])
 	{
 		split_env = ft_split(envp[i], '=');
-		if (split_env != NULL && split_env[0] != NULL && split_env[1] != NULL)
-		{
-			new_node = init_env(split_env[0], split_env[1]);
-			if (new_node == NULL)
-				printf("Error: memory not allocted\n");
-			if (start == NULL)
-				start = new_node;
-			if (end != NULL)
-				end->next = new_node;
-			end = new_node;
-		}
+		new_node = init_env(split_env[0], split_env[1]);
+		if (new_node == NULL)
+			printf("Error: memory not allocted\n");
+		if (start == NULL)
+			start = new_node;
+		if (end != NULL)
+			end->next = new_node;
+		end = new_node;
 		i++;
 	}
 	return (start);
