@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-// t_program g_program;
-
 int	parse_env_var(char **token, char **name, char **value)
 {
 	char	**split_env;
@@ -76,4 +74,23 @@ void	do_builtins(char **builtin_id)
 		print_env();
 	if (ft_strcmp(builtin_id[0], "exit") == 0)
 		ft_exit(0);
+}
+
+void	ft_continue(t_token_list **root)
+{
+	remove_quotes(root);
+	copy_into_array(root);
+	if (has_pipe_token())
+	{
+		execute_commands();
+	}
+	if (is_builtin_cmd())
+	{
+		do_builtins(g_program.token);
+	}
+	else
+	{
+		execmd();
+	}
+	remove_redirect();
 }

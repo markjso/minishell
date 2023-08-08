@@ -31,7 +31,7 @@ Checks if the char is not printable: ASCII 32 (space) and less; and 127 (del).
 Returns 1 if true: it 32 or less; or 127. 
 Returns 0 otherwise. 
 */
-int	ft_is_white_space(int c)
+int	ft_white_space(int c)
 {
 	if (c >= 33 && c <= 126)
 		return (0);
@@ -72,7 +72,7 @@ Returns 0 otherwise.
 */
 int	ft_not_whitespace_not_quote(int c)
 {
-	if (ft_is_white_space(c) == 0 && ft_is_quote(c) == 0)
+	if (ft_white_space(c) == 0 && ft_is_quote(c) == 0)
 		return (1);
 	else
 		return (0);

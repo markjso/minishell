@@ -86,7 +86,6 @@ char	**get_full_path(void);
 char	*get_path_for_cmd(char **env_paths, char const *cmd);
 
 /*pipes and signals*/
-void	do_pipe(void);
 void	sig_initialiser(void);
 void	handle_pipe(void);
 bool	has_pipe_token(void);
@@ -100,9 +99,7 @@ int		find_token_number(t_token_list **root);
 int		find_end(char *str);
 void	remove_quotes(t_token_list **root);
 
-/*builtins*/
-void	do_builtins(char **builtin_id);
-int		is_builtin_cmd(void);
+/*builtins*/ 
 int		cd_command(char **token);
 int		export_cmd(char **token);
 int		parse_env_var(char **token, char **name, char **value);
@@ -150,7 +147,7 @@ int		ft_alnum_word_len(char *str, int start);
 int		ft_is_valid_var_char(char c);
 int		ft_env_word_len(char *str);
 int		ft_is_not_white_space(int c);
-int		ft_is_white_space(int c);
+int		ft_white_space(int c);
 int		ft_is_quote(int c);
 int		ft_is_not_quote(int c);
 int		ft_env_word_len(char *str);

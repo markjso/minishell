@@ -57,17 +57,17 @@ void	make_tokens(char *str, t_token_list **root)
 	int				input_index;
 	t_token_list	*new_node;
 	char			*temp_token_value;
+	char			pipe_token[2];
 
+	pipe_token[0] = '|';
+	pipe_token[1] = '\0';
 	input_index = 0;
 	while (str[input_index] != '\0')
 	{
 		if (ft_is_not_white_space(str[input_index]) == 1)
 		{
 			if (str[input_index] == '|')
-			{
-				char pipe_token[2] = {'|', '\0'};
 				new_node = make_new_node(pipe_token);
-			}
 			else
 			{
 				temp_token_value = make_token(&str[input_index]);

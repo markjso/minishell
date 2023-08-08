@@ -14,6 +14,7 @@
 
 extern	t_program	g_program;
 
+
 void exepipe(void)
 {
 	debugFunctionName("EXEC_PIPE");
@@ -23,8 +24,9 @@ void exepipe(void)
     int status;
 
 	cmds = g_program.token[0];
+	printf("cmd %s\n", cmds);
 	paths = get_full_path();
-	exec_path = get_path_for_cmd(paths, &cmds[0]);
+	exec_path = get_path_for_cmd(paths, cmds);
 	if (exec_path)
 	{
 		execve(exec_path, g_program.commands, g_program.envp);
@@ -35,19 +37,9 @@ void exepipe(void)
 	if (WIFEXITED(status))
 	{
 		g_program.exit_status = WEXITSTATUS(status);
+		ft_free_array(g_program.commands);
 	}
 	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
-}
-
-void last_command(void)
-{
-	debugFunctionName("LAST_CMD");
-	int status;
-
-	waitpid(g_program.pid, &status, 0);
-	if (WIFEXITED(status))
-		g_program.exit_status = WEXITSTATUS(status);
-		ft_free_array(g_program.token);
 }
 
 void	set_commands(void)
@@ -72,61 +64,73 @@ void	set_commands(void)
 		while (j < i)
 		{
 			g_program.commands[j] = tokens[j];
+			printf("Command %d: %s\n", j, g_program.commands[j]); 
 			j++;
 		}
 		g_program.commands[i] = NULL;
 	}
 }
 
+/*
+	first cmd will be first token 
+	2nd cmd will be immeditay after pipe 
+*/
+
 void do_pipe(void)
 {
     debugFunctionName("DO_PIPE");
 
-    int pipe_fd[2];
-    pipe(pipe_fd);
-    g_program.pid = fork();
-    if (g_program.pid < 0)
-    {
-        perror("Fork Error");
-        exit(EXIT_FAILURE);
-    }
-	if (!g_program.pid)
+    int pipe1[2];
+	pid_t	pid;
+	pid_t	pid2;
+	int status;
+    if (pipe(pipe1) == -1)
 	{
-		close(pipe_fd[1]);
-		if (dup2(pipe_fd[0], STDIN_FILENO) < 0)
-		{
-			perror("Child Dup Error");
-			exit(EXIT_FAILURE);
-		}
-		close(pipe_fd[0]);
+		perror("bad pipe");
+		exit(1);
+	}
+    pid = fork();
+	if (pid == 0)
+	{
+		dup2(pipe1[1], STDOUT_FILENO);
+		close(pipe1[0]);
+		close(pipe1[1]);
+		printf("getting to child\n");
 		exepipe();
-		g_program.redir_in_flag = 1;
 	}
 	else
 	{
-		close(pipe_fd[0]);
-		if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
+		pid2=fork();
+		if (pid2 == 0)
 		{
-			perror("Parent Dup Error");
-			exit(EXIT_FAILURE);
+			dup2(pipe1[0], STDIN_FILENO);
+			close(pipe1[1]);
+			close(pipe1[0]);
+			printf("getting to parent\n");
+			exepipe();	
 		}
-		close(pipe_fd[1]);
-		exepipe();
-		g_program.redir_out_flag = 1;
+		else
+		{
+			close(pipe1[0]);
+			close(pipe1[1]);
+			waitpid(pid2, &status, 1);
+		}
+		waitpid(pid, &status, 1);
 	}
 }
+
 
 void	execute_commands(void)
 {
 	 debugFunctionName("EXEXUTE_PIPE_COMMAND");
-     int	i = 0;
+    //  int	i = 0;
 
 	sig_initialiser();
 	set_commands();
-	printf("commmands in g_program.commands: %s\n", g_program.commands[i]);
+	// printf("commmands in g_program.commands: %s\n", g_program.commands[i]);
 	do_pipe();
-	last_command();
-	execmd();
+	// last_command();
+	// execmd();
 }
 
 void handle_pipe(void) 
@@ -141,11 +145,11 @@ void handle_pipe(void)
         if (!ft_strcmp("|", g_program.token[i])) 
         {
             execute_commands();
-			i = -1;
+			// i = -1;
 		}
 		i++;
 	}
 	printf("do we get to here?\n");
 	g_program.commands = g_program.token;
-	last_command();
+	// last_command();
 }

@@ -72,7 +72,7 @@ char	*get_file_name(char *str)
 	char	*file_name;
 
 	g_program.redirect_index++;
-	while (ft_is_white_space(str[g_program.redirect_index]))
+	while (ft_white_space(str[g_program.redirect_index]))
 		g_program.redirect_index++;
 	end_of_name = g_program.redirect_index;
 	while (ft_is_not_white_space(str[end_of_name]) == 1)
@@ -85,30 +85,19 @@ char	*get_file_name(char *str)
 		return (NULL);
 }
 
-void	ft_continue(t_token_list **root)
+void	process_redirect(t_token_list **root, t_token_list **curr)
 {
-	remove_quotes(root);
-	copy_into_array(root);
-	if (has_pipe_token())
-	{
-		execute_commands();
-	}
-	if (is_builtin_cmd())
-	{
-		do_builtins(g_program.token);
-	}
-	else
-	{
-		execmd();
-	}
-	remove_redirect();
+	t_token_list	*temp_token;
+
+	temp_token = *curr;
+	*curr = (*curr)->next->next;
+	remove_redirect_tokens(root, temp_token);
 }
 
 void	check_for_redirect(t_token_list **root)
 {
 	t_token_list	*curr;
 	t_token_list	*prev;
-	t_token_list	*temp_token;
 	int				flag;
 
 	curr = *root;
@@ -130,9 +119,7 @@ void	check_for_redirect(t_token_list **root)
 			do_redirect(curr, 1, &flag);
 		if (flag == 1)
 		{
-			temp_token = curr;
-			curr = curr->next->next;
-			remove_redirect_tokens(root, temp_token);
+			process_redirect(root, &curr);
 			continue ;
 		}
 		prev = curr;

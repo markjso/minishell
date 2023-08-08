@@ -42,6 +42,20 @@ int	ft_is_pipe_or_redirect(char c)
 		return (0);
 }
 
+void	check_is_quote(char *str, char type)
+{
+	int	i;
+
+	i = 0;
+	i++;
+	while (str[i] != type && str[i] != '\0')
+	{
+		i++;
+		if (str[i] == type)
+			i++;
+	}
+}
+
 /*Returns the index number of a string, the return value is the first space or 
 tab to occur. Spaces within matching double or single quotation marks are 
 ignored. The quotation is treated as one word. 
@@ -70,18 +84,12 @@ int	find_end(char *str)
 			}
 			break ;
 		}
-		if (ft_is_pipe_or_redirect(str[i]) == 1)
-		{
-			break ;
-		}
-		if (ft_is_white_space(str[i]) == 1)
+		if (ft_is_pipe_or_redirect(str[i]) == 1 || ft_white_space(str[i]) == 1)
 			break ;
 		if (ft_is_quote(str[i]) == 1)
 		{
 			type = str[i];
-			i++;
-			while (str[i] != type && str[i] != '\0')
-				i++;
+			check_is_quote(str, type);
 		}
 		i++;
 	}
