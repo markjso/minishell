@@ -90,7 +90,7 @@ void handle_pipe(void)
     {
         if (!ft_strcmp("|", g_program.token[i])) 
         {
-            execute_commands(g_program.token);
+            exepipe();
 			i = -1;
 		}
 		i++;

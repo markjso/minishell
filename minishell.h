@@ -117,6 +117,7 @@ void close_(io pipes[2]);
 void alternate(int **pipes);
 void	execute_commands(char **token);
 
+	void	exepipe();
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);

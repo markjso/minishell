@@ -131,7 +131,7 @@ void	ft_continue(t_token_list **root)
 	{
 		do_pipe();
 		todo--;
-		execute_commands(g_program.token);
+		exepipe();
 	}			// if it is one of the builtin commands do it. Found in buitlin_utils.c
 	if (is_builtin_cmd())
 	{
