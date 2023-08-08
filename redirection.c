@@ -122,10 +122,15 @@ void	do_redirect(t_token_list *curr, int num, int *flag)
 
 void	ft_continue(t_token_list **root)
 {
+	int	todo;
+
 	remove_quotes(root);
 	copy_into_array(root);
-	if (has_pipe_token())
+	todo = has_pipe_token();
+	while (todo > 0)
 	{
+		do_pipe();
+		todo--;
 		execute_commands(g_program.token);
 	}			// if it is one of the builtin commands do it. Found in buitlin_utils.c
 	if (is_builtin_cmd())
@@ -180,5 +185,5 @@ void check_for_redirect(t_token_list **root)
         prev = curr;
         curr = curr->next;
     }
-    ft_continue(root);
+    // ft_continue(root);
 }

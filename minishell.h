@@ -109,13 +109,14 @@ char	*get_path_for_cmd(char **env_paths, char const *cmd);
 // void	do_pipe(void);
 void	sig_initialiser(void);
 // void 	handle_pipe(void);
-// bool	has_pipe_token(void);
+int		has_pipe_token(void);
+void	do_pipe(void);
 // char	**split_command(const char *command);
 bool connect(io pipes[2]);
 void close_(io pipes[2]);
 void alternate(int **pipes);
-bool has_pipe_token(void);
 void	execute_commands(char **token);
+
 
 /*process_input*/
 void	process_input(char *str, t_token_list **root);
