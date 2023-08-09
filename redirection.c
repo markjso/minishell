@@ -127,13 +127,15 @@ void	ft_continue(t_token_list **root)
 	remove_quotes(root);
 	copy_into_array(root);
 	todo = has_pipe_token();
-	while (todo > 0)
+	if (todo > 0)
 	{
-		do_pipe();
-		todo--;
-		exepipe();
+		while (todo > 0)
+		{
+			do_pipe();
+			todo--;
+		}
 	}			// if it is one of the builtin commands do it. Found in buitlin_utils.c
-	if (is_builtin_cmd())
+	else if (is_builtin_cmd())
 	{
 		do_builtins(g_program.token, &g_program);
 	}

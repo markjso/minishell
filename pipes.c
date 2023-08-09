@@ -103,26 +103,32 @@ void handle_pipe(void)
 
 void	set_pipes(void)
 {
-	int	pid;
-	int	pipefd[2];
+	int	pid1;
+	int	pid2;
+	int	fd[2];
 
-	pipe(pipefd);
-	pid = fork();
-	if (pid != 0) // parent
+	pid1 = fork();
+	if (pid1 == 0)
 	{
-		if(!g_program.pid)
-			g_program.pid = pid;
-		close(pipefd[1]);
-		dup2(pipefd[0], STDIN_FILENO);
-		close(pipefd[0]);
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		if (execlp(g_program.commands[0] until first whitespace?, g_program.commands[0], NULL) == -1)
+			return 3;
 	}
-	else if (pid == 0) // child
-	{
-		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[1]);
-		exepipe();
-	}
+	pid2 = fork();
+
+	if (pid2 == 0) { 
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		execlp("grep", "grep", "rtt", NULL);
+	} 
+	close(fd[0]);
+	close(fd[1]);
+
+	waitpid(pid1, NULL, 0); //process, status, options
+	waitpid(pid2, NULL, 0);
 }
 
 
