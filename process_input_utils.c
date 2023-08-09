@@ -6,11 +6,13 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/13 14:11:00 by jchurch           #+#    #+#             */
-/*   Updated: 2023/08/02 16:47:03 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/07/13 14:11:00 by jchurch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// extern	t_program	g_program;
 
 /*Input: string to return an integer the number of "tokens" that can be 
 created. A token is seperated by a space or tab, unless the space or tab 
@@ -36,24 +38,22 @@ int	find_token_number(t_token_list **root)
 
 int	ft_is_pipe_or_redirect(char c)
 {
-	if (c == '<' || c == '>')
+	if (c == '<' || c == '>' || c == '|')
 		return (1);
 	else
 		return (0);
 }
 
-void	check_is_quote(char *str, char type)
+void	process_quotes(char *str, char type)
 {
 	int	i;
 
 	i = 0;
 	i++;
 	while (str[i] != type && str[i] != '\0')
-	{
 		i++;
-		if (str[i] == type)
-			i++;
-	}
+	if (str[i] == type)
+		i++;
 }
 
 /*Returns the index number of a string, the return value is the first space or 
@@ -84,12 +84,12 @@ int	find_end(char *str)
 			}
 			break ;
 		}
-		if (ft_is_pipe_or_redirect(str[i]) == 1 || ft_white_space(str[i]) == 1)
+		if (ft_white_space(str[i]) == 1 || ft_is_pipe_or_redirect(str[i]) == 1)
 			break ;
 		if (ft_is_quote(str[i]) == 1)
 		{
 			type = str[i];
-			check_is_quote(str, type);
+			process_quotes(str, type); 
 		}
 		i++;
 	}
