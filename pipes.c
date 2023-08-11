@@ -14,55 +14,6 @@
 
 extern	t_program	g_program;
 
-int    num_of_cmds()
-{
-    int count;
-    int i;
-
-    i = 0;
-    count = 1;
-    while (&g_program.token[i])
-    {
-        if (ft_strcmp(&g_program.token[i], "|") == 0 && &g_program.token[i + 1])
-        {
-            count++;
-        }
-        i++;
-    }
-    return (count);
-}
-
-void    set_commands()
-{
-    debugFunctionName("SET_CMDS");
-    int i;
-    int j;
-    int k;
-    int num = num_of_cmds();
-
-    g_program.commands = malloc(sizeof(char*) (num + 1)); // MALLOC
-    i = 0;
-    j = 0;
-    k = 0;
-    while (&g_program.token[i])
-    {
-        while (ft_strcmp("|", &g_program.token[i]) != 0 && &g_program.token[i])
-        {
-            g_program.commands[k][j] = ft_strdup(&g_program.token[i]); // MALLOC
-            j++;
-            i++;
-        }
-        g_program.commands[k][j] = NULL;
-        if (&g_program.token[i])
-            i++;
-        k++;
-        j = 0;
-    }
-    if (!&g_program.token[i])
-    {
-        g_program.commands[k][0] = NULL;
-    }
-}
 
 void exepipe(void)
 {
@@ -96,47 +47,46 @@ void exepipe(void)
 	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
 }
 
-void	set_commands(void)
-{
-    debugFunctionName("SET_CMDS");
-    char **tokens;
-    int i;
-	int j;
+// void	set_commands(void)
+// {
+//     debugFunctionName("SET_CMDS");
+//     char **tokens;
+//     int i;
+// 	int j;
 
-    i = 0; 
-	tokens = &g_program.token[i];
-	while (tokens[i] && ft_strcmp("|", tokens[i]))
-		i++;
-	if (!tokens[i])
-    {
-        g_program.commands = tokens;
-    }
-	else
-	{
-		g_program.commands = malloc(sizeof(*g_program.commands) * (i + 1));
-		j = 0;
-		while (j < i)
-		{
-			g_program.commands[j] = tokens[j];
-			printf("Command %d: %s\n", j, g_program.commands[j]); 
-			j++;
-		}
-		g_program.commands[i] = NULL;
-	}
-}
+//     i = 0; 
+// 	tokens = &g_program.token[i];
+// 	while (tokens[i] && ft_strcmp("|", tokens[i]))
+// 		i++;
+// 	if (!tokens[i])
+//     {
+//         g_program.commands = tokens;
+//     }
+// 	else
+// 	{
+// 		g_program.commands = malloc(sizeof(*g_program.commands) * (i + 1));
+// 		j = 0;
+// 		while (j < i)
+// 		{
+// 			g_program.commands[j] = tokens[j];
+// 			printf("Command %d: %s\n", j, g_program.commands[j]); 
+// 			j++;
+// 		}
+// 		g_program.commands[i] = NULL;
+// 	}
+// }
 
 void do_pipe(void)
 {
     debugFunctionName("DO_PIPE");
-
-    int pipe1[2];
+    int		pipe1[2];
 	pid_t	pid;
-	int status;
+	int		status;
 
     if (pipe(pipe1) == -1)
 	{
 		perror("bad pipe");
-		exit(1);
+		ft_exit(1);
 	}
     pid = fork();
 	if (pid)
@@ -155,7 +105,86 @@ void do_pipe(void)
 	}
 }
 
-void	execute_commands(void)
+int    num_of_cmds()
+{
+    int count;
+    int i;
+
+    i = 0;
+    count = 1;
+    while (g_program.token[i])
+    {
+		printf("count is %d for %s\n", count, g_program.token[i]);
+        if (ft_strcmp(g_program.token[i], "|") == 0)
+        {
+            count++;
+        }
+        i++;
+    }
+	printf("return count is %d\n", count);
+    return (count);
+}
+
+int	num_until_pipe()
+{
+	static int 	i;
+	int			count;
+
+	count = 0;
+	if (i == NULL)
+		i = 0;
+	while (g_program.token[i] )
+
+	return (count);
+}
+
+void	init_commands()
+{
+	int i;
+
+	g_program.command = ((char ***)malloc(sizeof(char**) * (num_of_cmds() + 1));
+	i = 0;
+	while (i < )
+}
+
+void    set_commands()
+{
+    debugFunctionName("SET_COMMANDS");
+    int i;
+    int j;
+    int k;
+	printf("a\n");
+
+	init_commands();
+	g_program.commands = (char **)malloc((num_of_cmds() + 1) * sizeof(char *)); // MALLOC
+	if (!g_program.commands)
+		printf("failure to set g_program.commands\n");
+	else
+		printf("set g_program.commands\n");
+    i = 0;
+    j = 0;
+    k = 0;
+    while (&g_program.token[i])
+    {
+        while (ft_strcmp("|", g_program.token[i]) != 0 && g_program.token[i])
+        {
+            g_program.commands[k][j] = *ft_strdup(g_program.token[i++]); // MALLOC
+            j++;
+        }
+        g_program.commands[k][j] = 0;
+        if (&g_program.token[i])
+            i++;
+        k++;
+        j = 0;
+    }
+    if (!&g_program.token[i])
+    {
+        g_program.commands[k][0] = 0;
+    }
+}
+
+
+void	execute_commands()
 {
 	 debugFunctionName("EXEXUTE_PIPE_COMMAND");
     //  int	i = 0;
@@ -177,7 +206,7 @@ void handle_pipe(void)
 		exit (0);
     while (g_program.token[i])
     {
-        if (!ft_strcmp("|", g_program.token[i])) 
+        if (ft_strcmp("|", g_program.token[i]) == 0) 
         {
             execute_commands();
 			// i = -1;

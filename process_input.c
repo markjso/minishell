@@ -110,20 +110,29 @@ void	copy_into_array(t_token **root)
 	}
 }
 
-bool	has_pipe_token(void)
+int	has_pipe_token(void)
 {
+	debugFunctionName("HAS_PIPE_TOKEN");
 	int	i;
 
-	i = 0;
+	i = 1;
+	if (ft_strcmp(g_program.token[0], "|") == 0)
+		error_message("command not found", 127);
 	while (g_program.token[i])
 	{
-		if (g_program.token[0][0] == '|')
-			error_message("command not found", 127);
-		else if (g_program.token[i][0] == '|')
-			return (true);
+		printf("%s\n", g_program.token[i]);
+		if (ft_strcmp(g_program.token[i], "|") == 0)
+		{
+			if (ft_strcmp(g_program.token[i + 1], "|") == 0)
+			{
+				perror("double pipe not implemented");
+				return (0);
+			}
+			return (1);
+		}
 		i++;
 	}
-	return (false);
+	return (0);
 }
 
 /*
