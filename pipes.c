@@ -72,7 +72,7 @@ void exepipe(void)
     char *cmds;
     // int status;
 
-	cmds = g_program.token[0];
+	cmds = g_program.commands[0];
 	printf("cmd %s\n", cmds);
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, cmds);

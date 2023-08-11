@@ -18,6 +18,11 @@ static char	*get_path(char const *currentPath, char const *cmd)
 
 	if (*cmd == '/')
 		rtn = ft_strdup(cmd);
+	if (cmd[0] == '/')
+	{
+		if (execve(&cmd[0], g_program.token, g_program.envp) == -1)
+			error_and_exit("command cannot be executed", 126);
+	}
 	else if (!ft_strncmp(cmd, "./", 2))
 		rtn = ft_strjoin((find_env(g_program.envar, "PWD")->value),
 				ft_strjoin("/", cmd));
@@ -68,11 +73,6 @@ void	execmd(void)
 	cmds = g_program.token[0];
 	if (pid == 0)
 	{
-		if (cmds[0] == '/')
-		{
-			if (execve(&cmds[0], g_program.token, g_program.envp) == -1)
-				error_and_exit("command cannot be executed", 126);
-		}
 		paths = get_full_path();
 		exec_path = get_path_for_cmd(paths, &cmds[0]);
 		if (!paths || !exec_path)
@@ -81,13 +81,7 @@ void	execmd(void)
 			error_and_exit("command cannot be executed", 126);
 	}
 	else
-	{
 		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-		{
-			g_program.exit_status = WEXITSTATUS(status);
-		}
-		return ;
-	}
-	exit(EXIT_SUCCESS);
+	if (WIFEXITED(status))
+		g_program.exit_status = WEXITSTATUS(status);
 }

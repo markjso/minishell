@@ -50,11 +50,14 @@ void	std_input(void)
 	file_temp = open(file, O_RDONLY, 0444);
 	free(file);
 	if (file_temp == -1)
-		perror("Error in std_input: \n");
+	{
+		perror("Error in std_input");
+		return ;
+	}
 	g_program.in_backup = dup(STDIN_FILENO);
 	g_program.in_file = dup2(file_temp, STDIN_FILENO);
 	if (g_program.in_file < 0)
-		perror("Error: cannot open input file\n");
+		error_and_exit("no such file", 127);
 	close(file_temp);
 	g_program.redir_in_flag = 1;
 }

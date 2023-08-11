@@ -61,8 +61,6 @@ int	export_cmd(char **token)
 		return (0);
 	}
 	split_env = ft_split(token[1], '=');
-	if (!split_env[1])
-		return (1);
 	name = split_env[0];
 	value = split_env[1];
 	node = find_env(g_program.envar, name);
@@ -91,12 +89,12 @@ void	unset_cmd(char **token)
 
 void	exit_cmd(char **token)
 {
-	if ((token[0]) && (!token[2])) 
+	if (token[1] && (token[2]))
 		error_message_cmd("too many arguments", 255);
-	// else if (token[1])
-	// {
-	// 	ft_exit(0);
-	// }
+	else if (token[1])
+	{
+		ft_exit(0);
+	}
 	else
 	{
 		ft_exit(0);

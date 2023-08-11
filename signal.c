@@ -15,11 +15,14 @@
 //handles the Ctrl-C key combination (SIGINT signal)
 void	sig_handler(int sig)
 {
-	(void)sig;
-	write(2, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (sig == SIGINT)
+	{
+		g_program.exit_status = 130;
+		write(1, "\n", 2);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
 /* if the return value of signal is not SIG_ERR set 
@@ -29,18 +32,6 @@ is typed. SIG_IGN tells the system to ignore the
 signal so nothing will happen.*/
 void	sig_initialiser(void)
 {
-	if (signal(SIGINT, sig_handler) == SIG_ERR)
-	{
-		printf("failed to catch the SIGINT signal\n");
-	}
-	if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
-	{
-		printf("failed to catch the SIGQUIT signal\n");
-	}
-	if (signal(SIGQUIT, sig_handler) == SIG_ERR)
-	{
-		printf("failed to catch the EOF signal\n");
-	}
-	else
-		signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

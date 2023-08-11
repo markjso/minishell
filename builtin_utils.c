@@ -52,7 +52,7 @@ void	do_builtins(char **builtin_id)
 	if (ft_strcmp(builtin_id[0], "env") == 0)
 		print_env();
 	if (ft_strcmp(builtin_id[0], "exit") == 0)
-		ft_exit(0);
+		exit_cmd(g_program.token);
 }
 
 void	ft_continue(t_token **root)

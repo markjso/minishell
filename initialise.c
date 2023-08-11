@@ -33,9 +33,9 @@ int	take_input(char *input)
 
 	get_user_prompt();
 	user_input = readline(g_program.prompt);
-	if (!user_input) 
+	if (!user_input)
 	{
-		printf("%sexit\n", input);
+		printf("exit\n");
 		ft_exit(1);
 	}
 	if (ft_strlen(user_input) != 0) 
