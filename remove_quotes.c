@@ -12,9 +12,7 @@
 
 #include "minishell.h"
 
-t_program	g_program;
-
-char	*make_one_and_two(t_token_list *curr, int *start, 
+char	*make_one_and_two(t_token *curr, int *start, 
 		int *first, int *second)
 {
 	char	*str_first;
@@ -31,7 +29,7 @@ char	*make_one_and_two(t_token_list *curr, int *start,
 	return (first_and_second);
 }
 
-void	really_remove_quotes(t_token_list *curr, int *start, 
+void	really_remove_quotes(t_token *curr, int *start, 
 		int *first, int second)
 {
 	char	*first_and_second;
@@ -53,7 +51,7 @@ void	really_remove_quotes(t_token_list *curr, int *start,
 	*first = second - 2;
 }
 
-void	find_second_quote(t_token_list *curr, int *start, int *first)
+void	find_second_quote(t_token *curr, int *start, int *first)
 {
 	int	second;
 
@@ -74,11 +72,11 @@ void	find_second_quote(t_token_list *curr, int *start, int *first)
 	}
 }
 
-void	remove_quotes(t_token_list **root)
+void	remove_quotes(t_token **root)
 {
-	int				start;
-	int				first;
-	t_token_list	*curr;
+	int		start;
+	int		first;
+	t_token	*curr;
 
 	curr = *root;
 	while (curr != NULL)

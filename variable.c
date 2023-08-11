@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-t_program	g_program;
-
 char	*ft_first_and_second(char *str, int *start, int env_start, int *end)
 {
 	char	*first;
@@ -31,7 +29,7 @@ char	*ft_first_and_second(char *str, int *start, int env_start, int *end)
 	return (first_and_second);
 }
 
-void	dollar_found(t_token_list *curr, int *end, int *start)
+void	dollar_found(t_token *curr, int *end, int *start)
 {
 	char	*first_and_second;
 	int		env_start;
@@ -54,7 +52,7 @@ void	dollar_found(t_token_list *curr, int *end, int *start)
 	free(final);
 }
 
-void	locate_dollar_for_action(t_token_list *curr)
+void	locate_dollar_for_action(t_token *curr)
 {
 	int	end;
 	int	start;
@@ -101,10 +99,10 @@ int	count_dollars(char *str)
 	return (todo);
 }
 
-void	expand_variables(t_token_list **root)
+void	expand_variables(t_token **root)
 {
-	t_token_list	*curr;
-	int				todo;
+	t_token	*curr;
+	int		todo;
 
 	curr = *root;
 	while (curr != NULL)

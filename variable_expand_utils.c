@@ -17,7 +17,7 @@ char	*expand_dollar(char *variable)
 	t_envar	*env_node;
 
 	variable++;
-	env_node = find_env_var(variable);
+	env_node = find_env(g_program.envar, variable);
 	if (variable[0] == '?')
 	{
 		return (ft_itoa(g_program.exit_status));

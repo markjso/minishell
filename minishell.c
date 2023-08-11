@@ -14,8 +14,8 @@
 
 int	main(int ac, char **av, char **envp)
 {
-	char			input[MAXCOM];
-	t_token_list	*root;
+	char	input[MAXCOM];
+	t_token	*root;
 
 	(void)ac;
 	(void)av;
@@ -31,8 +31,6 @@ int	main(int ac, char **av, char **envp)
 			g_program.redirect_index = 0;
 			process_input(input, &root);
 			check_for_redirect(&root);
-			// check_for_heredoc(&root);
-			ft_continue(&root);
 		}
 	}
 }

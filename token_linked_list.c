@@ -12,11 +12,11 @@
 
 #include "minishell.h"
 
-t_token_list	*make_new_node(char *value)
+t_token	*make_new_node(char *value)
 {
-	t_token_list	*new_node;
+	t_token	*new_node;
 
-	new_node = malloc(sizeof(t_token_list));
+	new_node = malloc(sizeof(t_token));
 	if (new_node == NULL)
 		ft_exit(20);
 	new_node->data = ft_strdup(value);
@@ -24,7 +24,7 @@ t_token_list	*make_new_node(char *value)
 	return (new_node);
 }
 
-void	replace_node_data(t_token_list *curr, char *new_data)
+void	replace_node_data(t_token *curr, char *new_data)
 {
 	if (curr == NULL)
 		ft_exit(21);

@@ -12,20 +12,6 @@
 
 #include "minishell.h"
 
-t_envar	*find_env(t_envar *envars, char *name)
-{
-	t_envar		*temp;
-
-	temp = envars;
-	while (temp != NULL)
-	{
-		if (ft_strcmp(temp->name, name) == 0)
-			return (temp);
-		temp = temp->next;
-	}
-	return (NULL);
-}
-
 static char	*get_path(char const *currentPath, char const *cmd)
 {
 	char	*rtn;

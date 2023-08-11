@@ -15,10 +15,15 @@
 void	get_user_prompt(void)
 {
 	char	*prompt;
-	char	*username;
+	t_envar	*username;
 
-	username = getenv("USER");
-	prompt = ft_strjoin(username, "@>>$ ");
+	prompt = ft_strdup(T_DEFAULT);
+	username = find_env(g_program.envar, "USER");
+	if (username)
+	{
+		prompt = ft_strjoin(prompt, (char *)username->value);
+		prompt = ft_strjoin(prompt, "@>>$ ");
+	}
 	g_program.prompt = ft_strdup(prompt);
 }
 

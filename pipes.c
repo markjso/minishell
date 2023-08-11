@@ -6,7 +6,7 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/11 14:34:44 by jmarks            #+#    #+#             */
-/*   Updated: 2023/07/28 22:03:46 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/11 12:55:15 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,55 @@
 
 extern	t_program	g_program;
 
+int    num_of_cmds()
+{
+    int count;
+    int i;
+
+    i = 0;
+    count = 1;
+    while (&g_program.token[i])
+    {
+        if (ft_strcmp(&g_program.token[i], "|") == 0 && &g_program.token[i + 1])
+        {
+            count++;
+        }
+        i++;
+    }
+    return (count);
+}
+
+void    set_commands()
+{
+    debugFunctionName("SET_CMDS");
+    int i;
+    int j;
+    int k;
+    int num = num_of_cmds();
+
+    g_program.commands = malloc(sizeof(char*) (num + 1)); // MALLOC
+    i = 0;
+    j = 0;
+    k = 0;
+    while (&g_program.token[i])
+    {
+        while (ft_strcmp("|", &g_program.token[i]) != 0 && &g_program.token[i])
+        {
+            g_program.commands[k][j] = ft_strdup(&g_program.token[i]); // MALLOC
+            j++;
+            i++;
+        }
+        g_program.commands[k][j] = NULL;
+        if (&g_program.token[i])
+            i++;
+        k++;
+        j = 0;
+    }
+    if (!&g_program.token[i])
+    {
+        g_program.commands[k][0] = NULL;
+    }
+}
 
 void exepipe(void)
 {

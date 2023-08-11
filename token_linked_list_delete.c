@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void	ll_remove_node(t_token_list **root, t_token_list *this_node)
+void	ll_remove_node(t_token **root, t_token *this_node)
 {
-	t_token_list	*curr;
+	t_token	*curr;
 
 	if (*root == NULL)
 		return ;
@@ -40,10 +40,10 @@ void	ll_remove_node(t_token_list **root, t_token_list *this_node)
 	}
 }
 
-void	ll_deallocate(t_token_list **root)
+void	ll_deallocate(t_token **root)
 {
-	t_token_list	*curr;
-	t_token_list	*temp;
+	t_token	*curr;
+	t_token	*temp;
 
 	curr = *root;
 	while (curr != NULL)
@@ -56,9 +56,9 @@ void	ll_deallocate(t_token_list **root)
 	*root = NULL;
 }
 
-void	ll_print_token(t_token_list **root)
+void	ll_print_token(t_token **root)
 {
-	t_token_list	*curr;
+	t_token	*curr;
 
 	curr = *root;
 	while (curr != NULL)

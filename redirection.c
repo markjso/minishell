@@ -14,9 +14,9 @@
 
 t_program	g_program;
 
-void	remove_redirect_tokens(t_token_list **root, t_token_list *operator_node)
+void	remove_redirect_tokens(t_token **root, t_token *operator_node)
 {
-	t_token_list	*file_name_node;
+	t_token	*file_name_node;
 
 	file_name_node = operator_node->next;
 	ll_remove_node(root, operator_node);
@@ -77,7 +77,7 @@ void	output_append(void)
 	g_program.redir_out_flag = 1;
 }
 
-void	do_redirect(t_token_list *curr, int num, int *flag)
+void	do_redirect(t_token *curr, int num, int *flag)
 {
 	*flag = 1;
 	if (curr->next == NULL)

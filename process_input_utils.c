@@ -21,10 +21,10 @@ is enclosed within matching double or single quotation marks.
 Any word that has no space or no tab and is next to the "outside" of a 
 quotation mark: One token will be created to encompas the outside word 
 and the whole quotation mark.*/
-int	find_token_number(t_token_list **root)
+int	find_token_number(t_token **root)
 {
-	int				i;
-	t_token_list	*curr;
+	int		i;
+	t_token	*curr;
 
 	i = 0;
 	curr = *root;

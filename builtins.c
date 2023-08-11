@@ -16,10 +16,7 @@
 
 void	printpwd(void)
 {
-	char	pwd[256];
-
-	getcwd(pwd, sizeof(pwd));
-	printf("Dir: %s\n", pwd);
+	printf("%s\n", (char *)find_env(g_program.envar, "PWD")->value);
 	g_program.exit_status = 0;
 }
 
@@ -53,13 +50,22 @@ void	echo_cmd(char **token)
 
 int	export_cmd(char **token)
 {
+	char	**split_env;
 	char	*name;
 	char	*value;
 	t_envar	*node;
 
-	if (parse_env_var(token, &name, &value) != 0)
+	if (token[1] == NULL)
+	{
+		print_env();
+		return (0);
+	}
+	split_env = ft_split(token[1], '=');
+	if (!split_env[1])
 		return (1);
-	node = find_env_var(name);
+	name = split_env[0];
+	value = split_env[1];
+	node = find_env(g_program.envar, name);
 	if (node == NULL)
 	{
 		node = init_env(name, value);
@@ -75,7 +81,7 @@ int	export_cmd(char **token)
 
 void	unset_cmd(char **token)
 {
-	if (ft_strcmp(token[1], "#") == 0)
+	if (ft_strrchr(token[1], '#'))
 	{
 		error_message_cmd("invalid parameter name", 1);
 	}
@@ -85,12 +91,12 @@ void	unset_cmd(char **token)
 
 void	exit_cmd(char **token)
 {
-	if (token[1] && token[2])
-		(ft_putstr_fd("exit", 2), error_message("too many arguments", 255));
-	else if (token[1])
-	{
-		ft_exit(0);
-	}
+	if ((token[0]) && (!token[2])) 
+		error_message_cmd("too many arguments", 255);
+	// else if (token[1])
+	// {
+	// 	ft_exit(0);
+	// }
 	else
 	{
 		ft_exit(0);

@@ -26,20 +26,20 @@ int	cd_command(char **tokens)
 	t_envar	*pwd;
 	t_envar	*oldpwd;
 
-	pwd = find_env_var("PWD");
-	oldpwd = find_env_var("OLDPWD");
+	pwd = find_env(g_program.envar, "PWD");
+	oldpwd = find_env(g_program.envar, "OLDPWD");
 	if (chdir(tokens[1]) == 0)
 	{
 		if (getcwd(cwd, sizeof(cwd)) == NULL)
 		{
-			(ft_putstr_fd("cd", 2), error_message("Not a directory", 20));
+			error_message_cmd("Not a directory", 20);
 		}
 		else
 			change_dirs(pwd, oldpwd, cwd);
 	}
 	else
 	{
-		(ft_putstr_fd("cd", 2), error_message("No such file or directory", 2));
+		error_message_cmd("No such file or directory", 2);
 	}
 	return (0);
 }

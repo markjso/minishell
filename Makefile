@@ -22,7 +22,6 @@ SRCS=minishell.c \
 	environ.c \
 	environ_utils.c \
 	initialise.c \
-	debug.c \
 	process_input.c \
 	token_linked_list.c \
 	token_linked_list_create.c \
@@ -36,7 +35,6 @@ SRCS=minishell.c \
 	error.c \
 	redirection.c \
 	heredoc.c \
-	pipes.c \
 	redirection_utils.c \
 	leaks.c \
 	exit_and_free.c

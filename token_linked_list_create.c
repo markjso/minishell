@@ -12,9 +12,9 @@
 
 #include "minishell.h"
 
-void	ll_insert_end(t_token_list **root, t_token_list *new_node)
+void	ll_insert_end(t_token **root, t_token *new_node)
 {
-	t_token_list	*curr;
+	t_token	*curr;
 
 	if (new_node == NULL)
 		exit(21);
@@ -29,7 +29,7 @@ void	ll_insert_end(t_token_list **root, t_token_list *new_node)
 	curr->next = new_node;
 }
 
-void	ll_insert_beginning(t_token_list **root, t_token_list *new_node)
+void	ll_insert_beginning(t_token **root, t_token *new_node)
 {
 	if (new_node == NULL)
 		exit (3);
@@ -37,7 +37,7 @@ void	ll_insert_beginning(t_token_list **root, t_token_list *new_node)
 	*root = new_node;
 }
 
-void	ll_insert_after(t_token_list *this_node, t_token_list *new_node)
+void	ll_insert_after(t_token *this_node, t_token *new_node)
 {
 	if (new_node == NULL)
 		exit(4);
@@ -45,10 +45,10 @@ void	ll_insert_after(t_token_list *this_node, t_token_list *new_node)
 	this_node->next = new_node;
 }
 
-void	ll_insert_before(t_token_list **root, t_token_list *this_node, 
-		t_token_list *new_node)
+void	ll_insert_before(t_token **root, t_token *this_node, 
+		t_token *new_node)
 {
-	t_token_list	*curr;
+	t_token	*curr;
 
 	if (new_node == NULL)
 		exit(4);

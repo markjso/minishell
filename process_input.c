@@ -52,12 +52,12 @@ The quotation is treated as one word.
 Any word that has no space or no tab and is next to the "outside" of a 
 quotation mark: One token will be created to encompas the outside word 
 and the whole quotation mark.*/
-void	make_tokens(char *str, t_token_list **root)
+void	make_tokens(char *str, t_token **root)
 {
-	int				input_index;
-	t_token_list	*new_node;
-	char			*temp_token_value;
-	char			pipe_token[2];
+	int		input_index;
+	t_token	*new_node;
+	char	*temp_token_value;
+	char	pipe_token[2];
 
 	pipe_token[0] = '|';
 	pipe_token[1] = '\0';
@@ -83,14 +83,14 @@ void	make_tokens(char *str, t_token_list **root)
 
 /*
 copy_int_array
-Moves linked list t_token_list->data* into program->token** array. 
+Moves linked list t_token->data* into program->token** array. 
 */
-void	copy_into_array(t_token_list **root)
+void	copy_into_array(t_token **root)
 {
-	t_token_list	*curr;
-	int				token_number;
-	int				i;
-	int				j;
+	t_token	*curr;
+	int		token_number;
+	int		i;
+	int		j;
 
 	token_number = find_token_number(root);
 	i = 0;
@@ -106,7 +106,6 @@ void	copy_into_array(t_token_list **root)
 	j = 0;
 	while (j < token_number)
 	{
-		printf("token[%d]: %s\n", j, g_program.token[j]);
 		j++;
 	}
 }
@@ -132,7 +131,7 @@ process_input(char *str: raw user input,
 char **token: is empty pointer to string that will become tokenised string).
 Return value is always 0? Why
 */
-void	process_input(char *str, t_token_list **root)
+void	process_input(char *str, t_token **root)
 {
 	make_tokens(str, root);
 	expand_variables(root);

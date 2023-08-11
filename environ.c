@@ -79,18 +79,16 @@ void	add_env_var(t_envar *node)
 list of environement variables. Used by the 
 export builtin*/
 
-t_envar	*find_env_var(char *name)
+t_envar	*find_env(t_envar *envars, char *name)
 {
-	t_envar	*tmp;
+	t_envar		*temp;
 
-	tmp = g_program.envar;
-	while (tmp != NULL)
+	temp = envars;
+	while (temp != NULL)
 	{
-		if (ft_strcmp(tmp->name, name) == 0)
-		{
-			return (tmp);
-		}
-		tmp = tmp->next;
+		if (ft_strcmp(temp->name, name) == 0)
+			return (temp);
+		temp = temp->next;
 	}
 	return (NULL);
 }

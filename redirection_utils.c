@@ -85,20 +85,12 @@ char	*get_file_name(char *str)
 		return (NULL);
 }
 
-void	process_redirect(t_token_list **root, t_token_list **curr)
+void	check_for_redirect(t_token **root)
 {
-	t_token_list	*temp_token;
-
-	temp_token = *curr;
-	*curr = (*curr)->next->next;
-	remove_redirect_tokens(root, temp_token);
-}
-
-void	check_for_redirect(t_token_list **root)
-{
-	t_token_list	*curr;
-	t_token_list	*prev;
-	int				flag;
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*temp_token;
+	int		flag;
 
 	curr = *root;
 	while (curr != NULL)
@@ -117,9 +109,16 @@ void	check_for_redirect(t_token_list **root)
 			do_redirect(curr, 2, &flag);
 		else if (curr->data[0] == '>')
 			do_redirect(curr, 1, &flag);
+		if (flag == 2)
+		{
+			ll_deallocate(root);
+			return ;
+		}
 		if (flag == 1)
 		{
-			process_redirect(root, &curr);
+			temp_token = curr;
+			curr = curr->next->next;
+			remove_redirect_tokens(root, temp_token);
 			continue ;
 		}
 		prev = curr;

@@ -25,10 +25,11 @@ void	error_message_cmd(char *message, int status)
 	char	*cmd;
 
 	cmd = g_program.token[1];
-	ft_putstr_fd("minishell: ", 2);
+	ft_putendl_fd(g_program.token[0], 2);
+	ft_putstr_fd(" : ", 2);
 	ft_putendl_fd(message, 2);
 	ft_putstr_fd(" : ", 2);
-	ft_putstr_fd(cmd, 2);
+	ft_putendl_fd(cmd, 2);
 	write(2, "\n", 1);
 	g_program.exit_status = status;
 	return ;
