@@ -60,13 +60,18 @@ void exepipe(t_cmd_token **root)
 
 	curr = *root;
 	temp = curr;
+	for (int z = 0; temp->data[z]; z++)
+		fprintf(stderr, "temp->data : %s\n", temp->data[z]);
+
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, temp->name);
+	// printf("exepath: %s\n", exec_path);
 	if (exec_path)
 	{
 		// printf("Path: %s\n", exec_path);
 		ll_cmd_remove_node(root, curr);
 		// printf("temp node : %s\n", temp->name);
+
 		execve(exec_path, temp->data, g_program.envp);
 		perror("execve"); 
 		ft_exit(EXIT_FAILURE); 
@@ -98,14 +103,16 @@ void do_pipe(t_cmd_token **root)
 	{
 		close(pipe1[0]);
 		dup2(pipe1[1], 1);
+		close(pipe1[0]);
 		exepipe(root);
 	}
 	else
 	{
 		close(pipe1[1]);
 		dup2(pipe1[0], 0);
-		wait(&status);
-		waitpid(pid, NULL, WNOHANG);
+		close(pipe1[0]);
+		// wait(&status);
+		// waitpid(pid, NULL, WNOHANG);
 		if (WEXITSTATUS(status) != EXIT_SUCCESS)
 			printf("Failed\n");
 	}
