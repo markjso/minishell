@@ -31,9 +31,9 @@ void	ft_free_envp(void)
 void	ft_free_envar(void)
 {
 	t_envar	*temp;
-	int		i;
+	// int		i;
 
-	i = 0;
+	// i = 0;
 	while (g_program.envar != 0)
 	{
 		temp = g_program.envar;

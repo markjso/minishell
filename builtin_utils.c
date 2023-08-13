@@ -62,7 +62,7 @@ void	ft_continue(t_token **root)
 	if (has_pipe_token() == 1)
 	{
 		printf("has pipe\n");
-		execute_commands();
+		handle_pipe();
 	}
 	if (is_builtin_cmd())
 	{

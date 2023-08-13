@@ -12,58 +12,37 @@
 
 #include "minishell.h"
 
-void	ll_remove_node(t_token **root, t_token *this_node)
-{
-	t_token	*curr;
 
-	if (*root == NULL)
-		return ;
-	if ((*root) == this_node)
-	{
-		*root = (*root)->next;
-		free(this_node->data);
-		free(this_node);
-		return ;
-	}
-	curr = *root;
-	while (curr->next != NULL)
-	{
-		if (curr->next == this_node)
-		{
-			curr->next = this_node->next;
-			if (this_node->data)
-				free(this_node->data);
-			free(this_node);
-			return ;
-		}
-		curr = curr->next;
-	}
-}
 
-void	ll_deallocate(t_token **root)
+void	ll_cmd_deallocate(t_cmd_token **root)
 {
-	t_token	*curr;
-	t_token	*temp;
+	t_cmd_token	*curr;
+	t_cmd_token	*temp;
 
 	curr = *root;
 	while (curr != NULL)
 	{
 		temp = curr;
 		curr = curr->next;
+		free(temp->name);
+		while (temp->data)
+		{
+			free(*temp->data);
+			temp->data++;
+		}
 		free(temp->data);
 		free(temp);
 	}
 	*root = NULL;
 }
 
-void	ll_print_token(t_token **root)
-{
-	t_token	*curr;
+// void	ll_cmd_print_token(t_token **root)
+// {
+// 	t_token	*curr;
 
-	curr = *root;
-	while (curr != NULL)
-	{
-		printf("Print token LL: %s\n ", curr->data);
-		curr = curr->next;
-	}
-}
+// 	curr = *root;
+// 	while (curr != NULL)
+// 	{
+// 		curr = curr->next;
+// 	}
+// }

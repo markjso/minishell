@@ -112,7 +112,7 @@ void	copy_into_array(t_token **root)
 
 int	has_pipe_token(void)
 {
-	debugFunctionName("HAS_PIPE_TOKEN");
+	// debugFunctionName("HAS_PIPE_TOKEN");
 	int	i;
 
 	i = 1;

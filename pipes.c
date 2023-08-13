@@ -15,28 +15,57 @@
 extern	t_program	g_program;
 
 
-void exepipe(void)
+// void exepipe(void)
+// {
+// 	debugFunctionName("EXEC_PIPE");
+// 	char **paths;
+// 	char *exec_path;
+//     char *cmds;
+//     // int status;
+
+// 	cmds = g_program.token[0];
+// 	printf("cmd %s\n", cmds);
+// 	paths = get_full_path();
+// 	exec_path = get_path_for_cmd(paths, cmds);
+// 	if (exec_path)
+// 	{
+// 		printf("Path = %s\n", exec_path);
+// 		for (int i = 0; g_program.commands[i]; i++)
+// 		{
+// 			printf("arg[%i] = %s\n", i, g_program.commands[i]);
+// 			execve(exec_path, &g_program.commands[i], g_program.envp);
+// 		}
+// 		perror("execve"); 
+// 		exit(EXIT_FAILURE); 
+// 	}
+// 	// waitpid(g_program.pid, &status, 0);
+// 	// if (WIFEXITED(status))
+// 	// {
+// 	// 	g_program.exit_status = WEXITSTATUS(status);
+// 	// 	ft_free_array(g_program.commands);
+// 	// }
+// 	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
+// }
+
+
+void exepipe(t_cmd_token **root)
 {
-	debugFunctionName("EXEC_PIPE");
-	char **paths;
-	char *exec_path;
-    char *cmds;
+	// debugFunctionName("EXEC_PIPE");
+	char		**paths;
+	char		*exec_path;
+    // char		*cmds;
+	t_cmd_token	*curr;
     // int status;
 
-	cmds = g_program.token[0];
-	printf("cmd %s\n", cmds);
+	curr = *root;
 	paths = get_full_path();
-	exec_path = get_path_for_cmd(paths, cmds);
+	exec_path = get_path_for_cmd(paths, curr->name);
 	if (exec_path)
 	{
-		printf("Path = %s\n", exec_path);
-		for (int i = 0; g_program.commands[i]; i++)
-		{
-			printf("arg[%i] = %s\n", i, g_program.commands[i]);
-		execve(exec_path, &g_program.commands[i], g_program.envp);
-		}
+		// printf("Path: %s\n", exec_path);
+		execve(exec_path, curr->data, g_program.envp);
 		perror("execve"); 
-		exit(EXIT_FAILURE); 
+		ft_exit(EXIT_FAILURE); 
 	}
 	// waitpid(g_program.pid, &status, 0);
 	// if (WIFEXITED(status))
@@ -44,44 +73,16 @@ void exepipe(void)
 	// 	g_program.exit_status = WEXITSTATUS(status);
 	// 	ft_free_array(g_program.commands);
 	// }
-	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
+	ft_exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
 }
 
-// void	set_commands(void)
-// {
-//     debugFunctionName("SET_CMDS");
-//     char **tokens;
-//     int i;
-// 	int j;
 
-//     i = 0; 
-// 	tokens = &g_program.token[i];
-// 	while (tokens[i] && ft_strcmp("|", tokens[i]))
-// 		i++;
-// 	if (!tokens[i])
-//     {
-//         g_program.commands = tokens;
-//     }
-// 	else
-// 	{
-// 		g_program.commands = malloc(sizeof(*g_program.commands) * (i + 1));
-// 		j = 0;
-// 		while (j < i)
-// 		{
-// 			g_program.commands[j] = tokens[j];
-// 			printf("Command %d: %s\n", j, g_program.commands[j]); 
-// 			j++;
-// 		}
-// 		g_program.commands[i] = NULL;
-// 	}
-// }
-
-void do_pipe(void)
+void do_pipe(t_cmd_token **root)
 {
     debugFunctionName("DO_PIPE");
-    int		pipe1[2];
-	pid_t	pid;
-	int		status;
+    int			pipe1[2];
+	pid_t		pid;
+	int			status;
 
     if (pipe(pipe1) == -1)
 	{
@@ -89,131 +90,80 @@ void do_pipe(void)
 		ft_exit(1);
 	}
     pid = fork();
-	if (pid)
+	if (pid == 0)
+	{
+		close(pipe1[0]);
+		dup2(pipe1[1], 1);
+		exepipe(root);
+	}
+	else
 	{
 		close(pipe1[1]);
 		dup2(pipe1[0], 0);
 		wait(&status);
+		waitpid(pid, NULL, WNOHANG);
 		if (WEXITSTATUS(status) != EXIT_SUCCESS)
 			printf("Failed\n");
 	}
-	else
-	{
-		close(pipe1[0]);
-		dup2(pipe1[1], 1);
-		exepipe();
-	}
 }
 
-int    num_of_cmds()
-{
-    int count;
-    int i;
 
-    i = 0;
-    count = 1;
-    while (g_program.token[i])
-    {
-		printf("count is %d for %s\n", count, g_program.token[i]);
-        if (ft_strcmp(g_program.token[i], "|") == 0)
-        {
-            count++;
-        }
-        i++;
-    }
-	printf("return count is %d\n", count);
-    return (count);
-}
 
-int	num_until_pipe()
-{
-	static int 	i;
-	int			count;
 
-	count = 0;
-	if (i == NULL)
-		i = 0;
-	while (g_program.token[i] )
-
-	return (count);
-}
-
-void	init_commands()
-{
-	int i;
-
-	g_program.command = ((char ***)malloc(sizeof(char**) * (num_of_cmds() + 1));
-	i = 0;
-	while (i < )
-}
-
-void    set_commands()
+void    set_commands(t_cmd_token **root)
 {
     debugFunctionName("SET_COMMANDS");
-    int i;
-    int j;
-    int k;
-	printf("a\n");
+	t_cmd_token	*new_cmd_node;
+	static int	j;
 
-	init_commands();
-	g_program.commands = (char **)malloc((num_of_cmds() + 1) * sizeof(char *)); // MALLOC
-	if (!g_program.commands)
-		printf("failure to set g_program.commands\n");
-	else
-		printf("set g_program.commands\n");
-    i = 0;
-    j = 0;
-    k = 0;
-    while (&g_program.token[i])
-    {
-        while (ft_strcmp("|", g_program.token[i]) != 0 && g_program.token[i])
-        {
-            g_program.commands[k][j] = *ft_strdup(g_program.token[i++]); // MALLOC
-            j++;
-        }
-        g_program.commands[k][j] = 0;
-        if (&g_program.token[i])
-            i++;
-        k++;
-        j = 0;
-    }
-    if (!&g_program.token[i])
-    {
-        g_program.commands[k][0] = 0;
-    }
+	if (!j)
+		j = 0;
+	// for (int z = 0; value[z]; z++)
+	// 	printf("value: %s\t", value[z]);
+	while (g_program.token[j])
+	{
+		new_cmd_node = ll_new_cmd_node(g_program.token, &j);
+		ll_cmd_insert_end(root, new_cmd_node);
+		printf("token is now: %s\n", g_program.token[j]);
+	}
+	ll_cmd_print_token(root);
 }
 
 
-void	execute_commands()
-{
-	 debugFunctionName("EXEXUTE_PIPE_COMMAND");
-    //  int	i = 0;
+// void	execute_commands(t_cmd_token **cmd_root)
+// {
+// 	 debugFunctionName("EXEXUTE_PIPE_COMMAND");
+//     //  int	i = 0;
+// 	// set_commands(cmd_root);
 
-	// sig_initialiser();
-	set_commands();
-	// printf("commmands in g_program.commands: %s\n", g_program.commands[i]);
-	do_pipe();
-	// last_command();
-	// execmd();
-}
+// 	// sig_initialiser();
+// 	// printf("commmands in g_program.commands: %s\n", g_program.commands[i]);
+// 	// do_pipe(cmd_root);
+// 	// last_command();
+// 	// execmd();
+// }
 
-void handle_pipe(void) 
+void handle_pipe() 
 {
+	t_cmd_token	*cmd_root;
+
+	cmd_root = NULL;
     debugFunctionName("HANDLE_PIPE");
     int i = 0;
     printf("this is the token: %s\n", g_program.token[i]);
 	if (!g_program.token[i])
-		exit (0);
-    while (g_program.token[i])
-    {
-        if (ft_strcmp("|", g_program.token[i]) == 0) 
-        {
-            execute_commands();
-			// i = -1;
-		}
-		i++;
-	}
-	printf("do we get to here?\n");
-	g_program.commands = g_program.token;
+		ft_exit(51);
+	set_commands(&cmd_root);
+    // while (g_program.token[i])
+    // {
+    //     if (ft_strcmp("|", g_program.token[i]) == 0) // or end of line?
+    //     {
+    //         execute_commands(&cmd_root);
+	// 		// i = -1;
+	// 	}
+	// 	i++;
+	// }
+	do_pipe(&cmd_root);
+	// g_program.commands = g_program.token;
 	// last_command();
 }
