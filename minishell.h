@@ -186,6 +186,7 @@ void	execute_commands(t_cmd_token **cmd_root);
 void	ll_cmd_insert_end(t_cmd_token **root, t_cmd_token *new_node);
 void	ll_cmd_insert_beginning(t_cmd_token **root, t_cmd_token *new_node);
 void	ll_cmd_print_token(t_cmd_token **root);
+void	ll_cmd_remove_node(t_cmd_token **root, t_cmd_token *this_node);
 
 
 #endif

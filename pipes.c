@@ -55,15 +55,19 @@ void exepipe(t_cmd_token **root)
 	char		*exec_path;
     // char		*cmds;
 	t_cmd_token	*curr;
+	t_cmd_token	*temp;
     // int status;
 
 	curr = *root;
+	temp = curr;
 	paths = get_full_path();
-	exec_path = get_path_for_cmd(paths, curr->name);
+	exec_path = get_path_for_cmd(paths, temp->name);
 	if (exec_path)
 	{
 		// printf("Path: %s\n", exec_path);
-		execve(exec_path, curr->data, g_program.envp);
+		ll_cmd_remove_node(root, curr);
+		// printf("temp node : %s\n", temp->name);
+		execve(exec_path, temp->data, g_program.envp);
 		perror("execve"); 
 		ft_exit(EXIT_FAILURE); 
 	}
