@@ -74,9 +74,19 @@ void	ft_free(void)
 	ft_free_envar();
 }
 
+
 void	ft_exit(int exit_number)
 {
 	ft_free();
 	check_leaks();
 	exit(exit_number);
+}
+
+void	ft_exit_cmd_ll(int exit_number, t_cmd_token **root)
+{
+	if (*root)
+	{
+		ll_cmd_deallocate(root);
+		ft_exit(exit_number);
+	}
 }

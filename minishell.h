@@ -178,6 +178,8 @@ void	ft_exit(int exit_number);
 void	ft_free_envp(void);
 void	error_message_cmd(char *message, int status);
 void	debugFunctionName(char *function_name);
+void	ft_exit_cmd_ll(int exit_number, t_cmd_token **root);
+
 
 
 t_cmd_token	*ll_new_cmd_node(char **value, int *j);

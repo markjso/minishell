@@ -48,35 +48,34 @@ extern	t_program	g_program;
 // }
 
 
-void exepipe(t_cmd_token **root, t_cmd_token *curr)
+int exepipe(t_cmd_token *curr)
 {
 	// debugFunctionName("EXEC_PIPE");
 	char		**paths;
 	char		*exec_path;
     // char		*cmds;
 	// t_cmd_token	*curr;
-	t_cmd_token	*temp;
+	// t_cmd_token	*temp;
     // int status;
 
-	curr = *root;
-	temp = curr;
+	// temp = curr;
 	// for (int z = 0; temp->data[z]; z++)
 	// 	fprintf(stderr, "ERROR: temp->data : %s\n", temp->data[z]);
 
 	paths = get_full_path();
-	exec_path = get_path_for_cmd(paths, temp->name);
+	exec_path = get_path_for_cmd(paths, curr->name);
 	fprintf(stderr, "exepath: %s\n", exec_path);
 	if (exec_path)
 	{
-		fprintf(stderr, "Path: %s\n", exec_path);
-		ll_cmd_remove_node(root, curr);
-		fprintf(stderr, "temp node : %s\n", temp->name);
+		fprintf(stderr, "exec_path: %s\n", exec_path);
+		// ll_cmd_remove_node(root, curr);
+		// fprintf(stderr, "temp node : %s\n", temp->data);
 
-		for (int z = 0; temp->data[z]; z++){
-			fprintf(stderr, "Just before execve temp->data[%d]: %s\n", z, temp->data[z]);}
-		execve(exec_path, temp->data, g_program.envp);
-		perror("execve"); 
-		ft_exit(EXIT_FAILURE); 
+		for (int z = 0; curr->data[z]; z++){
+			fprintf(stderr, "Just before execve temp->data[%d]: %s\n", z, curr->data[z]);}
+		execve(exec_path, curr->data, g_program.envp);
+		perror("execve");
+		return (EXIT_FAILURE);
 	}
 	// waitpid(g_program.pid, &status, 0);
 	// if (WIFEXITED(status))
@@ -84,7 +83,7 @@ void exepipe(t_cmd_token **root, t_cmd_token *curr)
 	// 	g_program.exit_status = WEXITSTATUS(status);
 	// 	ft_free_array(g_program.commands);
 	// }
-	ft_exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
+	return(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
 }
 
 void do_pipe(t_cmd_token **root, t_cmd_token *curr)
@@ -97,7 +96,7 @@ void do_pipe(t_cmd_token **root, t_cmd_token *curr)
     if (pipe(pipe1) == -1)
 	{
 		perror("bad pipe");
-		ft_exit(1);
+		ft_exit_cmd_ll(1, root);
 	}
     pid = fork();
 	if (pid)
@@ -107,13 +106,15 @@ void do_pipe(t_cmd_token **root, t_cmd_token *curr)
 		wait(&status);
 		if (WEXITSTATUS(status) != EXIT_SUCCESS)
 			fprintf(stderr, "Failed\n");
-		
 	}
 	else
 	{
 		close(pipe1[0]);
 		dup2(pipe1[1], 1);
-		exepipe(root, curr);
+		if (exepipe(curr) == EXIT_FAILURE)
+			ft_exit_cmd_ll(EXIT_FAILURE, root);
+		else
+			ft_exit_cmd_ll(EXIT_SUCCESS, root);
 	}
 }
 
@@ -140,19 +141,6 @@ void    set_commands(t_cmd_token **root)
 }
 
 
-// void	execute_commands(t_cmd_token **cmd_root)
-// {
-// 	 debugFunctionName("EXEXUTE_PIPE_COMMAND");
-//     //  int	i = 0;
-// 	// set_commands(cmd_root);
-
-// 	// sig_initialiser();
-// 	// printf("commmands in g_program.commands: %s\n", g_program.commands[i]);
-// 	// do_pipe(cmd_root);
-// 	// last_command();
-// 	// execmd();
-// }
-
 void handle_pipe() 
 {
 	t_cmd_token	*cmd_root;
@@ -175,7 +163,7 @@ void handle_pipe()
 	// 	}
 	// 	i++;
 	// }
-	while (curr->name)
+	while (curr)
 	{
 		do_pipe(&cmd_root, curr);
 		curr = curr->next;
