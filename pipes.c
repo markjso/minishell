@@ -65,13 +65,15 @@ void exepipe(t_cmd_token **root, t_cmd_token *curr)
 
 	paths = get_full_path();
 	exec_path = get_path_for_cmd(paths, temp->name);
-	// printf("exepath: %s\n", exec_path);
+	fprintf(stderr, "exepath: %s\n", exec_path);
 	if (exec_path)
 	{
-		// printf("Path: %s\n", exec_path);
+		fprintf(stderr, "Path: %s\n", exec_path);
 		ll_cmd_remove_node(root, curr);
-		// printf("temp node : %s\n", temp->name);
+		fprintf(stderr, "temp node : %s\n", temp->name);
 
+		for (int z = 0; temp->data[z]; z++){
+			fprintf(stderr, "Just before execve temp->data[%d]: %s\n", z, temp->data[z]);}
 		execve(exec_path, temp->data, g_program.envp);
 		perror("execve"); 
 		ft_exit(EXIT_FAILURE); 

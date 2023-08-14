@@ -42,6 +42,7 @@ t_cmd_token	*ll_new_cmd_node(char **value, int *j)
 		ft_exit(20);
 	printf("a\n");
 	new_node->name = ft_strdup(value[*j]);
+	printf("new_node name: %d %s\n", i, new_node->name);
 	new_node->data = (char **)malloc(sizeof(char *) * (num_args + 1)); //MALLOC
 	if (!new_node->data)
 		ft_exit(52);
@@ -49,7 +50,7 @@ t_cmd_token	*ll_new_cmd_node(char **value, int *j)
 	while (i < num_args)
 	{
 		new_node->data[i] = ft_strdup(value[*j]); // MALLOC loop
-		printf("newnode data: %d %s\n", i, new_node->data[i]);
+		printf("new_node data: %d %s\n", i, new_node->data[i]);
 		i++;
 		(*j)++;
 	}
