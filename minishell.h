@@ -35,6 +35,8 @@
 # define MAX_BUFFER 4096
 # define MAXARGS 20
 # define T_DEFAULT	"\033[0m"
+# define PIPE_READ 0
+# define PIPE_WRITE 1
 
 /*Struct for holding tokenised user input.*/
 typedef struct s_token

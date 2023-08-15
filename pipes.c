@@ -93,14 +93,24 @@ void    set_commands(t_cmd_token **root)
 	ll_cmd_print_token(root);
 }
 
+int count_commands(t_cmd_token *root)
+{
+    int count = 0;
+    t_cmd_token *current = root;
+
+    while (current != NULL)
+    {
+        count++;
+        current = current->next;
+    }
+    printf("count is: %d\n", count);
+    return (count);
+}
+
 void handle_pipe()
 {
     t_cmd_token *cmd_root;
     t_cmd_token *current;
-    int pipe_fd[2]; 
-    int fd_in = STDIN_FILENO; // Default input is stdin
-    int fd_out = STDOUT_FILENO; // Default output is stdout
-    pid_t pid;
 
     cmd_root = NULL;
     debugFunctionName("HANDLE_PIPE");
@@ -111,17 +121,27 @@ void handle_pipe()
     set_commands(&cmd_root);
     current = cmd_root;
 
-    // Declare and initialize pipe_fd here
-    if (pipe(pipe_fd) == -1)
+    int num_pipes = count_commands(cmd_root) - 1;
+    int pipes[num_pipes][2];
+
+    for (int j = 0; j < num_pipes; j++)
     {
-        perror("Pipe creation failed");
-        exit(EXIT_FAILURE);
+        if (pipe(pipes[j]) == -1)
+        {
+            perror("Pipe creation failed");
+            exit(EXIT_FAILURE);
+        }
     }
+    int fd_in = STDIN_FILENO;
+    int fd_out = STDOUT_FILENO;
+    int status;
+    int cmd_index = 0; // Counter for the current command index
+
     while (current != NULL)
     {
         printf("fd_in before fork: %d\n", fd_in);
         // Create a child process
-        pid = fork();
+        pid_t pid = fork();
         if (pid == -1)
         {
             perror("Fork failed");
@@ -131,78 +151,65 @@ void handle_pipe()
         {
             printf("Child: fd_in = %d, fd_out = %d\n", fd_in, fd_out);
             // Input redirection
-            if (current != cmd_root)
+            if (fd_in != STDIN_FILENO)
             {
-                if (dup2(fd_in, STDIN_FILENO) == -1)
+                if (dup2(pipes[cmd_index][PIPE_WRITE], STDOUT_FILENO) == -1)
                 {
                     perror("Input redirection failed");
                     exit(EXIT_FAILURE);
                 }
+               close(pipes[cmd_index][PIPE_READ]);
+               close(pipes[cmd_index][PIPE_WRITE]);
             }
             // Output redirection
-            if (current->next != NULL)
+            if (current->next != NULL)//not the last command
             {
-                if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
+                if (dup2(pipes[cmd_index][PIPE_READ], STDIN_FILENO) == -1)
                 {
                     perror("Output redirection failed");
                     exit(EXIT_FAILURE);
                 }
-                close(pipe_fd[0]);
-                if (pipe_fd[0])
-                    fprintf(stderr, "pipe_fd[0] exists as %d\n", pipe_fd[0]);
-                else
-                    fprintf(stderr, "pipe_fd[0] is closed\n");
-                if (pipe_fd[1])
-                    fprintf(stderr, "pipe_fd[1] exists as %d\n", pipe_fd[1]);
-                else
-                    fprintf(stderr, "pipe_fd[1] is closed\n");
+                close(pipes[cmd_index][PIPE_WRITE]);
             }
             else
             {
-                // Last command, restore output to stdout
-                if (dup2(fd_out, STDOUT_FILENO) == -1)
-                {
-                    perror("Output redirection restore failed");
-                    exit(EXIT_FAILURE);
-                }
+            //     if (dup2(pipes[cmd_index][PIPE_WRITE], STDOUT_FILENO) == -1)
+            //     {
+            //         perror("Output redirection failed");
+            //         exit(EXIT_FAILURE);
+            //     }
+                close(pipes[cmd_index][PIPE_READ]);
             }
             // Execute the command using execve
-            exepipe(current); // Replace this with your execve logic
-            perror("Execution failed");
-            exit(EXIT_FAILURE);
+            exepipe(current);
         }
         else // Parent process
         {
             printf("Parent: fd_in = %d, fd_out = %d\n", fd_in, fd_out);
-            // Close the previous command's output if not stdout
-            if (fd_out != STDOUT_FILENO)
+            // Close the input/output file descriptors if not stdin/stdout
+            if (fd_in != STDIN_FILENO)
+            {
+                close(fd_in);
+            }
+            if (current->next != NULL)
+            {
+                close(pipes[cmd_index][PIPE_WRITE]);
+            }
+            else if (fd_out != STDOUT_FILENO)
             {
                 close(fd_out);
             }
-            // Set the current command's output as input for the next command
-            if (current->next != NULL)
-            {
-                fd_in = pipe_fd[0];
-            }       
-            // Update fd_out for the next iteration
-            fd_out = pipe_fd[1];
             // Wait for the child process to finish
-            waitpid(pid, NULL, 0);
+            waitpid(pid, &status, 0);
             current = current->next;
+            cmd_index++; // Increment the current command index
         }
     }
-    // Close the last pipe file descriptor after the loop
-    close(pipe_fd[0]);
-    close(pipe_fd[1]);
-    fprintf(stderr, "pid is: %d\n", pid);
-    if (pipe_fd[0])
-        fprintf(stderr, "last pipe_fd[0] exists as %d\n", pipe_fd[0]);
-    else
-        fprintf(stderr, "last pipe_fd[0] is closed\n");
-    if (pipe_fd[1])
-        fprintf(stderr, "last pipe_fd[1] exists as %d\n", pipe_fd[1]);
-    else
-        fprintf(stderr, "last pipe_fd[1] is closed\n");
+    for (int j = 0; j < num_pipes; j++)
+    {
+        close(pipes[j][PIPE_READ]);
+        close(pipes[j][PIPE_WRITE]);
+    }
 
     t_cmd_token *current_cmd = cmd_root;
     while (current_cmd != NULL)
@@ -211,6 +218,6 @@ void handle_pipe()
         free_command(current_cmd);
         current_cmd = next;
     }
+
     return;
 }
-
