@@ -68,9 +68,9 @@ void	ft_continue(t_token **root)
 	{
 		do_builtins(g_program.token);
 	}
-	else
-	{
-		execmd();
-	}
+	// else
+	// {
+	// 	execmd();
+	// }
 	remove_redirect();
 }
