@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	get_user_prompt(void)
+static char	*get_user_prompt(void)
 {
 	char	*prompt;
 	t_envar	*username;
@@ -24,15 +24,16 @@ void	get_user_prompt(void)
 		prompt = ft_strjoin(prompt, (char *)username->value);
 		prompt = ft_strjoin(prompt, "@>>$ ");
 	}
-	g_program.prompt = ft_strdup(prompt);
+	return (prompt);
 }
 
 int	take_input(char *input)
 {
 	char	*user_input;
+	char	*prompt;
 
-	get_user_prompt();
-	user_input = readline(g_program.prompt);
+	prompt = get_user_prompt();
+	user_input = readline(prompt);
 	if (!user_input)
 	{
 		printf("exit\n");

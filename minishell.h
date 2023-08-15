@@ -49,7 +49,6 @@ typedef struct s_program
 	char			**token;
 	char			**envp;
 	char			**commands;
-	char			*prompt;
 	int				exit_status;
 	char			*redirect_file;
 	char			*redirect_in;
