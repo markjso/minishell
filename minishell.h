@@ -50,6 +50,8 @@ typedef struct s_cmd_token
 {
 	char				*name;
 	char				**data;
+	int					fd_in;
+	int					fd_out;
 	struct s_cmd_token	*next;
 }	t_cmd_token;
 

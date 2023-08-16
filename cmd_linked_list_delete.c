@@ -68,11 +68,7 @@ void	ll_cmd_deallocate(t_cmd_token **root)
 		temp = curr;
 		curr = curr->next;
 		free(temp->name);
-		while (temp->data)
-		{
-			free(*temp->data);
-			temp->data++;
-		}
+		remove_data(curr);
 		free(temp->data);
 		free(temp);
 	}

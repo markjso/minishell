@@ -58,7 +58,7 @@ void	ft_token_free(void)
 		}
 		if (g_program.token)
 		{
-			free (g_program.token);
+			free(g_program.token);
 		}
 		if (g_program.token)
 			printf("g_program.token still exists\n");
