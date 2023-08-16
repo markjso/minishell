@@ -16,25 +16,25 @@
 If either STDOUT_FILENO or STDIN_FILENO were modified:
 Reset to defualt. 
 */
-void	remove_redirect(void)
+void	remove_redirect(t_program *program)
 {
-	if (g_program.redir_out_flag == 1)
+	if (program->redir_out_flag == 1)
 	{
-		close(g_program.out_file);
-		dup2(g_program.out_backup, STDOUT_FILENO);
-		close(g_program.out_backup);
-		g_program.out_backup = -1;
-		free(g_program.redirect_out);
-		g_program.redir_out_flag = 0;
+		close(program->out_file);
+		dup2(program->out_backup, STDOUT_FILENO);
+		close(program->out_backup);
+		program->out_backup = -1;
+		free(program->redirect_out);
+		program->redir_out_flag = 0;
 	}
-	if (g_program.redir_in_flag == 1)
+	if (program->redir_in_flag == 1)
 	{
-		close(g_program.in_file);
-		dup2(g_program.in_backup, STDIN_FILENO);
-		close(g_program.in_backup);
-		g_program.in_backup = -1;
-		free(g_program.redirect_in);
-		g_program.redir_in_flag = 0;
+		close(program->in_file);
+		dup2(program->in_backup, STDIN_FILENO);
+		close(program->in_backup);
+		program->in_backup = -1;
+		free(program->redirect_in);
+		program->redir_in_flag = 0;
 	}
 }
 
@@ -45,47 +45,47 @@ If a matching close quote is found:
 If no matching close quote is found: 
 	Index will be moved to 1 char after the current loose quote. 
 */
-void	locate_second_quote(char *str)
+void	locate_second_quote(char *str, t_program *program)
 {
 	int		second;
 
-	second = g_program.redirect_index + 1;
+	second = program->redirect_index + 1;
 	while (str[second] != '\0')
 	{
-		if (str[second] == str[g_program.redirect_index])
+		if (str[second] == str[program->redirect_index])
 		{
-			g_program.redirect_index = second + 1;
+			program->redirect_index = second + 1;
 			break ;
 		}
 		second++;
 	}
 	if (str[second] == '\0')
 	{
-		g_program.redirect_index++;
+		program->redirect_index++;
 		return ;
 	}
 }
 
-char	*get_file_name(char *str)
+char	*get_file_name(char *str, t_program *program)
 {
 	int		end_of_name;
 	char	*file_name;
 
-	g_program.redirect_index++;
-	while (ft_white_space(str[g_program.redirect_index]))
-		g_program.redirect_index++;
-	end_of_name = g_program.redirect_index;
+	program->redirect_index++;
+	while (ft_white_space(str[program->redirect_index]))
+		program->redirect_index++;
+	end_of_name = program->redirect_index;
 	while (ft_is_not_white_space(str[end_of_name]) == 1)
 		end_of_name++;
-	file_name = ft_substr(str, g_program.redirect_index, 
-			end_of_name - g_program.redirect_index);
+	file_name = ft_substr(str, program->redirect_index, 
+			end_of_name - program->redirect_index);
 	if (file_name)
 		return (file_name); 
 	else
 		return (NULL);
 }
 
-void	check_for_redirect(t_token **root)
+void	check_for_redirect(t_token **root, t_program *program)
 {
 	t_token	*curr;
 	t_token	*prev;
@@ -101,14 +101,14 @@ void	check_for_redirect(t_token **root)
 		if (curr->data[0] == '<' && curr->data[1] == '<')
 		{
 			ll_remove_node(root, prev);
-			do_redirect(curr, 4, &flag);
+			do_redirect(curr, 4, &flag, program);
 		}
 		else if (curr->data[0] == '<')
-			do_redirect(curr, 3, &flag);
+			do_redirect(curr, 3, &flag, program);
 		else if (curr->data[0] == '>' && curr->data[1] == '>')
-			do_redirect(curr, 2, &flag);
+			do_redirect(curr, 2, &flag, program);
 		else if (curr->data[0] == '>')
-			do_redirect(curr, 1, &flag);
+			do_redirect(curr, 1, &flag, program);
 		if (flag == 2)
 		{
 			ll_deallocate(root);
@@ -124,5 +124,5 @@ void	check_for_redirect(t_token **root)
 		prev = curr;
 		curr = curr->next;
 	}
-	ft_continue(root);
+	ft_continue(root, program);
 }

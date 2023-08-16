@@ -85,7 +85,7 @@ void	make_tokens(char *str, t_token **root)
 copy_int_array
 Moves linked list t_token->data* into program->token** array. 
 */
-void	copy_into_array(t_token **root)
+void	copy_into_array(t_token **root, t_program *program)
 {
 	t_token	*curr;
 	int		token_number;
@@ -97,11 +97,11 @@ void	copy_into_array(t_token **root)
 	curr = *root;
 	while (i < token_number)
 	{
-		g_program.token[i] = ft_strdup(curr->data);
+		program->token[i] = ft_strdup(curr->data);
 		curr = curr->next;
 		i++;
 	}
-	g_program.token[i] = 0;
+	program->token[i] = 0;
 	ll_deallocate(root);
 	j = 0;
 	while (j < token_number)
@@ -110,16 +110,16 @@ void	copy_into_array(t_token **root)
 	}
 }
 
-bool	has_pipe_token(void)
+bool	has_pipe_token(t_program *program)
 {
 	int	i;
 
 	i = 0;
-	while (g_program.token[i])
+	while (program->token[i])
 	{
-		if (g_program.token[0][0] == '|')
+		if (program->token[0][0] == '|')
 			error_message("command not found", 127);
-		else if (g_program.token[i][0] == '|')
+		else if (program->token[i][0] == '|')
 			return (true);
 		i++;
 	}
@@ -131,8 +131,8 @@ process_input(char *str: raw user input,
 char **token: is empty pointer to string that will become tokenised string).
 Return value is always 0? Why
 */
-void	process_input(char *str, t_token **root)
+void	process_input(char *str, t_token **root, t_program *program)
 {
 	make_tokens(str, root);
-	expand_variables(root);
+	expand_variables(root, program);
 }

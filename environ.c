@@ -47,32 +47,32 @@ t_envar	*split_env_var(char **envp)
 list of environment variables. Used by the export
 builtin function*/
 
-void	add_env_var(t_envar *node)
+void	add_env_var(t_envar *node, t_program *program)
 {
 	t_envar	*tmp;
 
-	tmp = g_program.envar;
+	tmp = program->envar;
 	while (tmp != NULL)
 	{
 		if (strcmp(tmp->name, node->name) == 0)
 		{
 			free(tmp->value);
 			tmp->value = strdup(node->value);
-			rebuild_envp();
+			rebuild_envp(program);
 			return ;
 		}
 		tmp = tmp->next;
 	}
-	if (g_program.envar == NULL)
-		g_program.envar = node;
+	if (program->envar == NULL)
+		program->envar = node;
 	else
 	{
-		tmp = g_program.envar;
+		tmp = program->envar;
 		while (tmp->next != NULL)
 			tmp = tmp->next;
 		tmp->next = node;
 	}
-	rebuild_envp();
+	rebuild_envp(program);
 }
 
 /* search for an environment variable in the 
@@ -98,20 +98,20 @@ environment variables. Used to unset. Searches through
 the list searching for a node with a matching name
 if it finds one it removes it from the list and frees
 the associated memory*/
-void	remove_env_var(char *name)
+void	remove_env_var(char *name, t_program *program)
 {
 	t_envar	*prev;
 	t_envar	*curr;
 
 	prev = NULL;
-	curr = g_program.envar;
+	curr = program->envar;
 	while (curr != NULL)
 	{
 		if (ft_strcmp(curr->name, name) == 0)
 		{
 			if (prev == NULL)
 			{
-				g_program.envar = curr->next;
+				program->envar = curr->next;
 			}
 			else
 			{

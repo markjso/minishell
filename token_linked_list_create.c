@@ -32,7 +32,7 @@ void	ll_insert_end(t_token **root, t_token *new_node)
 void	ll_insert_beginning(t_token **root, t_token *new_node)
 {
 	if (new_node == NULL)
-		exit (3);
+		exit(3);
 	new_node->next = *root;
 	*root = new_node;
 }

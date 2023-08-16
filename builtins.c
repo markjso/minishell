@@ -12,12 +12,13 @@
 
 #include "minishell.h"
 
-// t_program g_program;
-
 void	printpwd(void)
 {
-	printf("%s\n", (char *)find_env(g_program.envar, "PWD")->value);
-	g_program.exit_status = 0;
+	char	pwd[256];
+
+	getcwd(pwd, sizeof(pwd));
+	printf("%s\n", pwd);
+	g_exit_status = 0;
 }
 
 /*
@@ -45,10 +46,10 @@ void	echo_cmd(char **token)
 	}
 	if (flag && (i > 1))
 		printf("\n");
-	g_program.exit_status = 0;
+	g_exit_status = 0;
 }
 
-int	export_cmd(char **token)
+int	export_cmd(char **token, t_program *program)
 {
 	char	**split_env;
 	char	*name;
@@ -57,17 +58,17 @@ int	export_cmd(char **token)
 
 	if (token[1] == NULL)
 	{
-		print_env();
+		print_env(program);
 		return (0);
 	}
 	split_env = ft_split(token[1], '=');
 	name = split_env[0];
 	value = split_env[1];
-	node = find_env(g_program.envar, name);
+	node = find_env(program->envar, name);
 	if (node == NULL)
 	{
 		node = init_env(name, value);
-		add_env_var(node);
+		add_env_var(node, program);
 	}
 	else
 	{
@@ -77,26 +78,26 @@ int	export_cmd(char **token)
 	return (0);
 }
 
-void	unset_cmd(char **token)
+void	unset_cmd(char **token, t_program *program)
 {
 	if (ft_strrchr(token[1], '#'))
 	{
-		error_message_cmd("invalid parameter name", 1);
+		error_message_cmd("invalid parameter name", 1, program);
 	}
 	else
-		remove_env_var(g_program.token[1]);
+		remove_env_var(token[1], program);
 }
 
-void	exit_cmd(char **token)
+void	exit_cmd(char **token, t_program *program)
 {
 	if (token[1] && (token[2]))
-		error_message_cmd("too many arguments", 255);
+		error_message_cmd("too many arguments", 255, program);
 	else if (token[1])
 	{
-		ft_exit(0);
+		exit(0);
 	}
 	else
 	{
-		ft_exit(0);
+		exit(0);
 	}
 }

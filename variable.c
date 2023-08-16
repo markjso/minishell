@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char	*ft_first_and_second(char *str, int *start, int env_start, int *end)
+char	*ft_first_and_second(char *str, int *start, int env_start, int *end, t_program *program)
 {
 	char	*first;
 	char	*second_temp;
@@ -21,7 +21,7 @@ char	*ft_first_and_second(char *str, int *start, int env_start, int *end)
 
 	first = ft_substr(str, *start, env_start);
 	second_temp = ft_substr(str, env_start, (*end) - env_start);
-	second = ft_strdup(expand_dollar(second_temp));
+	second = ft_strdup(expand_dollar(second_temp, program));
 	free(second_temp);
 	first_and_second = ft_strjoin(first, second);
 	free(first);
@@ -29,7 +29,7 @@ char	*ft_first_and_second(char *str, int *start, int env_start, int *end)
 	return (first_and_second);
 }
 
-void	dollar_found(t_token *curr, int *end, int *start)
+void	dollar_found(t_token *curr, int *end, int *start, t_program *program)
 {
 	char	*first_and_second;
 	int		env_start;
@@ -40,7 +40,7 @@ void	dollar_found(t_token *curr, int *end, int *start)
 	while ((curr->data[*end] != '\0') && ft_is_not_white_space(curr->data[*end])
 		&& ft_is_not_quote(curr->data[*end]))
 		(*end)++;
-	first_and_second = ft_first_and_second(curr->data, start, env_start, end);
+	first_and_second = ft_first_and_second(curr->data, start, env_start, end, program);
 	*start = *end;
 	while (curr->data[*end] != '\0')
 		(*end)++;
@@ -52,7 +52,7 @@ void	dollar_found(t_token *curr, int *end, int *start)
 	free(final);
 }
 
-void	locate_dollar_for_action(t_token *curr)
+void	locate_dollar_for_action(t_token *curr, t_program *program)
 {
 	int	end;
 	int	start;
@@ -68,7 +68,7 @@ void	locate_dollar_for_action(t_token *curr)
 		}
 		if (curr->data[end] == '$')
 		{
-			dollar_found(curr, &end, &start);
+			dollar_found(curr, &end, &start, program);
 			break ;
 		}
 		while (curr->data[end] != '\0' && curr->data[end] != '$'
@@ -99,7 +99,7 @@ int	count_dollars(char *str)
 	return (todo);
 }
 
-void	expand_variables(t_token **root)
+void	expand_variables(t_token **root, t_program *program)
 {
 	t_token	*curr;
 	int		todo;
@@ -110,7 +110,7 @@ void	expand_variables(t_token **root)
 		todo = count_dollars(curr->data);
 		while (todo > 0)
 		{
-			locate_dollar_for_action(curr);
+			locate_dollar_for_action(curr, program);
 			todo--;
 		}
 		curr = curr->next;

@@ -27,7 +27,7 @@ int	count_envars(t_envar *envars)
 	return (i);
 }
 
-void	rebuild_envp(void)
+void	rebuild_envp(t_program *program)
 {
 	char		**new_env;
 	char		*name_part;
@@ -35,8 +35,7 @@ void	rebuild_envp(void)
 	int			count;
 	int			i;
 
-	ft_free_envp();
-	tmp = g_program.envar;
+	tmp = program->envar;
 	count = count_envars(tmp);
 	i = 0;
 	new_env = malloc(sizeof(char *) * count + 1);
@@ -51,7 +50,8 @@ void	rebuild_envp(void)
 		tmp = tmp->next;
 	}
 	new_env[i] = NULL;
-	g_program.envp = new_env;
+	program->envp = new_env;
+	ft_free_envp(program);
 }
 
 /*prints all the environment variables in the linked list
@@ -59,16 +59,16 @@ Initialisses tmp to the head of the list and iterates
 through printing the name and value fields. I then updates
 tmp to point to the next sturct in the list */
 
-void	print_env(void)
+void	print_env(t_program *program)
 {
 	t_envar	*tmp;
 
-	tmp = g_program.envar;
+	tmp = program->envar;
 	while (tmp)
 	{
 		printf("%s=%s\n", tmp->name, tmp->value);
 		tmp = tmp->next;
 	}
-	g_program.exit_status = 0;
+	g_exit_status = 0;
 	return ;
 }

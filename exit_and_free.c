@@ -12,71 +12,71 @@
 
 #include "minishell.h"
 
-void	ft_free_envp(void)
+void	ft_free_envp(t_program *program)
 {
 	int	i;
 
 	i = 0;
-	if (g_program.envp != 0)
+	if (program->envp != 0)
 	{
-		while (g_program.envp[i] != 0)
+		while (program->envp[i] != 0)
 		{
-			free(g_program.envp[i]);
+			free(program->envp[i]);
 			i++;
 		}
-		free(g_program.envp);
+		free(program->envp);
 	}
 }
 
-void	ft_free_envar(void)
+void	ft_free_envar(t_program *program)
 {
 	t_envar	*temp;
 	int		i;
 
 	i = 0;
-	while (g_program.envar != 0)
+	while (program->envar != 0)
 	{
-		temp = g_program.envar;
-		g_program.envar = g_program.envar->next;
+		temp = program->envar;
+		program->envar = program->envar->next;
 		free(temp->name);
 		free(temp->value);
 		free(temp);
 	}
 }
 
-void	ft_token_free(void)
+void	ft_token_free(t_program *program)
 {
 	int	i;
 
 	i = 0;
-	if (g_program.token)
+	if (program->token)
 	{
 		while (i < MAXLIST + 1)
 		{
-			free(g_program.token[i]);
+			free(program->token[i]);
 			i++;
 		}
-		if (g_program.token)
+		if (program->token)
 		{
-			free (g_program.token);
+			free (program->token);
 		}
-		if (g_program.token)
-			printf("g_program.token still exists\n");
+		if (program->token)
+			printf("program->token still exists\n");
 		else
-			printf("g_program.token doesnt exists\n");
+			printf("program->token doesnt exists\n");
 	}
 }
 
-void	ft_free(void)
+void	ft_free(t_program *program)
 {
-	ft_token_free();
-	ft_free_envp();
-	ft_free_envar();
+	ft_token_free(program);
+	// ft_free_envp(program);
+	ft_free_envar(program);
 }
 
 void	ft_exit(int exit_number)
 {
-	ft_free();
+	// ft_free(program);
 	check_leaks();
 	exit(exit_number);
 }

@@ -64,7 +64,7 @@ void    set_commands()
     }
 }
 
-void exepipe(void)
+void exepipe(t_program *program)
 {
 	debugFunctionName("EXEC_PIPE");
 	char **paths;
@@ -72,17 +72,17 @@ void exepipe(void)
     char *cmds;
     // int status;
 
-	cmds = g_program.commands[0];
+	cmds = program->commands[0];
 	printf("cmd %s\n", cmds);
-	paths = get_full_path();
+	paths = get_full_path(program);
 	exec_path = get_path_for_cmd(paths, cmds);
 	if (exec_path)
 	{
 		printf("Path = %s\n", exec_path);
-		for (int i = 0; g_program.commands[i]; i++)
+		for (int i = 0; program->commands[i]; i++)
 		{
-			printf("arg[%i] = %s\n", i, g_program.commands[i]);
-		execve(exec_path, &g_program.commands[i], g_program.envp);
+			printf("arg[%i] = %s\n", i, program->commands[i]);
+		execve(exec_path, &program->commands[i], program->envp);
 		}
 		perror("execve"); 
 		exit(EXIT_FAILURE); 
@@ -90,7 +90,7 @@ void exepipe(void)
 	// waitpid(g_program.pid, &status, 0);
 	// if (WIFEXITED(status))
 	// {
-	// 	g_program.exit_status = WEXITSTATUS(status);
+	// 	g_exit_status = WEXITSTATUS(status);
 	// 	ft_free_array(g_program.commands);
 	// }
 	exit(EXIT_SUCCESS); // Ensure the child process exits after executing the command.
@@ -125,7 +125,7 @@ void	set_commands(void)
 	}
 }
 
-void do_pipe(void)
+void do_pipe(t_program *program)
 {
     debugFunctionName("DO_PIPE");
 
@@ -151,7 +151,7 @@ void do_pipe(void)
 	{
 		close(pipe1[0]);
 		dup2(pipe1[1], 1);
-		exepipe();
+		exepipe(program);
 	}
 }
 

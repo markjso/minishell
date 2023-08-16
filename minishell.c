@@ -12,25 +12,26 @@
 
 #include "minishell.h"
 
+int	g_exit_status = 0;
+
 int	main(int ac, char **av, char **envp)
 {
 	char	input[MAXCOM];
 	t_token	*root;
+	t_program	program;
 
 	(void)ac;
 	(void)av;
 	root = NULL;
-	g_program.envar = split_env_var(envp);
-	g_program.envp = envp;
-	init_global();
+	init_program(&program, envp);
 	sig_initialiser();
 	while (1)
 	{
-		if (take_input(input) == 0)
+		if (take_input(input, &program) == 0)
 		{
-			g_program.redirect_index = 0;
-			process_input(input, &root);
-			check_for_redirect(&root);
+			program.redirect_index = 0;
+			process_input(input, &root, &program);
+			check_for_redirect(&root, &program);
 		}
 	}
 }

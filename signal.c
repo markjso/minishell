@@ -17,7 +17,7 @@ void	sig_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		g_program.exit_status = 130;
+		g_exit_status = 130;
 		write(1, "\n", 2);
 		rl_on_new_line();
 		rl_replace_line("", 0);
