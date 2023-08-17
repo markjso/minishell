@@ -64,13 +64,16 @@ void	ft_continue(t_token **root)
 		printf("has pipe\n");
 		handle_pipe();
 	}
-	if (is_builtin_cmd())
+	else
 	{
-		do_builtins(g_program.token);
+		if (is_builtin_cmd())
+		{
+			do_builtins(g_program.token);
+		}
+		else
+		{
+			execmd();
+		}
 	}
-	// else
-	// {
-	// 	execmd();
-	// }
 	remove_redirect();
 }

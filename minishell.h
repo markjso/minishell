@@ -188,7 +188,7 @@ void	ft_exit_cmd_ll(int exit_number, t_cmd_token **root);
 
 t_cmd_token	*ll_new_cmd_node(char **value, int *j);
 void	ll_cmd_deallocate(t_cmd_token **cmd_root);
-void	execute_commands(t_cmd_token **cmd_root);
+// void	execute_commands(t_cmd_token **cmd_root);
 void	ll_cmd_insert_end(t_cmd_token **root, t_cmd_token *new_node);
 void	ll_cmd_insert_beginning(t_cmd_token **root, t_cmd_token *new_node);
 void	ll_cmd_print_token(t_cmd_token **root);

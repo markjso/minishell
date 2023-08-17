@@ -17,7 +17,7 @@ void	remove_data(t_cmd_token *this_node)
 	int	i;
 
 	i = 0;
-	if (!this_node->data)
+	if (!*this_node->data)
 		return ;
 	while (this_node->data[i])
 	{
@@ -57,6 +57,8 @@ void	ll_cmd_remove_node(t_cmd_token **root, t_cmd_token *this_node)
 	}
 }
 
+/*Don't use this function, it doesn't work and I don't know why nor do I care. 
+Use ll_cmd_remove_node in a loop instead.*/
 void	ll_cmd_deallocate(t_cmd_token **root)
 {
 	t_cmd_token	*curr;
@@ -68,7 +70,7 @@ void	ll_cmd_deallocate(t_cmd_token **root)
 		temp = curr;
 		curr = curr->next;
 		free(temp->name);
-		remove_data(curr);
+		remove_data(temp);
 		free(temp->data);
 		free(temp);
 	}

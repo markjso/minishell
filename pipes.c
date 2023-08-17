@@ -157,29 +157,25 @@ void do_pipe(char *exec_path, t_cmd_token *curr)
 		exit(1);
 	}
     pid = fork();
-	if (pid) // Parent
+	if (pid)
 	{
 		printf("Parent: pipe1[0]: %d\t and pipe1[1]: %d\n", pipe1[0], pipe1[1]);
-		close(pipe1[1]); //close output
-		dup2(pipe1[0], 0); // stdinput as pipe1 to take input from child
+		close(pipe1[1]);
+		dup2(pipe1[0], 0);
+		close(pipe1[0]);
 		wait(&status);
 		if (WEXITSTATUS(status) != EXIT_SUCCESS)
 			printf("Failed\n");
 	}
 	else // Child
 	{
-		printf("Child: pipe1[0]: %d\t and pipe1[1]: %d\n", pipe1[0], pipe1[1]);
-		close(pipe1[0]); // close input
+		close(pipe1[0]);
 		if (curr->next != NULL)
 			dup2(pipe1[1], 1); // stdoutput to parent as pipe
 		close(pipe1[1]);
-		fprintf(stderr, "child process:\n");
-		fprintf(stderr, "\tPid:\t\t%d\n", pid);
-		fprintf(stderr, "\tPath:\t%s\n", exec_path);
-		for (int z = 0; curr->data[z] != NULL; z++)
-			fprintf(stderr, "\tData:\t\t%s\n", curr->data[z]);
 		execve(exec_path, curr->data, g_program.envp);
-		fprintf(stderr, "EXE Failed\n");
+		perror("execve");
+		ft_exit(EXIT_FAILURE);
 	}
 }
 
@@ -187,19 +183,28 @@ void handle_pipe()
 {
     t_cmd_token *cmd_root;
     t_cmd_token *curr;
+	t_cmd_token *temp;
 	char		*exec_path;
+	int			backup[2];
     debugFunctionName("HANDLE_PIPE");
     cmd_root = NULL;
 
     set_commands(&cmd_root);
     curr = cmd_root;
+	backup[0] = dup(STDIN_FILENO);
+	backup[1] = dup(STDOUT_FILENO);
 	while (curr)
 	{
 		exec_path = get_path_for_cmd(get_full_path(), curr->name);
         do_pipe(exec_path, curr);
+		temp = curr;
 		curr = curr->next;
+		ll_cmd_remove_node(&cmd_root, temp);
 	}
-	ll_cmd_deallocate(&cmd_root);
+	dup2(backup[0], 0);
+	dup2(backup[1], 1);
+	close(backup[0]);
+	close(backup[1]);
 }
 
 
