@@ -159,23 +159,25 @@ void do_pipe(char *exec_path, t_cmd_token *curr)
     pid = fork();
 	if (pid) // Parent
 	{
-		close(pipe1[1]);
-		dup2(pipe1[0], 0);
+		printf("Parent: pipe1[0]: %d\t and pipe1[1]: %d\n", pipe1[0], pipe1[1]);
+		close(pipe1[1]); //close output
+		dup2(pipe1[0], 0); // stdinput as pipe1 to take input from child
 		wait(&status);
 		if (WEXITSTATUS(status) != EXIT_SUCCESS)
 			printf("Failed\n");
 	}
 	else // Child
 	{
-		fprintf(stderr, "pipe[0]: %d\n", pipe1[0]);
-		close(pipe1[0]);
-		dup2(pipe1[1], 1);
+		printf("Child: pipe1[0]: %d\t and pipe1[1]: %d\n", pipe1[0], pipe1[1]);
+		close(pipe1[0]); // close input
+		if (curr->next != NULL)
+			dup2(pipe1[1], 1); // stdoutput to parent as pipe
+		close(pipe1[1]);
 		fprintf(stderr, "child process:\n");
 		fprintf(stderr, "\tPid:\t\t%d\n", pid);
 		fprintf(stderr, "\tPath:\t%s\n", exec_path);
 		for (int z = 0; curr->data[z] != NULL; z++)
 			fprintf(stderr, "\tData:\t\t%s\n", curr->data[z]);
-		fprintf(stderr, "pipe[1]: %d\n", pipe1[1]);
 		execve(exec_path, curr->data, g_program.envp);
 		fprintf(stderr, "EXE Failed\n");
 	}
