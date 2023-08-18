@@ -14,7 +14,6 @@
 
 int	arg_num(char **value, int *j)
 {
-	debugFunctionName("ARG_NUM");
 	int		count;
 	int		i;
 
@@ -28,11 +27,8 @@ int	arg_num(char **value, int *j)
 	return (count);
 }
 
-
-
 t_cmd_token	*ll_new_cmd_node(char **value, int *j)
 {
-	debugFunctionName("LL_NEW_CMD_NODE");
 	t_cmd_token	*new_node;
 	int			num_args;
 	int			i;
@@ -43,12 +39,12 @@ t_cmd_token	*ll_new_cmd_node(char **value, int *j)
 	if (new_node == NULL)
 		ft_exit(20);
 	new_node->name = ft_strdup(value[*j]);
-	new_node->data = (char **)malloc(sizeof(char *) * (num_args + 1)); //MALLOC
+	new_node->data = (char **)malloc(sizeof(char *) * (num_args + 1));
 	if (!new_node->data)
 		ft_exit(52);
 	while (i < num_args)
 	{
-		new_node->data[i] = ft_strdup(value[*j]); // MALLOC loop
+		new_node->data[i] = ft_strdup(value[*j]);
 		i++;
 		(*j)++;
 	}
@@ -61,7 +57,6 @@ t_cmd_token	*ll_new_cmd_node(char **value, int *j)
 
 void	ll_cmd_insert_end(t_cmd_token **root, t_cmd_token *new_node)
 {
-	debugFunctionName("LL_CMD_INSERT_END");
 	t_cmd_token	*curr;
 
 	if (new_node == NULL)
@@ -77,14 +72,6 @@ void	ll_cmd_insert_end(t_cmd_token **root, t_cmd_token *new_node)
 	curr->next = new_node;
 }
 
-void	ll_cmd_insert_beginning(t_cmd_token **root, t_cmd_token *new_node)
-{
-	if (new_node == NULL)
-		exit (3);
-	new_node->next = *root;
-	*root = new_node;
-}
-
 void	ll_cmd_print_token(t_cmd_token **root)
 {
 	t_cmd_token	*curr;
@@ -98,13 +85,9 @@ void	ll_cmd_print_token(t_cmd_token **root)
 		printf("\tPrint cmd LL name: %s\n", curr->name);
 		while (curr->data[i] != NULL)
 		{
-			// printf("start while %d\n", i);
 			printf("\t\tPrint cmd LL [i] data: %d %s\n", i, curr->data[i]);
 			i++;
-			// printf("end while %d\n", i);
 		}
-		// printf("%d", i);
 		curr = curr->next;
-
 	}
 }

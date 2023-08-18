@@ -57,8 +57,12 @@ void	ll_cmd_remove_node(t_cmd_token **root, t_cmd_token *this_node)
 	}
 }
 
-/*Don't use this function, it doesn't work and I don't know why nor do I care. 
-Use ll_cmd_remove_node in a loop instead.*/
+/*
+Don't use this function, ll_cmd_deallocate. 
+It doesn't work.
+I don't know why, nor do I care. 
+Use ll_cmd_remove_node in a loop instead.
+*/
 void	ll_cmd_deallocate(t_cmd_token **root)
 {
 	t_cmd_token	*curr;
@@ -76,14 +80,3 @@ void	ll_cmd_deallocate(t_cmd_token **root)
 	}
 	*root = NULL;
 }
-
-// void	ll_cmd_print_token(t_token **root)
-// {
-// 	t_token	*curr;
-
-// 	curr = *root;
-// 	while (curr != NULL)
-// 	{
-// 		curr = curr->next;
-// 	}
-// }
