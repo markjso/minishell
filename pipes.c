@@ -15,16 +15,14 @@
 void	set_commands(t_cmd_token **root, t_program *program)
 {
 	t_cmd_token	*new_cmd_node;
-	int	j;
+	int			j;
 
 	j = 0;
 	while (program->token[j])
 	{
 		new_cmd_node = ll_new_cmd_node(program->token, &j);
 		ll_cmd_insert_end(root, new_cmd_node);
-		// printf("token is now: %s\n", program->token[j]);
 	}
-	// ll_cmd_print_token(root);
 }
 
 void	do_pipe(char *exec_path, t_cmd_token *curr, t_program *program)
@@ -36,7 +34,7 @@ void	do_pipe(char *exec_path, t_cmd_token *curr, t_program *program)
 	if (pipe(pipe1) == -1)
 	{
 		perror("bad pipe");
-		exit(1);
+		ft_exit(1);
 	}
 	pid = fork();
 	if (pid == 0)
@@ -53,6 +51,14 @@ void	do_pipe(char *exec_path, t_cmd_token *curr, t_program *program)
 	dup2(pipe1[0], 0);
 	close(pipe1[0]);
 	waitpid(pid, &status, 0);
+}
+
+void	reset_fds(int backup[2])
+{
+	dup2(backup[0], 0);
+	dup2(backup[1], 1);
+	close(backup[0]);
+	close(backup[1]);
 }
 
 void	handle_pipe(t_program *program)
@@ -72,15 +78,11 @@ void	handle_pipe(t_program *program)
 	{
 		exec_path = get_path_for_cmd(get_full_path(program),
 				curr->name, program);
-			printf("exe_path is: %s\n", exec_path);
 		do_pipe(exec_path, curr, program);
 		temp = curr;
 		curr = curr->next;
 		ll_cmd_remove_node(&cmd_root, temp);
 	}
 	cmd_root = NULL;
-	dup2(backup[0], 0);
-	dup2(backup[1], 1);
-	close(backup[0]);
-	close(backup[1]);
+	reset_fds(backup);
 }

@@ -58,12 +58,8 @@ void	ft_token_free(t_program *program)
 		}
 		if (program->token)
 		{
-			free (program->token);
+			free(program->token);
 		}
-		if (program->token)
-			printf("program->token still exists\n");
-		else
-			printf("program->token doesnt exists\n");
 	}
 }
 

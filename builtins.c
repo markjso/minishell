@@ -94,10 +94,12 @@ void	exit_cmd(char **token, t_program *program)
 		error_message_cmd("too many arguments", 255, program);
 	else if (token[1])
 	{
-		exit(0);
+		ft_free(program);
+		ft_exit(0);
 	}
 	else
 	{
-		exit(0);
+		ft_free(program);
+		ft_exit(0);
 	}
 }

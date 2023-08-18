@@ -32,32 +32,6 @@ char	*expand_dollar(char *variable, t_program *program)
 	}
 }
 
-int	env_len(char *str)
-{
-	int	i;
-
-	i = 1;
-	if (str[0] == '?')
-		return (1);
-	while (ft_is_valid_var_char(str[i]) == 1)
-		i++;
-	return (i);
-}
-
-char	*return_string(char *src, int terminator)
-{
-	char		*ret;
-	static char	*backup;
-
-	if (!src)
-	{
-		src = backup;
-	}
-	ret = ft_strdup(src);
-	ret[terminator] = '\0';
-	return (ret);
-}
-
 void	skip_single_quote(char *src, int *end)
 {
 	(*end)++;

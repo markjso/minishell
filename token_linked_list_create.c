@@ -17,7 +17,7 @@ void	ll_insert_end(t_token **root, t_token *new_node)
 	t_token	*curr;
 
 	if (new_node == NULL)
-		exit(21);
+		ft_exit(21);
 	if (*root == NULL)
 	{
 		*root = new_node;
@@ -27,46 +27,4 @@ void	ll_insert_end(t_token **root, t_token *new_node)
 	while (curr->next != NULL)
 		curr = curr->next;
 	curr->next = new_node;
-}
-
-void	ll_insert_beginning(t_token **root, t_token *new_node)
-{
-	if (new_node == NULL)
-		exit(3);
-	new_node->next = *root;
-	*root = new_node;
-}
-
-void	ll_insert_after(t_token *this_node, t_token *new_node)
-{
-	if (new_node == NULL)
-		exit(4);
-	new_node->next = this_node->next;
-	this_node->next = new_node;
-}
-
-void	ll_insert_before(t_token **root, t_token *this_node, 
-		t_token *new_node)
-{
-	t_token	*curr;
-
-	if (new_node == NULL)
-		exit(4);
-	if ((*root) == this_node)
-	{
-		new_node->next = *root;
-		*root = new_node;
-		return ;
-	}
-	curr = *root;
-	while (curr->next != NULL)
-	{
-		if (curr->next == this_node)
-		{
-			new_node->next = curr->next;
-			curr->next = new_node;
-			return ;
-		}
-		curr = curr->next;
-	}
 }
