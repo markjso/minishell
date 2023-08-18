@@ -66,24 +66,24 @@ void	locate_second_quote(char *str, t_program *program)
 	}
 }
 
-char	*get_file_name(char *str, t_program *program)
-{
-	int		end_of_name;
-	char	*file_name;
+// char	*get_file_name(char *str, t_program *program)
+// {
+// 	int		end_of_name;
+// 	char	*file_name;
 
-	program->redirect_index++;
-	while (ft_white_space(str[program->redirect_index]))
-		program->redirect_index++;
-	end_of_name = program->redirect_index;
-	while (ft_is_not_white_space(str[end_of_name]) == 1)
-		end_of_name++;
-	file_name = ft_substr(str, program->redirect_index, 
-			end_of_name - program->redirect_index);
-	if (file_name)
-		return (file_name); 
-	else
-		return (NULL);
-}
+// 	program->redirect_index++;
+// 	while (ft_white_space(str[program->redirect_index]))
+// 		program->redirect_index++;
+// 	end_of_name = program->redirect_index;
+// 	while (ft_is_not_white_space(str[end_of_name]) == 1)
+// 		end_of_name++;
+// 	file_name = ft_substr(str, program->redirect_index, 
+// 			end_of_name - program->redirect_index);
+// 	if (file_name)
+// 		return (file_name); 
+// 	else
+// 		return (NULL);
+// }
 
 void	check_for_redirect(t_token **root, t_program *program)
 {

@@ -15,15 +15,14 @@
 void	set_commands(t_cmd_token **root, t_program *program)
 {
 	t_cmd_token	*new_cmd_node;
-	static int	j;
+	int	j;
 
-	if (!j)
-		j = 0;
+	j = 0;
 	while (program->token[j])
 	{
 		new_cmd_node = ll_new_cmd_node(program->token, &j);
 		ll_cmd_insert_end(root, new_cmd_node);
-		printf("token is now: %s\n", program->token[j]);
+		// printf("token is now: %s\n", program->token[j]);
 	}
 	// ll_cmd_print_token(root);
 }
@@ -73,6 +72,7 @@ void	handle_pipe(t_program *program)
 	{
 		exec_path = get_path_for_cmd(get_full_path(program),
 				curr->name, program);
+			printf("exe_path is: %s\n", exec_path);
 		do_pipe(exec_path, curr, program);
 		temp = curr;
 		curr = curr->next;

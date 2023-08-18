@@ -57,11 +57,10 @@ typedef struct s_program
 	struct s_envar	*envar;
 	char			**token;
 	char			**envp;
-	char			**commands;
-	char			*redirect_file;
+	// char			*redirect_file;
 	char			*redirect_in;
 	char			*redirect_out;
-	int				is_redirect;
+	// int				is_redirect;
 	int				redirect_index;
 	int				out_file;
 	int				out_backup;
@@ -112,9 +111,6 @@ void		unset_cmd(char **token, t_program *program);
 void		exit_cmd(char **token, t_program *program);
 
 /*utils*/
-int			ft_is_special_char(char *s1);
-char		*ft_strcpy(char *s1, char *s2);
-void		ft_free_array(char **arr);
 int			ft_strcmp(char *s1, char *s2);
 
 /*redirections*/
@@ -122,8 +118,8 @@ void		check_for_redirect(t_token **root, t_program *program);
 void		do_redirect(t_token *curr, int num, int *flag, t_program *program);
 void		remove_redirect(t_program *program);
 int			input_heredoc(char *delimiter);
-char		*get_file_name(char *str, t_program *program);
-void		locate_second_quote(char *str, t_program *program);
+// char		*get_file_name(char *str, t_program *program);
+// void		locate_second_quote(char *str, t_program *program);
 void		ft_continue(t_token **root, t_program *program);
 void		remove_redirect_tokens(t_token **root,
 				t_token *operator_node);
