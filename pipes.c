@@ -55,6 +55,14 @@ void	do_pipe(char *exec_path, t_cmd_token *curr, t_program *program)
 	waitpid(pid, &status, 0);
 }
 
+void	reset_fds(int backup[2])
+{
+	dup2(backup[0], 0);
+	dup2(backup[1], 1);
+	close(backup[0]);
+	close(backup[1]);
+}
+
 void	handle_pipe(t_program *program)
 {
 	t_cmd_token	*cmd_root;
@@ -79,8 +87,5 @@ void	handle_pipe(t_program *program)
 		ll_cmd_remove_node(&cmd_root, temp);
 	}
 	cmd_root = NULL;
-	dup2(backup[0], 0);
-	dup2(backup[1], 1);
-	close(backup[0]);
-	close(backup[1]);
+	reset_fds(backup);
 }

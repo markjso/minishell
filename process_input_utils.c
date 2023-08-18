@@ -77,9 +77,7 @@ int	find_end(char *str)
 		{
 			i++;
 			if (str[i] == str[i - 1])
-			{
 				i++;
-			}
 			break ;
 		}
 		if (ft_is_pipe_or_redirect(str[i]) == 1 || ft_white_space(str[i]) == 1)
