@@ -90,7 +90,7 @@ of char pointers and sets each element to NULL.
 This ensures that array is empty and ready to 
 store data.*/
 
-void init_program(t_program *program, char **envp)
+void	init_program(t_program *program, char **envp)
 {
 	int	i;
 

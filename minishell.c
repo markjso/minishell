@@ -16,8 +16,8 @@ int	g_exit_status = 0;
 
 int	main(int ac, char **av, char **envp)
 {
-	char	input[MAXCOM];
-	t_token	*root;
+	char		input[MAXCOM];
+	t_token		*root;
 	t_program	program;
 
 	(void)ac;

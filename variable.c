@@ -12,15 +12,16 @@
 
 #include "minishell.h"
 
-char	*ft_first_and_second(char *str, int *start, int env_start, int *end, t_program *program)
+char	*ft_first_and_second(char *str, int var_nbrs[2], int env_start,
+			t_program *program)
 {
 	char	*first;
 	char	*second_temp;
 	char	*second;
 	char	*first_and_second;
 
-	first = ft_substr(str, *start, env_start);
-	second_temp = ft_substr(str, env_start, (*end) - env_start);
+	first = ft_substr(str, var_nbrs[0], env_start);
+	second_temp = ft_substr(str, env_start, (var_nbrs[1]) - env_start);
 	second = ft_strdup(expand_dollar(second_temp, program));
 	free(second_temp);
 	first_and_second = ft_strjoin(first, second);
@@ -29,22 +30,24 @@ char	*ft_first_and_second(char *str, int *start, int env_start, int *end, t_prog
 	return (first_and_second);
 }
 
-void	dollar_found(t_token *curr, int *end, int *start, t_program *program)
+void	dollar_found(t_token *curr, int var_nbrs[2], t_program *program)
 {
 	char	*first_and_second;
 	int		env_start;
 	char	*third_temp;
 	char	*final;
 
-	env_start = *end;
-	while ((curr->data[*end] != '\0') && ft_is_not_white_space(curr->data[*end])
-		&& ft_is_not_quote(curr->data[*end]))
-		(*end)++;
-	first_and_second = ft_first_and_second(curr->data, start, env_start, end, program);
-	*start = *end;
-	while (curr->data[*end] != '\0')
-		(*end)++;
-	third_temp = ft_substr(curr->data, *start, *end - *start);
+	env_start = var_nbrs[1];
+	while ((curr->data[var_nbrs[1]] != '\0')
+		&& ft_is_not_white_space(curr->data[var_nbrs[1]])
+		&& ft_is_not_quote(curr->data[var_nbrs[1]]))
+		(var_nbrs[1])++;
+	first_and_second = ft_first_and_second(curr->data, var_nbrs,
+			env_start, program);
+	var_nbrs[0] = var_nbrs[1];
+	while (curr->data[var_nbrs[1]] != '\0')
+		(var_nbrs[1])++;
+	third_temp = ft_substr(curr->data, var_nbrs[0], var_nbrs[1] - var_nbrs[0]);
 	final = ft_strjoin(first_and_second, third_temp);
 	free(first_and_second);
 	free(third_temp);
@@ -54,26 +57,25 @@ void	dollar_found(t_token *curr, int *end, int *start, t_program *program)
 
 void	locate_dollar_for_action(t_token *curr, t_program *program)
 {
-	int	end;
-	int	start;
+	int	var_nbrs[2];
 
-	end = 0;
-	start = 0;
-	while (curr->data[end] != '\0')
+	var_nbrs[0] = 0;
+	var_nbrs[1] = 0;
+	while (curr->data[var_nbrs[1]] != '\0')
 	{
-		if (curr->data[end] == 39)
+		if (curr->data[var_nbrs[1]] == 39)
 		{
-			skip_single_quote(curr->data, &end);
+			skip_single_quote(curr->data, &var_nbrs[1]);
 			continue ;
 		}
-		if (curr->data[end] == '$')
+		if (curr->data[var_nbrs[1]] == '$')
 		{
-			dollar_found(curr, &end, &start, program);
+			dollar_found(curr, var_nbrs, program);
 			break ;
 		}
-		while (curr->data[end] != '\0' && curr->data[end] != '$'
-			&& curr->data[end] != 39)
-			end++;
+		while (curr->data[var_nbrs[1]] != '\0' && curr->data[var_nbrs[1]] != '$'
+			&& curr->data[var_nbrs[1]] != 39)
+			var_nbrs[1]++;
 	}
 }
 

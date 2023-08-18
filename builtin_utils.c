@@ -59,17 +59,20 @@ void	ft_continue(t_token **root, t_program *program)
 {
 	remove_quotes(root);
 	copy_into_array(root, program);
-	// if (has_pipe_token(program))
-	// {
-	// 	execute_commands();
-	// }
-	if (is_builtin_cmd(program))
+	if (has_pipe_token(program) == 1)
 	{
-		do_builtins(program->token, program);
+		handle_pipe(program);
 	}
 	else
 	{
-		execmd(program);
+		if (is_builtin_cmd(program))
+		{
+			do_builtins(program->token, program);
+		}
+		else
+		{
+			execmd(program);
+		}
 	}
 	remove_redirect(program);
 }

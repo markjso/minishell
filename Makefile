@@ -19,6 +19,8 @@ SRCS=minishell.c \
 	utils.c	\
 	signal.c \
 	cd_command.c \
+	cmd_linked_list.c \
+	cmd_linked_list_delete.c \
 	environ.c \
 	environ_utils.c \
 	initialise.c \
@@ -34,8 +36,9 @@ SRCS=minishell.c \
 	string_utils_2.c \
 	error.c \
 	redirection.c \
-	heredoc.c \
 	redirection_utils.c \
+	heredoc.c \
+	pipes.c \
 	leaks.c \
 	exit_and_free.c
 	

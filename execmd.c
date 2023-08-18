@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-static char	*get_path(char const *currentPath, char const *cmd, t_program *program)
+static char	*get_path(char const *currentPath, char const *cmd,
+		t_program *program)
 {
 	char	*rtn;
 

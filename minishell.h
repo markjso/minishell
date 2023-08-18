@@ -43,6 +43,15 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_cmd_token
+{
+	char				*name;
+	char				**data;
+	int					fd_in;
+	int					fd_out;
+	struct s_cmd_token	*next;
+}	t_cmd_token;
+
 typedef struct s_program
 {
 	struct s_envar	*envar;
@@ -72,102 +81,108 @@ typedef struct s_envar
 extern int	g_exit_status;
 
 /*initialise*/
-int		take_input(char *input, t_program *program);
-// void	init_global(t_program *program);
-void 	init_program(t_program *program, char **envp);
-t_envar	*init_env(char *name, char *value);
+int			take_input(char *input, t_program *program);
+void		init_program(t_program *program, char **envp);
+t_envar		*init_env(char *name, char *value);
 
 /*execute commands*/
-void	execmd(t_program *program);
-char	**get_full_path(t_program *program);
-char	*get_path_for_cmd(char **env_paths, char const *cmd, t_program *program);
+void		execmd(t_program *program);
+char		**get_full_path(t_program *program);
+char		*get_path_for_cmd(char **env_paths, char const *cmd,
+				t_program *program);
 
 /*pipes and signals*/
-void	sig_initialiser(void);
-void	handle_pipe(void);
-bool	has_pipe_token(t_program *program);
-char	**split_command(const char *command);
-void	execute_commands(void);
+void		sig_initialiser(void);
+void		handle_pipe(t_program *program);
+bool		has_pipe_token(t_program *program);
 
 /*process_input*/
-void	process_input(char *str, t_token **root, t_program *program);
-void	make_tokens(char *str, t_token **root);
-int		find_token_number(t_token **root);
-int		find_end(char *str);
-void	remove_quotes(t_token **root);
+void		process_input(char *str, t_token **root, t_program *program);
+void		make_tokens(char *str, t_token **root);
+int			find_token_number(t_token **root);
+int			find_end(char *str);
+void		remove_quotes(t_token **root);
 
 /*builtins*/ 
-int		cd_command(char **token, t_program *program);
-int		export_cmd(char **token, t_program *program);
-void	echo_cmd(char **token);
-void	printpwd(void);
-void	unset_cmd(char **token, t_program *program);
-void	exit_cmd(char **token, t_program *program);
+int			cd_command(char **token, t_program *program);
+int			export_cmd(char **token, t_program *program);
+void		echo_cmd(char **token);
+void		printpwd(void);
+void		unset_cmd(char **token, t_program *program);
+void		exit_cmd(char **token, t_program *program);
 
 /*utils*/
-int		ft_is_special_char(char *s1);
-char	*ft_strcpy(char *s1, char *s2);
-void	ft_free_array(char **arr);
-int		ft_strcmp(char *s1, char *s2);
+int			ft_is_special_char(char *s1);
+char		*ft_strcpy(char *s1, char *s2);
+void		ft_free_array(char **arr);
+int			ft_strcmp(char *s1, char *s2);
 
 /*redirections*/
-void	check_for_redirect(t_token **root, t_program *program);
-void	do_redirect(t_token *curr, int num, int *flag, t_program *program);
-void	remove_redirect(t_program *program);
-int		input_heredoc(char *delimiter);
-char	*get_file_name(char *str, t_program *program);
-void	locate_second_quote(char *str, t_program *program);
-void	ft_continue(t_token **root, t_program *program);
-void	remove_redirect_tokens(t_token **root,
-			t_token *operator_node);
+void		check_for_redirect(t_token **root, t_program *program);
+void		do_redirect(t_token *curr, int num, int *flag, t_program *program);
+void		remove_redirect(t_program *program);
+int			input_heredoc(char *delimiter);
+char		*get_file_name(char *str, t_program *program);
+void		locate_second_quote(char *str, t_program *program);
+void		ft_continue(t_token **root, t_program *program);
+void		remove_redirect_tokens(t_token **root,
+				t_token *operator_node);
 
 /*environment variables*/
-t_envar	*split_env_var(char **envp);
-t_envar	*find_env(t_envar *envars, char *name);
-char	*get_envar(char *token);
-void	add_env_var(t_envar *node, t_program *program);
-void	remove_env_var(char *name, t_program *program);
-void	print_env(t_program *program);
-int		count_envars(t_envar *envars);
-void	rebuild_envp(t_program *program);
+t_envar		*split_env_var(char **envp);
+t_envar		*find_env(t_envar *envars, char *name);
+char		*get_envar(char *token);
+void		add_env_var(t_envar *node, t_program *program);
+void		remove_env_var(char *name, t_program *program);
+void		print_env(t_program *program);
+int			count_envars(t_envar *envars);
+void		rebuild_envp(t_program *program);
 
 /*expand variables*/
-void	expand_variables(t_token **root, t_program *program);
-char	*expand_dollar(char *variable, t_program *program);
-int		env_len(char *str);
-char	*return_string(char *src, int terminator);
-void	skip_single_quote(char *src, int *end);
+void		expand_variables(t_token **root, t_program *program);
+char		*expand_dollar(char *variable, t_program *program);
+int			env_len(char *str);
+char		*return_string(char *src, int terminator);
+void		skip_single_quote(char *src, int *end);
 
 /*string_utils*/
-int		ft_alnum_word_len(char *str, int start);
-int		ft_is_valid_var_char(char c);
-int		ft_env_word_len(char *str);
-int		ft_is_not_white_space(int c);
-int		ft_white_space(int c);
-int		ft_is_quote(int c);
-int		ft_is_not_quote(int c);
-int		ft_env_word_len(char *str);
-void	copy_into_array(t_token **root, t_program *program);
-int		ft_not_whitespace_not_quote(int c);
+int			ft_alnum_word_len(char *str, int start);
+int			ft_is_valid_var_char(char c);
+int			ft_env_word_len(char *str);
+int			ft_is_not_white_space(int c);
+int			ft_white_space(int c);
+int			ft_is_quote(int c);
+int			ft_is_not_quote(int c);
+int			ft_env_word_len(char *str);
+void		copy_into_array(t_token **root, t_program *program);
+int			ft_not_whitespace_not_quote(int c);
 
 /*tokens*/
-t_token	*make_new_node(char *value);
-void	ll_insert_end(t_token **root, t_token *new_node);
-void	ll_insert_beginning(t_token **root, t_token *new_node);
-void	ll_insert_after(t_token *this_node, t_token *new_node);
-void	ll_insert_before(t_token **root, t_token *this_node, t_token *new_node);
-void	ll_remove_node(t_token **root, t_token *this_node);
-void	ll_deallocate(t_token **root);
-void	ll_print_token(t_token **root);
-void	replace_node_data(t_token *curr, char *new_data);
+t_token		*make_new_node(char *value);
+void		ll_insert_end(t_token **root, t_token *new_node);
+void		ll_insert_beginning(t_token **root, t_token *new_node);
+void		ll_insert_after(t_token *this_node, t_token *new_node);
+void		ll_insert_before(t_token **root, t_token *this_node,
+				t_token *new_node);
+void		ll_remove_node(t_token **root, t_token *this_node);
+void		ll_deallocate(t_token **root);
+void		ll_print_token(t_token **root);
+void		replace_node_data(t_token *curr, char *new_data);
+
+/*command tokens*/
+t_cmd_token	*ll_new_cmd_node(char **value, int *j);
+// void	ll_cmd_deallocate(t_cmd_token **cmd_root);
+void		ll_cmd_insert_end(t_cmd_token **root, t_cmd_token *new_node);
+void		ll_cmd_insert_beginning(t_cmd_token **root, t_cmd_token *new_node);
+void		ll_cmd_print_token(t_cmd_token **root);
+void		ll_cmd_remove_node(t_cmd_token **root, t_cmd_token *this_node);
 
 /*errors and exit*/
-void	error_message(char *message, int status);
-void	error_and_exit(char *message, int status, t_program *program);
-void	ft_exit(int exit_number);
-void	ft_free(t_program *program);
-void	ft_free_envp(t_program *program);
-void	error_message_cmd(char *message, int status, t_program *program);
-void	debugFunctionName(char *function_name);
+void		error_message(char *message, int status);
+void		error_and_exit(char *message, int status, t_program *program);
+void		ft_exit(int exit_number);
+void		ft_free(t_program *program);
+void		ft_free_envp(t_program *program);
+void		error_message_cmd(char *message, int status, t_program *program);
 
 #endif

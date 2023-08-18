@@ -72,7 +72,7 @@ int	find_end(char *str)
 
 	i = 0;
 	while (str[i] != '\0')
-	{	
+	{
 		if (i == 0 && ft_is_pipe_or_redirect(str[i]) == 1)
 		{
 			i++;
