@@ -59,17 +59,21 @@ void	ft_continue(t_token **root)
 {
 	remove_quotes(root);
 	copy_into_array(root);
-	// if (has_pipe_token())
-	// {
-	// 	execute_commands();
-	// }
-	if (is_builtin_cmd())
+	if (has_pipe_token() == 1)
 	{
-		do_builtins(g_program.token);
+		printf("has pipe\n");
+		handle_pipe();
 	}
 	else
 	{
-		execmd();
+		if (is_builtin_cmd())
+		{
+			do_builtins(g_program.token);
+		}
+		else
+		{
+			execmd();
+		}
 	}
 	remove_redirect();
 }

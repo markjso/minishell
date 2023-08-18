@@ -31,6 +31,7 @@ int	main(int ac, char **av, char **envp)
 			g_program.redirect_index = 0;
 			process_input(input, &root);
 			check_for_redirect(&root);
+			printf("end of loop");
 		}
 	}
 }

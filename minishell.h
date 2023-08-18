@@ -35,6 +35,8 @@
 # define MAX_BUFFER 4096
 # define MAXARGS 20
 # define T_DEFAULT	"\033[0m"
+# define PIPE_READ 0
+# define PIPE_WRITE 1
 
 /*Struct for holding tokenised user input.*/
 typedef struct s_token
@@ -42,6 +44,16 @@ typedef struct s_token
 	char			*data;
 	struct s_token	*next;
 }	t_token;
+
+/*Struct for holding cmdised user input.*/
+typedef struct s_cmd_token
+{
+	char				*name;
+	char				**data;
+	int					fd_in;
+	int					fd_out;
+	struct s_cmd_token	*next;
+}	t_cmd_token;
 
 typedef struct s_program
 {
@@ -86,9 +98,9 @@ char	*get_path_for_cmd(char **env_paths, char const *cmd);
 /*pipes and signals*/
 void	sig_initialiser(void);
 void	handle_pipe(void);
-bool	has_pipe_token(void);
-char	**split_command(const char *command);
-void	execute_commands(void);
+int		has_pipe_token(void);
+// char	**split_command(const char *command);
+// void	execute_commands();
 
 /*process_input*/
 void	process_input(char *str, t_token **root);
@@ -170,5 +182,17 @@ void	ft_exit(int exit_number);
 void	ft_free_envp(void);
 void	error_message_cmd(char *message, int status);
 void	debugFunctionName(char *function_name);
+void	ft_exit_cmd_ll(int exit_number, t_cmd_token **root);
+
+
+
+t_cmd_token	*ll_new_cmd_node(char **value, int *j);
+void	ll_cmd_deallocate(t_cmd_token **cmd_root);
+// void	execute_commands(t_cmd_token **cmd_root);
+void	ll_cmd_insert_end(t_cmd_token **root, t_cmd_token *new_node);
+void	ll_cmd_insert_beginning(t_cmd_token **root, t_cmd_token *new_node);
+void	ll_cmd_print_token(t_cmd_token **root);
+void	ll_cmd_remove_node(t_cmd_token **root, t_cmd_token *this_node);
+
 
 #endif

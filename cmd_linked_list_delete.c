@@ -12,16 +12,32 @@
 
 #include "minishell.h"
 
-void	ll_remove_node(t_token **root, t_token *this_node)
+void	remove_data(t_cmd_token *this_node)
 {
-	t_token	*curr;
+	int	i;
+
+	i = 0;
+	if (!*this_node->data)
+		return ;
+	while (this_node->data[i])
+	{
+		free(this_node->data[i]);
+		i++;
+	}
+	free(this_node->data);
+}
+
+void	ll_cmd_remove_node(t_cmd_token **root, t_cmd_token *this_node)
+{
+	t_cmd_token	*curr;
 
 	if (*root == NULL)
 		return ;
 	if ((*root) == this_node)
 	{
 		*root = (*root)->next;
-		free(this_node->data);
+		free(this_node->name);
+		remove_data(this_node);
 		free(this_node);
 		return ;
 	}
@@ -31,8 +47,9 @@ void	ll_remove_node(t_token **root, t_token *this_node)
 		if (curr->next == this_node)
 		{
 			curr->next = this_node->next;
-			if (this_node->data)
-				free(this_node->data);
+			if (this_node->name)
+				free(this_node->name);
+			remove_data(curr);
 			free(this_node);
 			return ;
 		}
@@ -40,30 +57,26 @@ void	ll_remove_node(t_token **root, t_token *this_node)
 	}
 }
 
-void	ll_deallocate(t_token **root)
+/*
+Don't use this function, ll_cmd_deallocate. 
+It doesn't work.
+I don't know why, nor do I care. 
+Use ll_cmd_remove_node in a loop instead.
+*/
+void	ll_cmd_deallocate(t_cmd_token **root)
 {
-	t_token	*curr;
-	t_token	*temp;
+	t_cmd_token	*curr;
+	t_cmd_token	*temp;
 
 	curr = *root;
 	while (curr != NULL)
 	{
 		temp = curr;
 		curr = curr->next;
+		free(temp->name);
+		remove_data(temp);
 		free(temp->data);
 		free(temp);
 	}
 	*root = NULL;
-}
-
-void	ll_print_token(t_token **root)
-{
-	t_token	*curr;
-
-	curr = *root;
-	while (curr != NULL)
-	{
-		printf("Print token LL: %s\n ", curr->data);
-		curr = curr->next;
-	}
 }

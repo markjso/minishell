@@ -14,6 +14,7 @@
 
 void	ft_free_envp(void)
 {
+	debugFunctionName("FT_FREE_ENVP");
 	int	i;
 
 	i = 0;
@@ -30,10 +31,11 @@ void	ft_free_envp(void)
 
 void	ft_free_envar(void)
 {
+	debugFunctionName("FT_FREE_ENVAR");
 	t_envar	*temp;
-	int		i;
+	// int		i;
 
-	i = 0;
+	// i = 0;
 	while (g_program.envar != 0)
 	{
 		temp = g_program.envar;
@@ -46,19 +48,20 @@ void	ft_free_envar(void)
 
 void	ft_token_free(void)
 {
+	debugFunctionName("FT_TOKEN_FREE");
 	int	i;
 
 	i = 0;
 	if (g_program.token)
 	{
-		while (i < MAXLIST + 1)
+		while (g_program.token[i])
 		{
 			free(g_program.token[i]);
 			i++;
 		}
 		if (g_program.token)
 		{
-			free (g_program.token);
+			free(g_program.token);
 		}
 		if (g_program.token)
 			printf("g_program.token still exists\n");
@@ -69,14 +72,27 @@ void	ft_token_free(void)
 
 void	ft_free(void)
 {
+	debugFunctionName("FT_FREE");
 	ft_token_free();
 	ft_free_envp();
 	ft_free_envar();
 }
 
+
 void	ft_exit(int exit_number)
 {
+	debugFunctionName("FT_EXIT");
 	ft_free();
 	check_leaks();
 	exit(exit_number);
+}
+
+void	ft_exit_cmd_ll(int exit_number, t_cmd_token **root)
+{
+	debugFunctionName("FT_EXIT_CMD_LL");
+	if (*root)
+	{
+		ll_cmd_deallocate(root);
+		ft_exit(exit_number);
+	}
 }
