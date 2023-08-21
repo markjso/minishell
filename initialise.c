@@ -29,6 +29,13 @@ static char	*get_user_prompt(void)
 	return (prompt);
 }
 
+/* Stores the user prompt and uses readline to enable
+line editing and command history. If user_input is
+null it means ctrl-D was entered and it prints exit
+and exits the shell. If is not null then it copies
+the user input to input, adds to the history using 
+add_history, frees the memory and returns '0'*/
+
 int	take_input(char *input, t_program *program)
 {
 	char	*user_input;
@@ -86,7 +93,7 @@ void	init_env_vars(t_program *program)
 
 /* sets up the t_program structure
 allocates memory to token to hold an array
-of char pointers and sets each element to NULL.
+of char pointers and sets each token to NULL.
 This ensures that array is empty and ready to 
 store data.*/
 
@@ -98,17 +105,19 @@ void	init_program(t_program *program, char **envp)
 	program->token = (char **)malloc((MAXLIST + 1) * sizeof(char *));
 	while (i < MAXLIST + 1)
 	{
+		program->token[i] = NULL;
 		i++;
 	}
 	program->envar = split_env_var(envp);
 	program->envp = envp;
-	program->token[i] = NULL;
+	program->token[MAXLIST] = NULL;
 	init_env_vars(program);
 }
 
 /*allocates memory for the t_envar struct and assigns
 name and value to the name and value fields.
 Returns a pointer to the new struct.*/
+
 t_envar	*init_env(char *name, char *value)
 {
 	t_envar	*new;

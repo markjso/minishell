@@ -16,6 +16,7 @@
 by '=' using ft_split. Then calls init_env to create a 
 new struct and append it to the linked list. Start and end
 are updated accordingly and a pointer to start is returned*/
+
 t_envar	*split_env_var(char **envp)
 {
 	char	**split_env;

@@ -16,7 +16,6 @@ SRCS=minishell.c \
 	builtins.c \
 	builtin_utils.c \
 	execmd.c \
-	utils.c	\
 	signal.c \
 	cd_command.c \
 	cmd_linked_list.c \

@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+/*counts the number of elements in the t_envar
+linked list and returns the count*/
+
 int	count_envars(t_envar *envars)
 {
 	int		i;
@@ -26,6 +29,11 @@ int	count_envars(t_envar *envars)
 	}
 	return (i);
 }
+
+/*Rebuilds the pogram->envp array based on the
+t_envar linked list. Used when export or unset
+so that the array stays consistent with the 
+linked list*/
 
 void	rebuild_envp(t_program *program)
 {
@@ -55,8 +63,8 @@ void	rebuild_envp(t_program *program)
 }
 
 /*prints all the environment variables in the linked list
-Initialisses tmp to the head of the list and iterates 
-through printing the name and value fields. I then updates
+Initialises tmp to the head of the list and iterates 
+through printing the name and value fields. It then updates
 tmp to point to the next sturct in the list */
 
 void	print_env(t_program *program)

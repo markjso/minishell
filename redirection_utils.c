@@ -38,48 +38,6 @@ void	remove_redirect(t_program *program)
 	}
 }
 
-// void	check_for_redirect(t_token **root, t_program *program)
-// {
-// 	t_token	*curr;
-// 	t_token	*prev;
-// 	t_token	*temp_token;
-// 	int		flag;
-
-// 	curr = *root;
-// 	while (curr != NULL)
-// 	{
-// 		flag = 0;
-// 		if (curr == NULL)
-// 			break ;
-// 		if (curr->data[0] == '<' && curr->data[1] == '<')
-// 		{
-// 			ll_remove_node(root, prev);
-// 			do_redirect(curr, 4, &flag, program);
-// 		}
-// 		else if (curr->data[0] == '<')
-// 			do_redirect(curr, 3, &flag, program);
-// 		else if (curr->data[0] == '>' && curr->data[1] == '>')
-// 			do_redirect(curr, 2, &flag, program);
-// 		else if (curr->data[0] == '>')
-// 			do_redirect(curr, 1, &flag, program);
-// 		if (flag == 2)
-// 		{
-// 			ll_deallocate(root);
-// 			return ;
-// 		}
-// 		if (flag == 1)
-// 		{
-// 			temp_token = curr;
-// 			curr = curr->next->next;
-// 			remove_redirect_tokens(root, temp_token);
-// 			continue ;
-// 		}
-// 		prev = curr;
-// 		curr = curr->next;
-// 	}
-// 	ft_continue(root, program);
-// }
-
 int	redirect_arrows(t_token *norm[2], int *f, t_token **root, t_program *prog)
 {
 	if (norm[1]->data[0] == '<' && norm[1]->data[1] == '<')
