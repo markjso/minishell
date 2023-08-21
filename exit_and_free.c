@@ -64,13 +64,10 @@ void	ft_token_free(t_program *program)
 void	ft_free(t_program *program)
 {
 	ft_token_free(program);
-	// ft_free_envp(program);
 	ft_free_envar(program);
 }
 
 void	ft_exit(int exit_number)
 {
-	// ft_free(program);
-	check_leaks();
 	exit(exit_number);
 }
