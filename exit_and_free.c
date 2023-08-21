@@ -31,9 +31,7 @@ void	ft_free_envp(t_program *program)
 void	ft_free_envar(t_program *program)
 {
 	t_envar	*temp;
-	int		i;
 
-	i = 0;
 	while (program->envar != 0)
 	{
 		temp = program->envar;
