@@ -105,10 +105,21 @@ void	expand_variables(t_token **root, t_program *program)
 {
 	t_token	*curr;
 	int		todo;
+	char	*env_name;
 
 	curr = *root;
 	while (curr != NULL)
 	{
+		if (ft_strcmp(curr->data, "export") == 0 && curr->next != NULL)
+		{
+			curr = curr->next;
+			env_name = local_find_env_name(curr->data);
+			if (find_env(program->envar, env_name))
+			{
+				curr = curr->next;
+				continue ;
+			}
+		}
 		todo = count_dollars(curr->data);
 		while (todo > 0)
 		{

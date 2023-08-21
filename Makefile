@@ -38,7 +38,8 @@ SRCS=minishell.c \
 	redirection_utils.c \
 	heredoc.c \
 	pipes.c \
-	exit_and_free.c
+	exit_and_free.c \
+	leaks.c
 	
 dINCLUDE=-I$(LIBFT)
 INCL_RL = /usr/local/opt/readline/include/
@@ -58,9 +59,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) -g -O0 $(CLFAGS) -L $(LINK_RL) -o $@ $^ -lreadline 
-	# mkdir -p $(OBJECT_FOLDER)
-	# mv $(OBJS) $(OBJECT_FOLDER)
-	# @echo minishell is compiled
+	@echo minishell is compiled
 
 $(LIBFT):
 		$(MAKE) -C libft
@@ -70,7 +69,6 @@ $(LIBFT):
 
 clean:
 	$(MAKE) clean -C libft
-	# @rm -rf $(OBJECT_FOLDER)
 	rm -f $(OBJS)
 
 fclean:	clean

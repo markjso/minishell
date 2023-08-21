@@ -44,13 +44,15 @@ void	do_pipe(char *exec_path, t_cmd_token *curr, t_program *program)
 			dup2(pipe1[1], 1);
 		close(pipe1[1]);
 		execve(exec_path, curr->data, program->envp);
-		perror("execve");
-		ft_exit(EXIT_FAILURE);
+		error_and_exit("command cannot be executed", 126, program);
+
 	}
 	close(pipe1[1]);
 	dup2(pipe1[0], 0);
 	close(pipe1[0]);
 	waitpid(pid, &status, 0);
+// 	if (WIFEXITED(status))
+// 		g_exit_status = WEXITSTATUS(status);
 }
 
 void	reset_fds(int backup[2])

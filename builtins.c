@@ -53,6 +53,35 @@ void	echo_cmd(char **token)
 	g_exit_status = 0;
 }
 
+char *local_split_value(char *str)
+{
+	char	*ret_str;
+	int		i;
+	int		j;
+	int		k;
+
+	i = 0;
+	j = 0;
+	while (str[i] != ':')
+		i++;
+	k = i;
+	while (str[i] != '\0')
+	{
+		j++;
+		i++;
+	}
+	i = 0;
+	ret_str = malloc(sizeof(char *) * j);
+	while (str[k] != '\0')
+	{
+		ret_str[i] = str[k];
+		i++;
+		k++;
+	}
+	ret_str[i] = '\0';
+	return (ret_str);
+}
+
 /* If no arguments entered print the env list
 If arguments are entered split them using = as
 a delimiter and save them in name and value
@@ -66,6 +95,7 @@ int	export_cmd(char **token, t_program *program)
 	char	**split_env;
 	char	*name;
 	char	*value;
+	char	*temp;
 	t_envar	*node;
 
 	if (token[1] == NULL)
@@ -81,6 +111,13 @@ int	export_cmd(char **token, t_program *program)
 	{
 		node = init_env(name, value);
 		add_env_var(node, program);
+	}
+	if (ft_strcmp(name, "PATH") == 0)
+	{
+		value = local_split_value(value);
+		temp = ft_strjoin((find_env(program->envar, "PATH")->value), value);
+		node->value = temp;
+		free(value);
 	}
 	else
 	{
@@ -118,7 +155,7 @@ void	exit_cmd(char **token, t_program *program)
 	}
 	else
 	{
-		ft_free(program);
+		// ft_free(program);
 		ft_exit(0);
 	}
 }

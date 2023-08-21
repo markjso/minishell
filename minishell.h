@@ -28,6 +28,7 @@
 # include <fcntl.h>
 # include "libft.h"
 # include <errno.h>
+# include "leaks.h"
 
 # define MAXCOM 5000
 # define MAXLIST 100
@@ -110,7 +111,7 @@ int			ft_strcmp(char *s1, char *s2);
 
 /*redirections*/
 void		check_for_redirect(t_token **root, t_program *program);
-void		do_redirect(t_token *curr, int num, int *flag, t_program *program);
+int			do_redirect(t_token *curr, int num, int *flag, t_program *program);
 void		remove_redirect(t_program *program);
 int			input_heredoc(char *delimiter);
 void		ft_continue(t_token **root, t_program *program);
@@ -129,6 +130,7 @@ void		rebuild_envp(t_program *program);
 void		expand_variables(t_token **root, t_program *program);
 char		*expand_dollar(char *variable, t_program *program);
 void		skip_single_quote(char *src, int *end);
+char		*local_find_env_name(char *str);
 
 /*string_utils*/
 int			ft_is_not_white_space(int c);

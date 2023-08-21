@@ -46,7 +46,10 @@ int	redirect_arrows(t_token *norm[2], int *f, t_token **root, t_program *prog)
 		do_redirect(norm[1], 4, f, prog);
 	}
 	else if (norm[1]->data[0] == '<')
-		do_redirect(norm[1], 3, f, prog);
+	{
+		if (do_redirect(norm[1], 3, f, prog) == -1)
+			*f = 2;
+	}
 	else if (norm[1]->data[0] == '>' && norm[1]->data[1] == '>')
 		do_redirect(norm[1], 2, f, prog);
 	else if (norm[1]->data[0] == '>')

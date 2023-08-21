@@ -28,9 +28,12 @@ void	std_output(t_program *program)
 
 	file = ft_strdup(program->redirect_out);
 	file_temp = open(file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (file_temp < 0)
+	{
+		perror("Error in out_input: \n");
+		return ;
+	}
 	free(file);
-	if (file_temp == -1)
-		perror("Error in std_input: \n");
 	program->out_backup = dup(STDOUT_FILENO);
 	program->out_file = dup2(file_temp, STDOUT_FILENO);
 	if (program->out_file < 0)
@@ -39,7 +42,7 @@ void	std_output(t_program *program)
 	program->redir_out_flag = 1;
 }
 
-void	std_input(t_program *program)
+int	std_input(t_program *program)
 {
 	int				file_temp;
 	char			*file;
@@ -47,10 +50,10 @@ void	std_input(t_program *program)
 	file = ft_strdup(program->redirect_in);
 	file_temp = open(file, O_RDONLY, 0444);
 	free(file);
-	if (file_temp == -1)
+	if (file_temp < 0)
 	{
 		perror("Error in std_input");
-		return ;
+		return (-1);
 	}
 	program->in_backup = dup(STDIN_FILENO);
 	program->in_file = dup2(file_temp, STDIN_FILENO);
@@ -58,6 +61,7 @@ void	std_input(t_program *program)
 		error_and_exit("no such file", 127, program);
 	close(file_temp);
 	program->redir_in_flag = 1;
+	return (0);
 }
 
 void	output_append(t_program *program)
@@ -78,7 +82,7 @@ void	output_append(t_program *program)
 	program->redir_out_flag = 1;
 }
 
-void	do_redirect(t_token *curr, int num, int *flag, t_program *program)
+int	do_redirect(t_token *curr, int num, int *flag, t_program *program)
 {
 	*flag = 1;
 	if (curr->next == NULL)
@@ -96,11 +100,13 @@ void	do_redirect(t_token *curr, int num, int *flag, t_program *program)
 	else if (num == 3)
 	{
 		program->redirect_in = ft_strdup(curr->next->data);
-		std_input(program);
+		if (std_input(program) == -1)
+			return (-1);
 	}
 	else if (num == 4)
 	{
 		program->redirect_in = ft_strdup(curr->next->data);
 		input_heredoc(program->redirect_in);
 	}
+	return (0);
 }

@@ -22,7 +22,7 @@ static char	*get_path(char const *currentPath, char const *cmd,
 	if (cmd[0] == '/')
 	{
 		if (execve(&cmd[0], program->token, program->envp) == -1)
-			error_and_exit("command cannot be executed", 126, program);
+			error_and_exit("command cannot be executed", 127, program);
 	}
 	else if (!ft_strncmp(cmd, "./", 2))
 		rtn = ft_strjoin((find_env(program->envar, "PWD")->value),

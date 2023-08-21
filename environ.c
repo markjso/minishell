@@ -41,6 +41,7 @@ t_envar	*split_env_var(char **envp)
 		end = new_node;
 		i++;
 	}
+	new_node->next = NULL;
 	return (start);
 }
 
