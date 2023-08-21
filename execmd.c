@@ -76,8 +76,10 @@ void	execmd(t_program *program)
 	{
 		paths = get_full_path(program);
 		exec_path = get_path_for_cmd(paths, &cmds[0], program);
-		if (!paths || !exec_path)
-			error_and_exit("command not found", 127, program);
+		if (!paths)
+			error_and_exit("path not found", 127, program);
+		if (!exec_path)
+			error_and_exit("exec_path not found", 127, program);
 		if (execve(exec_path, program->token, program->envp) == -1)
 			error_and_exit("command cannot be executed", 126, program);
 	}

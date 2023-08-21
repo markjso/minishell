@@ -72,8 +72,16 @@ void	handle_pipe(t_program *program)
 	{
 		exec_path = get_path_for_cmd(get_full_path(program),
 				curr->name, program);
-			printf("exe_path is: %s\n", exec_path);
-		do_pipe(exec_path, curr, program);
+		if (exec_path)
+			do_pipe(exec_path, curr, program);
+		else
+		{
+			error_and_continue("exec_path not found", curr->name);
+			// temp = curr;
+			// curr = curr->next;
+			// ll_cmd_remove_node(&cmd_root, temp);
+			// continue ;
+		}
 		temp = curr;
 		curr = curr->next;
 		ll_cmd_remove_node(&cmd_root, temp);

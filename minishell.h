@@ -176,6 +176,7 @@ void		ll_cmd_remove_node(t_cmd_token **root, t_cmd_token *this_node);
 /*errors and exit*/
 void		error_message(char *message, int status);
 void		error_and_exit(char *message, int status, t_program *program);
+void		error_and_continue(char *message, char *cmd);
 void		ft_exit(int exit_number);
 void		ft_free(t_program *program);
 void		ft_free_envp(t_program *program);
