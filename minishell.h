@@ -115,7 +115,7 @@ int			ft_strcmp(char *s1, char *s2);
 
 /*redirections*/
 void		check_for_redirect(t_token **root, t_program *program);
-void		do_redirect(t_token *curr, int num, int *flag, t_program *program);
+int			do_redirect(t_token *curr, int num, int *flag, t_program *program);
 void		remove_redirect(t_program *program);
 int			input_heredoc(char *delimiter);
 // char		*get_file_name(char *str, t_program *program);

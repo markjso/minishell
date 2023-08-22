@@ -85,44 +85,53 @@ void	locate_second_quote(char *str, t_program *program)
 // 		return (NULL);
 // }
 
+int	redirect_arrows(t_token *norm[2], int *f, t_token **root, t_program *prog)
+{
+	if (norm[1]->data[0] == '<' && norm[1]->data[1] == '<')
+	{
+		ll_remove_node(root, norm[0]);
+		do_redirect(norm[1], 4, f, prog);
+	}
+	else if (norm[1]->data[0] == '<')
+	{
+		if (do_redirect(norm[1], 3, f, prog) == -1)
+			*f = 2;
+	}
+	else if (norm[1]->data[0] == '>' && norm[1]->data[1] == '>')
+		do_redirect(norm[1], 2, f, prog);
+	else if (norm[1]->data[0] == '>')
+		do_redirect(norm[1], 1, f, prog);
+	if (*f == 2)
+	{
+		ll_deallocate(root);
+		return (-1);
+	}
+	return (1);
+}
+
 void	check_for_redirect(t_token **root, t_program *program)
 {
-	t_token	*curr;
-	t_token	*prev;
+	t_token	*norm[2];
 	t_token	*temp_token;
 	int		flag;
 
-	curr = *root;
-	while (curr != NULL)
+	norm[1] = *root;
+	while (norm[1] != NULL)
 	{
 		flag = 0;
-		if (curr == NULL)
+		if (norm[1] == NULL)
 			break ;
-		if (curr->data[0] == '<' && curr->data[1] == '<')
-		{
-			ll_remove_node(root, prev);
-			do_redirect(curr, 4, &flag, program);
-		}
-		else if (curr->data[0] == '<')
-			do_redirect(curr, 3, &flag, program);
-		else if (curr->data[0] == '>' && curr->data[1] == '>')
-			do_redirect(curr, 2, &flag, program);
-		else if (curr->data[0] == '>')
-			do_redirect(curr, 1, &flag, program);
-		if (flag == 2)
-		{
-			ll_deallocate(root);
+		if (redirect_arrows(norm, &flag, root, program) == -1)
 			return ;
-		}
 		if (flag == 1)
 		{
-			temp_token = curr;
-			curr = curr->next->next;
+			temp_token = norm[1];
+			norm[1] = norm[1]->next->next;
 			remove_redirect_tokens(root, temp_token);
 			continue ;
 		}
-		prev = curr;
-		curr = curr->next;
+		norm[0] = norm[1];
+		norm[1] = norm[1]->next;
 	}
 	ft_continue(root, program);
 }
