@@ -58,7 +58,6 @@ char *local_split_value(char *str)
 
 	i = 0;
 	j = 0;
-	// fprintf(stderr, "local_split_value %s\n", str);
 	while (str[i] != ':')
 		i++;
 	k = i;
@@ -94,12 +93,9 @@ int	export_cmd(char **token, t_program *program)
 		print_env(program);
 		return (0);
 	}
-	// fprintf(stderr, "token[1]: %s", token[1]);
 	split_env = ft_split(token[1], '=');
 	name = split_env[0];
 	value = split_env[1];
-	// fprintf(stderr, "name: %s", name);
-	// fprintf(stderr, "value: %s", value);
 	node = find_env(program->envar, name);
 	if (node == NULL)
 	{
@@ -109,9 +105,7 @@ int	export_cmd(char **token, t_program *program)
 	if (ft_strcmp(name, "PATH") == 0)
 	{
 		value = local_split_value(value);
-		// fprintf(stderr, "value: %s\n", value);
 		temp = ft_strjoin((find_env(program->envar, "PATH")->value), value);
-		// fprintf(stderr, "new path is in var temp: %s\n", temp);
 		free(node->value);
 		node->value = ft_strdup(temp);
 		free(value);

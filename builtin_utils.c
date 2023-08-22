@@ -53,8 +53,6 @@ void	do_builtins(char **builtin_id, t_program *program)
 		print_env(program);
 	if (ft_strcmp(builtin_id[0], "exit") == 0)
 		exit_cmd(program->token, program);
-	// fprintf(stderr, "After leaving export_cmd function the new PATH var is: \n");
-	// fprintf(stderr, "\t%s\n", (find_env(program->envar, "PATH")->value));
 }
 
 void	ft_continue(t_token **root, t_program *program)

@@ -29,7 +29,6 @@ int	count_envars(t_envar *envars)
 
 void	rebuild_envp(t_program *program)
 {
-	char		**new_env;
 	char		*name_part;
 	t_envar		*tmp;
 	int			count;
@@ -38,28 +37,29 @@ void	rebuild_envp(t_program *program)
 	tmp = program->envar;
 	count = count_envars(tmp);
 	i = 0;
-	new_env = malloc(sizeof(char *) * count + 1);
-	if (!new_env)
+	program->envp = (char **)malloc(sizeof(char *) * count + 1);
+	if (!program->envp)
 		return ;
 	while (i < count)
 	{
 		name_part = ft_strjoin(tmp->name, "=");
-		new_env[i] = ft_strjoin(name_part, tmp->value);
+		program->envp[i] = ft_strjoin(name_part, tmp->value);
 		free(name_part);
 		i++;
 		tmp = tmp->next;
 	}
-	new_env[i] = NULL;
-	program->envp = new_env;
-	// int j = 0;
-	// while (new_env[j])
-	// {
-	// 	fprintf(stderr, "new_env[j]: %s\n", new_env[j]);
-	// 	free(new_env[j]);
-	// 	j++;
-	// }
-	// free(new_env);
-	// ft_free_envp(program);
+	program->envp[i] = NULL;
+	i = 0;
+	if (program->envp != 0)
+	{
+		while (program->envp[i] != 0)
+		{
+			free(program->envp[i]);
+			i++;
+		}
+		if (program->envp)
+			free(program->envp);
+	}
 }
 
 /*prints all the environment variables in the linked list

@@ -14,12 +14,9 @@
 
 void	ft_free_envp(t_program *program)
 {
-		fprintf(stderr, "ft_free_envp\n");
 	int	i;
 
 	i = 0;
-	// for (int j = 0; program->envp[j]; j++)
-	// 	fprintf(stderr, "%s\n", program->envp[j]);
 	if (program->envp != 0)
 	{
 		while (program->envp[i] != 0)
@@ -27,22 +24,21 @@ void	ft_free_envp(t_program *program)
 			free(program->envp[i]);
 			i++;
 		}
-		free(program->envp);
+		if (program->envp)
+		{
+			free(program->envp);
+		}
 	}
 }
 
 void	ft_free_envar(t_program *program)
 {
-		fprintf(stderr, "ft_free_envar\n");
-
 	t_envar	*temp;
 	int		i;
 
 	i = 0;
 	while (program->envar != 0)
 	{
-		fprintf(stderr, "envar->name: %s\n", program->envar->name);
-		fprintf(stderr, "\tenvar->value: %s\n", program->envar->value);
 		temp = program->envar;
 		program->envar = program->envar->next;
 		free(temp->name);
@@ -53,7 +49,6 @@ void	ft_free_envar(t_program *program)
 
 void	ft_token_free(t_program *program)
 {
-	fprintf(stderr, "ft_token_free\n");
 	int	i;
 
 	i = 0;
@@ -68,18 +63,12 @@ void	ft_token_free(t_program *program)
 		{
 			free (program->token);
 		}
-		// if (program->token)
-		// 	printf("program->token still exists\n");
-		// else
-		// 	printf("program->token doesnt exists\n");
 	}
 }
 
 void	ft_free(t_program *program)
 {
-	fprintf(stderr, "ft_free\n");
 	ft_token_free(program);
-	ft_free_envp(program);
 	ft_free_envar(program);
 }
 

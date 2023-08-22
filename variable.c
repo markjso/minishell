@@ -139,6 +139,7 @@ void	expand_variables(t_token **root, t_program *program)
 			if (find_env(program->envar, env_name))
 			{
 				curr = curr->next;
+				free(env_name);
 				continue ;
 			}
 		}

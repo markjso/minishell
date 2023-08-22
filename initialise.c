@@ -22,7 +22,7 @@ static char	*get_user_prompt(void)
 	if (username)
 	{
 		prompt = ft_strjoin(prompt, username);
-		prompt = ft_strjoin(prompt, "@>>$ ");
+		prompt = ft_strjoin(prompt, "minishell@>>$ ");
 	}
 	else
 		printf("username does not exist\n");
@@ -98,6 +98,7 @@ void	init_program(t_program *program, char **envp)
 	program->token = (char **)malloc((MAXLIST + 1) * sizeof(char *));
 	while (i < MAXLIST + 1)
 	{
+		program->token[i] = NULL;
 		i++;
 	}
 	program->envar = split_env_var(envp);

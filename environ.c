@@ -12,6 +12,19 @@
 
 #include "minishell.h"
 
+void	free_new_split(char **split_env)
+{
+	int	i;
+
+	i = 0;
+	while (split_env[i])
+	{
+		free(split_env[i]);
+		i++;
+	}
+	free(split_env);
+}
+
 /*iterates through the envp array splitting each string
 by '=' using ft_split. Then calls init_env to create a 
 new struct and append it to the linked list. Start and end
@@ -39,6 +52,7 @@ t_envar	*split_env_var(char **envp)
 			end->next = new_node;
 		end = new_node;
 		i++;
+		free_new_split(split_env);
 	}
 	return (start);
 }
