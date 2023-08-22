@@ -64,16 +64,3 @@ int	ft_is_not_quote(int c)
 	else
 		return (1);
 }
-
-/*
-Checks if char agains the ASCII table. 
-Returns 1: If char is not a space or tab and is not a single or double quote. 
-Returns 0 otherwise. 
-*/
-int	ft_not_whitespace_not_quote(int c)
-{
-	if (ft_white_space(c) == 0 && ft_is_quote(c) == 0)
-		return (1);
-	else
-		return (0);
-}

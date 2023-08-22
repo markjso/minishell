@@ -29,6 +29,13 @@ static char	*get_user_prompt(void)
 	return (prompt);
 }
 
+/* Stores the user prompt and uses readline to enable
+line editing and command history. If user_input is
+null it means ctrl-D was entered and it prints exit
+and exits the shell. If is not null then it copies
+the user input to input, adds to the history using 
+add_history, frees the memory and returns '0'*/
+
 int	take_input(char *input, t_program *program)
 {
 	char	*user_input;

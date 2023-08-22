@@ -29,33 +29,17 @@ void	ll_insert_end(t_token **root, t_token *new_node)
 	curr->next = new_node;
 }
 
-void	ll_insert_beginning(t_token **root, t_token *new_node)
-{
-	if (new_node == NULL)
-		exit(3);
-	new_node->next = *root;
-	*root = new_node;
-}
-
-void	ll_insert_after(t_token *this_node, t_token *new_node)
-{
-	if (new_node == NULL)
-		exit(4);
-	new_node->next = this_node->next;
-	this_node->next = new_node;
-}
-
-void	ll_insert_before(t_token **root, t_token *this_node, 
-		t_token *new_node)
+void	ll_remove_node(t_token **root, t_token *this_node)
 {
 	t_token	*curr;
 
-	if (new_node == NULL)
-		exit(4);
+	if (*root == NULL)
+		return ;
 	if ((*root) == this_node)
 	{
-		new_node->next = *root;
-		*root = new_node;
+		*root = (*root)->next;
+		free(this_node->data);
+		free(this_node);
 		return ;
 	}
 	curr = *root;
@@ -63,10 +47,28 @@ void	ll_insert_before(t_token **root, t_token *this_node,
 	{
 		if (curr->next == this_node)
 		{
-			new_node->next = curr->next;
-			curr->next = new_node;
+			curr->next = this_node->next;
+			if (this_node->data)
+				free(this_node->data);
+			free(this_node);
 			return ;
 		}
 		curr = curr->next;
 	}
+}
+
+void	ll_deallocate(t_token **root)
+{
+	t_token	*curr;
+	t_token	*temp;
+
+	curr = *root;
+	while (curr != NULL)
+	{
+		temp = curr;
+		curr = curr->next;
+		free(temp->data);
+		free(temp);
+	}
+	*root = NULL;
 }

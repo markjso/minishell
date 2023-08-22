@@ -126,11 +126,6 @@ bool	has_pipe_token(t_program *program)
 	return (false);
 }
 
-/*
-process_input(char *str: raw user input, 
-char **token: is empty pointer to string that will become tokenised string).
-Return value is always 0? Why
-*/
 void	process_input(char *str, t_token **root, t_program *program)
 {
 	make_tokens(str, root);

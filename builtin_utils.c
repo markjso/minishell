@@ -77,6 +77,9 @@ void	ft_continue(t_token **root, t_program *program)
 	remove_redirect(program);
 }
 
+/* handles the exit command. Frees the program
+structure and exits the shell*/
+
 void	exit_cmd(char **token, t_program *program)
 {
 	if (token[1] && (token[2]))

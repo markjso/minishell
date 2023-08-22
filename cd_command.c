@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+/* updates PWD and OLDPWD after a successful
+directory change*/
+
 void	change_dirs(t_envar *pwd, t_envar *oldpwd, char *cwd)
 {
 	free(oldpwd->value);
@@ -19,6 +22,12 @@ void	change_dirs(t_envar *pwd, t_envar *oldpwd, char *cwd)
 	free(pwd->value);
 	pwd->value = ft_strdup(cwd);
 }
+
+/* handles the "cd" command. Finds PWD and
+OLDPWD in the t_envar list and if chdir is 
+successful, checks if getcwd is successful
+and if it is uses change_dirs to update them
+with the new directory path*/
 
 int	cd_command(char **tokens, t_program *program)
 {

@@ -13,20 +13,6 @@
 #include "minishell.h"
 
 /*
-Returns the lengh of a word - alpha numeric characters only. 
-ft_alpha_word_len(char *string to use, int starting index of first char of word.)
-*/
-int	ft_alnum_word_len(char *str, int start)
-{
-	int	i;
-
-	i = start;
-	while (ft_isalnum(str[i]) == 1)
-		i++;
-	return (i - start);
-}
-
-/*
 Checks if the char is an upper case char acording to the ASCII table. 
 Returns 1 if it is uppercase. 
 Returns 0 if it any thing other than uppercase, including lowercase, 

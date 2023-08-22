@@ -27,7 +27,6 @@ SRCS=minishell.c \
 	process_input.c \
 	token_linked_list.c \
 	token_linked_list_create.c \
-	token_linked_list_delete.c \
 	variable.c \
 	variable_expand_utils.c \
 	process_input_utils.c \
@@ -59,9 +58,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
 	$(CC) -g -O0 $(CLFAGS) -L $(LINK_RL) -o $@ $^ -lreadline 
-	# mkdir -p $(OBJECT_FOLDER)
-	# mv $(OBJS) $(OBJECT_FOLDER)
-	# @echo minishell is compiled
+	@echo minishell is compiled
 
 $(LIBFT):
 		$(MAKE) -C libft
@@ -71,7 +68,6 @@ $(LIBFT):
 
 clean:
 	$(MAKE) clean -C libft
-	# @rm -rf $(OBJECT_FOLDER)
 	rm -f $(OBJS)
 
 fclean:	clean

@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+/*counts the number of elements in the t_envar
+linked list and returns the count*/
+
 int	count_envars(t_envar *envars)
 {
 	int		i;
@@ -43,6 +46,11 @@ void	rebuild_envp_norm(t_program *program)
 			free(program->envp);
 	}
 }
+
+/*Rebuilds the pogram->envp array based on the
+t_envar linked list. Used when export or unset
+so that the array stays consistent with the 
+linked list*/
 
 void	rebuild_envp(t_program *program)
 {

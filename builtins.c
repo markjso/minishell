@@ -27,10 +27,10 @@ static bool	ft_check_n_flag(char *str)
 	return (true);
 }
 
-/*
-Write to screen the text folloing the command `echo`. 
-Checks for the -n flag. Must expand this description.
-*/
+/* Write to screen the text following the command `echo`. 
+Checks for the -n flag and if it finds it sets the
+flag to false so that "\n" will not be printed.*/
+
 void	echo_cmd(char **token)
 {
 	int		i;
@@ -67,6 +67,14 @@ void	export_path_append(char *value, t_program *program, t_envar *node)
 	free(value);
 }
 
+/* If no arguments entered print the env list
+If arguments are entered split them using = as
+a delimiter and save them in name and value
+pointer. Search the t_envar linked list to see
+if they already exist and if they don't initalise
+a new structure and add it to the linked list.
+If it does exist free the old one and update it*/
+
 void	export_cmd(char **token, t_program *program)
 {
 	char	**split_env;
@@ -93,6 +101,10 @@ void	export_cmd(char **token, t_program *program)
 	else
 		export_path_overwrite(node, value);
 }
+
+/* find the env variable at argument [1] (token[1])
+and remove it from the linked list of 
+environment variables*/
 
 void	unset_cmd(char **token, t_program *program)
 {
