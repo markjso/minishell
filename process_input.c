@@ -6,7 +6,7 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/06 11:10:49 by jchurch           #+#    #+#             */
-/*   Updated: 2023/06/20 18:27:24 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:44:50 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,6 @@ bool	has_pipe_token(t_program *program)
 	return (false);
 }
 
-/*
-process_input(char *str: raw user input, 
-char **token: is empty pointer to string that will become tokenised string).
-Return value is always 0? Why
-*/
 void	process_input(char *str, t_token **root, t_program *program)
 {
 	make_tokens(str, root);

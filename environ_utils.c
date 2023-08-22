@@ -6,11 +6,14 @@
 /*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 16:04:38 by jmarks            #+#    #+#             */
-/*   Updated: 2023/08/02 15:38:38 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:58:34 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*counts the number of elements in the t_envar
+linked list and returns the count*/
 
 int	count_envars(t_envar *envars)
 {
@@ -26,6 +29,11 @@ int	count_envars(t_envar *envars)
 	}
 	return (i);
 }
+
+/*Rebuilds the pogram->envp array based on the
+t_envar linked list. Used when export or unset
+so that the array stays consistent with the 
+linked list*/
 
 void	rebuild_envp(t_program *program)
 {
@@ -51,15 +59,6 @@ void	rebuild_envp(t_program *program)
 	}
 	new_env[i] = NULL;
 	program->envp = new_env;
-	// int j = 0;
-	// while (new_env[j])
-	// {
-	// 	fprintf(stderr, "new_env[j]: %s\n", new_env[j]);
-	// 	free(new_env[j]);
-	// 	j++;
-	// }
-	// free(new_env);
-	// ft_free_envp(program);
 }
 
 /*prints all the environment variables in the linked list

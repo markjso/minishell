@@ -6,7 +6,7 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 15:44:30 by jmarks            #+#    #+#             */
-/*   Updated: 2023/08/02 16:30:26 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:20:10 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ static char	*get_user_prompt(void)
 		printf("username does not exist\n");
 	return (prompt);
 }
+
+/* Stores the user prompt and uses readline to enable
+line editing and command history. If user_input is
+null it means ctrl-D was entered and it prints exit
+and exits the shell. If is not null then it copies
+the user input to input, adds to the history using 
+add_history, frees the memory and returns '0'*/
 
 int	take_input(char *input, t_program *program)
 {

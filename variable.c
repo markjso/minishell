@@ -6,7 +6,7 @@
 /*   By: jchurch <jchurch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:47:33 by jchurch           #+#    #+#             */
-/*   Updated: 2023/07/18 14:44:32 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 12:54:02 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,28 +77,6 @@ void	locate_dollar_for_action(t_token *curr, t_program *program)
 			&& curr->data[var_nbrs[1]] != 39)
 			var_nbrs[1]++;
 	}
-}
-
-int	count_dollars(char *str)
-{
-	int	i;
-	int	todo;
-
-	i = 0;
-	todo = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == 39)
-		{
-			i++;
-			while (str[i] != 39 && str[i] != '\0')
-				i++;
-		}
-		if (str[i] == '$')
-			todo++;
-		i++;
-	}
-	return (todo);
 }
 
 char	*local_find_env_name(char *str)

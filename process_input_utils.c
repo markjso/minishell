@@ -6,7 +6,7 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/13 14:11:00 by jchurch           #+#    #+#             */
-/*   Updated: 2023/07/13 14:11:00 by jchurch          ###   ########.fr       */
+/*   Updated: 2023/08/22 13:46:39 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,6 @@ int	ft_is_pipe_or_redirect(char c)
 	else
 		return (0);
 }
-
-// void	process_quotes(char *str, char type)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	i++;
-// 	while (str[i] != type && str[i] != '\0')
-// 		i++;
-// 	if (str[i] == type)
-// 		i++;
-// }
 
 /*Returns the index number of a string, the return value is the first space or 
 tab to occur. Spaces within matching double or single quotation marks are 

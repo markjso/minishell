@@ -6,11 +6,14 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 11:52:18 by jmarks            #+#    #+#             */
-/*   Updated: 2023/06/20 17:32:19 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:03:40 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* updates PWD and OLDPWD after a successful
+directory change*/
 
 void	change_dirs(t_envar *pwd, t_envar *oldpwd, char *cwd)
 {
@@ -19,6 +22,12 @@ void	change_dirs(t_envar *pwd, t_envar *oldpwd, char *cwd)
 	free(pwd->value);
 	pwd->value = ft_strdup(cwd);
 }
+
+/* handles the "cd" command. Finds PWD and
+OLDPWD in the t_envar list and if chdir is 
+successful, checks if getcwd is successful
+and if it is uses change_dirs to update them
+with the new directory path*/
 
 int	cd_command(char **tokens, t_program *program)
 {

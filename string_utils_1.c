@@ -6,25 +6,11 @@
 /*   By: jchurch <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 09:33:57 by jchurch           #+#    #+#             */
-/*   Updated: 2023/07/18 15:35:35 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:49:21 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-Returns the lengh of a word - alpha numeric characters only. 
-ft_alpha_word_len(char *string to use, int starting index of first char of word.)
-*/
-int	ft_alnum_word_len(char *str, int start)
-{
-	int	i;
-
-	i = start;
-	while (ft_isalnum(str[i]) == 1)
-		i++;
-	return (i - start);
-}
 
 /*
 Checks if the char is an upper case char acording to the ASCII table. 

@@ -6,7 +6,7 @@
 /*   By: jchurch <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 09:33:55 by jchurch           #+#    #+#             */
-/*   Updated: 2023/07/18 15:36:47 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:50:23 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,4 @@ int	ft_is_not_quote(int c)
 		return (0);
 	else
 		return (1);
-}
-
-/*
-Checks if char agains the ASCII table. 
-Returns 1: If char is not a space or tab and is not a single or double quote. 
-Returns 0 otherwise. 
-*/
-int	ft_not_whitespace_not_quote(int c)
-{
-	if (ft_white_space(c) == 0 && ft_is_quote(c) == 0)
-		return (1);
-	else
-		return (0);
 }

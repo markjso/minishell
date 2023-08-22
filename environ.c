@@ -6,7 +6,7 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 15:53:33 by jmarks            #+#    #+#             */
-/*   Updated: 2023/08/02 15:47:47 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:10:00 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 by '=' using ft_split. Then calls init_env to create a 
 new struct and append it to the linked list. Start and end
 are updated accordingly and a pointer to start is returned*/
+
 t_envar	*split_env_var(char **envp)
 {
 	char	**split_env;
@@ -98,6 +99,7 @@ environment variables. Used to unset. Searches through
 the list searching for a node with a matching name
 if it finds one it removes it from the list and frees
 the associated memory*/
+
 void	remove_env_var(char *name, t_program *program)
 {
 	t_envar	*prev;

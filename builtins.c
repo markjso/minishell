@@ -6,11 +6,15 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 13:55:05 by jmarks            #+#    #+#             */
-/*   Updated: 2023/08/02 15:06:24 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 14:00:32 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/* uses getcwd to get the current working
+directory and store it in pwd. It uses 
+printf to print the path to the console*/
 
 void	printpwd(void)
 {
@@ -21,10 +25,9 @@ void	printpwd(void)
 	g_exit_status = 0;
 }
 
-/*
-Write to screen the text folloing the command `echo`. 
-Checks for the -n flag. Must expand this description.
-*/
+/* Write to screen the text following the command `echo`. 
+Checks for the -n flag and if it finds it sets the
+flag to false so that "\n" will not be printed.*/
 
 void	echo_cmd(char **token)
 {
@@ -49,7 +52,7 @@ void	echo_cmd(char **token)
 	g_exit_status = 0;
 }
 
-char *local_split_value(char *str)
+char	*local_split_value(char *str)
 {
 	char	*ret_str;
 	int		i;
@@ -58,7 +61,6 @@ char *local_split_value(char *str)
 
 	i = 0;
 	j = 0;
-	// fprintf(stderr, "local_split_value %s\n", str);
 	while (str[i] != ':')
 		i++;
 	k = i;
@@ -79,7 +81,13 @@ char *local_split_value(char *str)
 	return (ret_str);
 }
 
-
+/* If no arguments entered print the env list
+If arguments are entered split them using = as
+a delimiter and save them in name and value
+pointer. Search the t_envar linked list to see
+if they already exist and if they don't initalise
+a new structure and add it to the linked list.
+If it does exist free the old one and update it*/
 
 int	export_cmd(char **token, t_program *program)
 {
@@ -94,12 +102,9 @@ int	export_cmd(char **token, t_program *program)
 		print_env(program);
 		return (0);
 	}
-	// fprintf(stderr, "token[1]: %s", token[1]);
 	split_env = ft_split(token[1], '=');
 	name = split_env[0];
 	value = split_env[1];
-	// fprintf(stderr, "name: %s", name);
-	// fprintf(stderr, "value: %s", value);
 	node = find_env(program->envar, name);
 	if (node == NULL)
 	{
@@ -109,9 +114,7 @@ int	export_cmd(char **token, t_program *program)
 	if (ft_strcmp(name, "PATH") == 0)
 	{
 		value = local_split_value(value);
-		// fprintf(stderr, "value: %s\n", value);
 		temp = ft_strjoin((find_env(program->envar, "PATH")->value), value);
-		// fprintf(stderr, "new path is in var temp: %s\n", temp);
 		free(node->value);
 		node->value = ft_strdup(temp);
 		free(value);
@@ -124,6 +127,10 @@ int	export_cmd(char **token, t_program *program)
 	return (0);
 }
 
+/* find the env variable at argument [1] (token[1])
+and remove it from the linked list of 
+environment variables*/
+
 void	unset_cmd(char **token, t_program *program)
 {
 	if (ft_strrchr(token[1], '#'))
@@ -132,20 +139,4 @@ void	unset_cmd(char **token, t_program *program)
 	}
 	else
 		remove_env_var(token[1], program);
-}
-
-void	exit_cmd(char **token, t_program *program)
-{
-	if (token[1] && (token[2]))
-		error_message_cmd("too many arguments", 255, program);
-	else if (token[1])
-	{
-		ft_free(program);
-		ft_exit(0);
-	}
-	else
-	{
-		ft_free(program);
-		ft_exit(0);
-	}
 }

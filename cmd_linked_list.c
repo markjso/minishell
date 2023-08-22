@@ -6,7 +6,7 @@
 /*   By: jchurch <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 13:45:38 by jchurch           #+#    #+#             */
-/*   Updated: 2023/07/18 15:32:38 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:06:27 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,24 +70,4 @@ void	ll_cmd_insert_end(t_cmd_token **root, t_cmd_token *new_node)
 	while (curr->next != NULL)
 		curr = curr->next;
 	curr->next = new_node;
-}
-
-void	ll_cmd_print_token(t_cmd_token **root)
-{
-	t_cmd_token	*curr;
-	int			i;
-
-	printf("Printing cmd linked list\n");
-	curr = *root;
-	while (curr != NULL)
-	{
-		i = 0;
-		printf("\tPrint cmd LL name: %s\n", curr->name);
-		while (curr->data[i] != NULL)
-		{
-			printf("\t\tPrint cmd LL [i] data: %d %s\n", i, curr->data[i]);
-			i++;
-		}
-		curr = curr->next;
-	}
 }

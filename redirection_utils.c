@@ -6,7 +6,7 @@
 /*   By: jmarks <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 18:01:04 by jmarks            #+#    #+#             */
-/*   Updated: 2023/07/17 18:01:07 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 12:41:52 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,25 +65,6 @@ void	locate_second_quote(char *str, t_program *program)
 		return ;
 	}
 }
-
-// char	*get_file_name(char *str, t_program *program)
-// {
-// 	int		end_of_name;
-// 	char	*file_name;
-
-// 	program->redirect_index++;
-// 	while (ft_white_space(str[program->redirect_index]))
-// 		program->redirect_index++;
-// 	end_of_name = program->redirect_index;
-// 	while (ft_is_not_white_space(str[end_of_name]) == 1)
-// 		end_of_name++;
-// 	file_name = ft_substr(str, program->redirect_index, 
-// 			end_of_name - program->redirect_index);
-// 	if (file_name)
-// 		return (file_name); 
-// 	else
-// 		return (NULL);
-// }
 
 int	redirect_arrows(t_token *norm[2], int *f, t_token **root, t_program *prog)
 {

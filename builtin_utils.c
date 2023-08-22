@@ -6,7 +6,7 @@
 /*   By: jmarks <jmarks@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 16:05:05 by jmarks            #+#    #+#             */
-/*   Updated: 2023/08/02 14:53:15 by jmarks           ###   ########.fr       */
+/*   Updated: 2023/08/22 13:01:54 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ void	do_builtins(char **builtin_id, t_program *program)
 		print_env(program);
 	if (ft_strcmp(builtin_id[0], "exit") == 0)
 		exit_cmd(program->token, program);
-	// fprintf(stderr, "After leaving export_cmd function the new PATH var is: \n");
-	// fprintf(stderr, "\t%s\n", (find_env(program->envar, "PATH")->value));
 }
 
 void	ft_continue(t_token **root, t_program *program)
@@ -77,4 +75,23 @@ void	ft_continue(t_token **root, t_program *program)
 		}
 	}
 	remove_redirect(program);
+}
+
+/* handles the exit command. Frees the program
+structure and exits the shell*/
+
+void	exit_cmd(char **token, t_program *program)
+{
+	if (token[1] && (token[2]))
+		error_message_cmd("too many arguments", 255, program);
+	else if (token[1])
+	{
+		ft_free(program);
+		ft_exit(0);
+	}
+	else
+	{
+		ft_free(program);
+		ft_exit(0);
+	}
 }

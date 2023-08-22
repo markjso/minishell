@@ -6,7 +6,7 @@
 /*   By: jchurch <jchurch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/13 13:57:03 by jchurch           #+#    #+#             */
-/*   Updated: 2023/07/13 13:57:04 by jchurch          ###   ########.fr       */
+/*   Updated: 2023/08/22 13:52:54 by jmarks           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,32 +32,6 @@ char	*expand_dollar(char *variable, t_program *program)
 	}
 }
 
-int	env_len(char *str)
-{
-	int	i;
-
-	i = 1;
-	if (str[0] == '?')
-		return (1);
-	while (ft_is_valid_var_char(str[i]) == 1)
-		i++;
-	return (i);
-}
-
-char	*return_string(char *src, int terminator)
-{
-	char		*ret;
-	static char	*backup;
-
-	if (!src)
-	{
-		src = backup;
-	}
-	ret = ft_strdup(src);
-	ret[terminator] = '\0';
-	return (ret);
-}
-
 void	skip_single_quote(char *src, int *end)
 {
 	(*end)++;
@@ -66,4 +40,26 @@ void	skip_single_quote(char *src, int *end)
 		(*end)++;
 	}
 	(*end)++;
+}
+
+int	count_dollars(char *str)
+{
+	int	i;
+	int	todo;
+
+	i = 0;
+	todo = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == 39)
+		{
+			i++;
+			while (str[i] != 39 && str[i] != '\0')
+				i++;
+		}
+		if (str[i] == '$')
+			todo++;
+		i++;
+	}
+	return (todo);
 }
