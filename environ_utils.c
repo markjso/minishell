@@ -59,7 +59,7 @@ void	rebuild_envp(t_program *program)
 	}
 	new_env[i] = NULL;
 	program->envp = new_env;
-	ft_free_envp(program);
+	// ft_free_envp(program);
 }
 
 /*prints all the environment variables in the linked list

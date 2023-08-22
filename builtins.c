@@ -155,7 +155,7 @@ void	exit_cmd(char **token, t_program *program)
 	}
 	else
 	{
-		// ft_free(program);
+		ft_free(program);
 		ft_exit(0);
 	}
 }

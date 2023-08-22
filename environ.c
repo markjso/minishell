@@ -77,9 +77,10 @@ void	add_env_var(t_envar *node, t_program *program)
 	rebuild_envp(program);
 }
 
-/* search for an environment variable in the 
-list of environement variables. Used by the 
-export builtin*/
+/* find and retrieve an entry with a matching
+name from the input arguments. If the environment
+variable name matches an entry, return a pointer
+to the node, otherwise return NULL*/
 
 t_envar	*find_env(t_envar *envars, char *name)
 {

@@ -38,12 +38,10 @@ void	ft_free_envar(t_program *program)
 			break ;
 		temp = program->envar;
 		program->envar = program->envar->next;
-
 		if (temp->name)
 			free(temp->name);
 		if (temp->value)
 			free(temp->value);
-		temp->next = NULL;
 		if (temp)
 			free(temp);
 	}
@@ -71,7 +69,7 @@ void	ft_token_free(t_program *program)
 void	ft_free(t_program *program)
 {
 	ft_token_free(program);
-	// ft_free_envar(program);
+	ft_free_envar(program);
 }
 
 void	ft_exit(int exit_number)
