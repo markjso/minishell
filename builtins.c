@@ -78,20 +78,34 @@ char *local_split_value(char *str)
 	return (ret_str);
 }
 
+void	local_export_path(char *value, t_program *program, t_envar *node)
+{
+	char	*temp;
 
+	value = local_split_value(value);
+	temp = ft_strjoin((find_env(program->envar, "PATH")->value), value);
+	free(node->value);
+	node->value = ft_strdup(temp);
+	free(value);
+}
 
-int	export_cmd(char **token, t_program *program)
+void	local_export_path_else(t_envar *node, char *value)
+{
+	free(node->value);
+	node->value = value;
+}
+
+void	export_cmd(char **token, t_program *program)
 {
 	char	**split_env;
 	char	*name;
 	char	*value;
 	t_envar	*node;
-	char	*temp;
 
 	if (token[1] == NULL)
 	{
 		print_env(program);
-		return (0);
+		return ;
 	}
 	split_env = ft_split(token[1], '=');
 	name = split_env[0];
@@ -103,19 +117,9 @@ int	export_cmd(char **token, t_program *program)
 		add_env_var(node, program);
 	}
 	if (ft_strcmp(name, "PATH") == 0)
-	{
-		value = local_split_value(value);
-		temp = ft_strjoin((find_env(program->envar, "PATH")->value), value);
-		free(node->value);
-		node->value = ft_strdup(temp);
-		free(value);
-	}
+		local_export_path(value, program, node);
 	else
-	{
-		free(node->value);
-		node->value = value;
-	}
-	return (0);
+		local_export_path_else(node, value);
 }
 
 void	unset_cmd(char **token, t_program *program)

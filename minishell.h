@@ -104,7 +104,7 @@ void		remove_quotes(t_token **root);
 
 /*builtins*/ 
 int			cd_command(char **token, t_program *program);
-int			export_cmd(char **token, t_program *program);
+void		export_cmd(char **token, t_program *program);
 void		echo_cmd(char **token);
 void		printpwd(void);
 void		unset_cmd(char **token, t_program *program);
@@ -140,6 +140,7 @@ char		*expand_dollar(char *variable, t_program *program);
 int			env_len(char *str);
 char		*return_string(char *src, int terminator);
 void		skip_single_quote(char *src, int *end);
+char		*local_find_env_name(char *str);
 
 /*string_utils*/
 int			ft_alnum_word_len(char *str, int start);

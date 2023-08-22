@@ -23,3 +23,25 @@ int	ft_strcmp(char *s1, char *s2)
 	}
 	return (s1[i] - s2[i]);
 }
+
+char	*local_find_env_name(char *str)
+{
+	char	*ret_str;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (str[i] != '\0' && str[i] != '=')
+	{
+		i++;
+	}
+	ret_str = malloc(sizeof(char *) * i);
+	while (j < i)
+	{
+		ret_str[j] = str[j];
+		j++;
+	}
+	ret_str[j] = '\0';
+	return (ret_str);
+}

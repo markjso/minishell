@@ -101,28 +101,6 @@ int	count_dollars(char *str)
 	return (todo);
 }
 
-char	*local_find_env_name(char *str)
-{
-	char	*ret_str;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (str[i] != '\0' && str[i] != '=')
-	{
-		i++;
-	}
-	ret_str = malloc(sizeof(char *) * i);
-	while (j < i)
-	{
-		ret_str[j] = str[j];
-		j++;
-	}
-	ret_str[j] = '\0';
-	return (ret_str);
-}
-
 void	expand_variables(t_token **root, t_program *program)
 {
 	t_token	*curr;
@@ -144,11 +122,8 @@ void	expand_variables(t_token **root, t_program *program)
 			}
 		}
 		todo = count_dollars(curr->data);
-		while (todo > 0)
-		{
+		while (todo-- > 0)
 			locate_dollar_for_action(curr, program);
-			todo--;
-		}
 		curr = curr->next;
 	}
 }

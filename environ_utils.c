@@ -27,6 +27,23 @@ int	count_envars(t_envar *envars)
 	return (i);
 }
 
+void	rebuild_envp_norm(t_program *program)
+{
+	int	i;
+
+	i = 0;
+	if (program->envp != 0)
+	{
+		while (program->envp[i] != 0)
+		{
+			free(program->envp[i]);
+			i++;
+		}
+		if (program->envp)
+			free(program->envp);
+	}
+}
+
 void	rebuild_envp(t_program *program)
 {
 	char		*name_part;
@@ -49,17 +66,7 @@ void	rebuild_envp(t_program *program)
 		tmp = tmp->next;
 	}
 	program->envp[i] = NULL;
-	i = 0;
-	if (program->envp != 0)
-	{
-		while (program->envp[i] != 0)
-		{
-			free(program->envp[i]);
-			i++;
-		}
-		if (program->envp)
-			free(program->envp);
-	}
+	rebuild_envp_norm(program);
 }
 
 /*prints all the environment variables in the linked list
