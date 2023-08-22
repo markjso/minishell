@@ -101,14 +101,47 @@ int	count_dollars(char *str)
 	return (todo);
 }
 
+char	*local_find_env_name(char *str)
+{
+	char	*ret_str;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (str[i] != '\0' && str[i] != '=')
+	{
+		i++;
+	}
+	ret_str = malloc(sizeof(char *) * i);
+	while (j < i)
+	{
+		ret_str[j] = str[j];
+		j++;
+	}
+	ret_str[j] = '\0';
+	return (ret_str);
+}
+
 void	expand_variables(t_token **root, t_program *program)
 {
 	t_token	*curr;
 	int		todo;
+	char	*env_name;
 
 	curr = *root;
 	while (curr != NULL)
 	{
+		if (ft_strcmp(curr->data, "export") == 0 && curr->next != NULL)
+		{
+			curr = curr->next;
+			env_name = local_find_env_name(curr->data);
+			if (find_env(program->envar, env_name))
+			{
+				curr = curr->next;
+				continue ;
+			}
+		}
 		todo = count_dollars(curr->data);
 		while (todo > 0)
 		{

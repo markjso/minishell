@@ -51,7 +51,15 @@ void	rebuild_envp(t_program *program)
 	}
 	new_env[i] = NULL;
 	program->envp = new_env;
-	ft_free_envp(program);
+	// int j = 0;
+	// while (new_env[j])
+	// {
+	// 	fprintf(stderr, "new_env[j]: %s\n", new_env[j]);
+	// 	free(new_env[j]);
+	// 	j++;
+	// }
+	// free(new_env);
+	// ft_free_envp(program);
 }
 
 /*prints all the environment variables in the linked list

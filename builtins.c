@@ -49,26 +49,72 @@ void	echo_cmd(char **token)
 	g_exit_status = 0;
 }
 
+char *local_split_value(char *str)
+{
+	char	*ret_str;
+	int		i;
+	int		j;
+	int		k;
+
+	i = 0;
+	j = 0;
+	// fprintf(stderr, "local_split_value %s\n", str);
+	while (str[i] != ':')
+		i++;
+	k = i;
+	while (str[i] != '\0')
+	{
+		j++;
+		i++;
+	}
+	i = 0;
+	ret_str = malloc(sizeof(char *) * j);
+	while (str[k] != '\0')
+	{
+		ret_str[i] = str[k];
+		i++;
+		k++;
+	}
+	ret_str[i] = '\0';
+	return (ret_str);
+}
+
+
+
 int	export_cmd(char **token, t_program *program)
 {
 	char	**split_env;
 	char	*name;
 	char	*value;
 	t_envar	*node;
+	char	*temp;
 
 	if (token[1] == NULL)
 	{
 		print_env(program);
 		return (0);
 	}
+	// fprintf(stderr, "token[1]: %s", token[1]);
 	split_env = ft_split(token[1], '=');
 	name = split_env[0];
 	value = split_env[1];
+	// fprintf(stderr, "name: %s", name);
+	// fprintf(stderr, "value: %s", value);
 	node = find_env(program->envar, name);
 	if (node == NULL)
 	{
 		node = init_env(name, value);
 		add_env_var(node, program);
+	}
+	if (ft_strcmp(name, "PATH") == 0)
+	{
+		value = local_split_value(value);
+		// fprintf(stderr, "value: %s\n", value);
+		temp = ft_strjoin((find_env(program->envar, "PATH")->value), value);
+		// fprintf(stderr, "new path is in var temp: %s\n", temp);
+		free(node->value);
+		node->value = ft_strdup(temp);
+		free(value);
 	}
 	else
 	{
@@ -94,10 +140,12 @@ void	exit_cmd(char **token, t_program *program)
 		error_message_cmd("too many arguments", 255, program);
 	else if (token[1])
 	{
-		exit(0);
+		ft_free(program);
+		ft_exit(0);
 	}
 	else
 	{
-		exit(0);
+		ft_free(program);
+		ft_exit(0);
 	}
 }
