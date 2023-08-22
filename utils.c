@@ -45,3 +45,38 @@ char	*local_find_env_name(char *str)
 	ret_str[j] = '\0';
 	return (ret_str);
 }
+
+char	*find_append_value(char *str)
+{
+	char	*ret_str;
+	int		i;
+	int		j;
+	int		k;
+
+	i = 0;
+	j = 0;
+	while (str[i] != ':' && str[i])
+		i++;
+	k = i;
+	while (str[i] != '\0')
+	{
+		j++;
+		i++;
+	}
+	i = 0;
+	ret_str = malloc(sizeof(char *) * j);
+	while (str[k] != '\0')
+	{
+		ret_str[i] = str[k];
+		i++;
+		k++;
+	}
+	ret_str[i] = '\0';
+	return (ret_str);
+}
+
+void	export_path_overwrite(t_envar *node, char *value)
+{
+	free(node->value);
+	node->value = value;
+}

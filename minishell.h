@@ -28,15 +28,12 @@
 # include <fcntl.h>
 # include "libft.h"
 # include <errno.h>
-# include "leaks.h"
 
-# define MAXCOM 5000 // max number of letters to be supported
-# define MAXLIST 100 // max number of commands to be supported
+# define MAXCOM 5000
+# define MAXLIST 100
 # define MAX_BUFFER 4096
-# define MAXARGS 20
 # define T_DEFAULT	"\033[0m"
 
-/*Struct for holding tokenised user input.*/
 typedef struct s_token
 {
 	char			*data;
@@ -57,10 +54,8 @@ typedef struct s_program
 	struct s_envar	*envar;
 	char			**token;
 	char			**envp;
-	// char			*redirect_file;
 	char			*redirect_in;
 	char			*redirect_out;
-	// int				is_redirect;
 	int				redirect_index;
 	int				out_file;
 	int				out_backup;
@@ -109,17 +104,19 @@ void		echo_cmd(char **token);
 void		printpwd(void);
 void		unset_cmd(char **token, t_program *program);
 void		exit_cmd(char **token, t_program *program);
+int			check_for_colon(char *str);
+void		printpwd(void);
 
 /*utils*/
 int			ft_strcmp(char *s1, char *s2);
+char		*find_append_value(char *str);
+void		export_path_overwrite(t_envar *node, char *value);
 
 /*redirections*/
 void		check_for_redirect(t_token **root, t_program *program);
 int			do_redirect(t_token *curr, int num, int *flag, t_program *program);
 void		remove_redirect(t_program *program);
 int			input_heredoc(char *delimiter);
-// char		*get_file_name(char *str, t_program *program);
-// void		locate_second_quote(char *str, t_program *program);
 void		ft_continue(t_token **root, t_program *program);
 void		remove_redirect_tokens(t_token **root,
 				t_token *operator_node);

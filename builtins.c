@@ -12,87 +12,59 @@
 
 #include "minishell.h"
 
-void	printpwd(void)
+static bool	ft_check_n_flag(char *str)
 {
-	char	pwd[256];
-
-	getcwd(pwd, sizeof(pwd));
-	printf("%s\n", pwd);
-	g_exit_status = 0;
+	if (!str)
+		return (false);
+	if (*str == '-' && *(str + 1))
+	{
+		str++;
+		while (*str == 'n')
+			str++;
+	}
+	if (*str)
+		return (false);
+	return (true);
 }
 
 /*
 Write to screen the text folloing the command `echo`. 
 Checks for the -n flag. Must expand this description.
 */
-
 void	echo_cmd(char **token)
 {
 	int		i;
 	bool	flag;
 
 	i = 1;
-	flag = true;
-	while (token[i] && !ft_strcmp(token[i], "-n"))
+	flag = false;
+	while (token[i] && ft_check_n_flag(token[i]) == true)
 	{
-		flag = false;
+		flag = true;
 		i++;
 	}
 	while (token[i])
 	{
-		printf("%s ", token[i]);
+		printf("%s", token[i]);
+		if (!flag)
+			printf(" ");
 		if (token[i])
 			i++;
 	}
-	if (flag && (i > 1))
+	if (!flag && (i > 1))
 		printf("\n");
 	g_exit_status = 0;
 }
 
-char *local_split_value(char *str)
-{
-	char	*ret_str;
-	int		i;
-	int		j;
-	int		k;
-
-	i = 0;
-	j = 0;
-	while (str[i] != ':')
-		i++;
-	k = i;
-	while (str[i] != '\0')
-	{
-		j++;
-		i++;
-	}
-	i = 0;
-	ret_str = malloc(sizeof(char *) * j);
-	while (str[k] != '\0')
-	{
-		ret_str[i] = str[k];
-		i++;
-		k++;
-	}
-	ret_str[i] = '\0';
-	return (ret_str);
-}
-
-void	local_export_path(char *value, t_program *program, t_envar *node)
+void	export_path_append(char *value, t_program *program, t_envar *node)
 {
 	char	*temp;
 
-	value = local_split_value(value);
+	value = find_append_value(value);
 	temp = ft_strjoin((find_env(program->envar, "PATH")->value), value);
 	free(node->value);
 	node->value = ft_strdup(temp);
 	free(value);
-}
-
-void	local_export_path_else(t_envar *node, char *value)
-{
-	free(node->value);
-	node->value = value;
 }
 
 void	export_cmd(char **token, t_program *program)
@@ -116,34 +88,16 @@ void	export_cmd(char **token, t_program *program)
 		node = init_env(name, value);
 		add_env_var(node, program);
 	}
-	if (ft_strcmp(name, "PATH") == 0)
-		local_export_path(value, program, node);
+	if (ft_strcmp(name, "PATH") == 0 && check_for_colon(value) == 1)
+		export_path_append(value, program, node);
 	else
-		local_export_path_else(node, value);
+		export_path_overwrite(node, value);
 }
 
 void	unset_cmd(char **token, t_program *program)
 {
 	if (ft_strrchr(token[1], '#'))
-	{
 		error_message_cmd("invalid parameter name", 1, program);
-	}
 	else
 		remove_env_var(token[1], program);
-}
-
-void	exit_cmd(char **token, t_program *program)
-{
-	if (token[1] && (token[2]))
-		error_message_cmd("too many arguments", 255, program);
-	else if (token[1])
-	{
-		ft_free(program);
-		ft_exit(0);
-	}
-	else
-	{
-		ft_free(program);
-		ft_exit(0);
-	}
 }

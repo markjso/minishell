@@ -74,6 +74,5 @@ void	ft_free(t_program *program)
 
 void	ft_exit(int exit_number)
 {
-	check_leaks();
 	exit(exit_number);
 }

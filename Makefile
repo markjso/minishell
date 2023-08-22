@@ -39,7 +39,6 @@ SRCS=minishell.c \
 	redirection_utils.c \
 	heredoc.c \
 	pipes.c \
-	leaks.c \
 	exit_and_free.c
 	
 dINCLUDE=-I$(LIBFT)

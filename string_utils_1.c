@@ -90,3 +90,12 @@ int	ft_env_word_len(char *str)
 		return (0);
 	return (0);
 }
+
+void	printpwd(void)
+{
+	char	pwd[256];
+
+	getcwd(pwd, sizeof(pwd));
+	printf("%s\n", pwd);
+	g_exit_status = 0;
+}

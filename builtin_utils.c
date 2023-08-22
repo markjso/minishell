@@ -76,3 +76,33 @@ void	ft_continue(t_token **root, t_program *program)
 	}
 	remove_redirect(program);
 }
+
+void	exit_cmd(char **token, t_program *program)
+{
+	if (token[1] && (token[2]))
+		error_message_cmd("too many arguments", 255, program);
+	else if (token[1])
+	{
+		ft_free(program);
+		ft_exit(0);
+	}
+	else
+	{
+		ft_free(program);
+		ft_exit(0);
+	}
+}
+
+int	check_for_colon(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == ':')
+			return (1);
+		i++;
+	}
+	return (0);
+}
