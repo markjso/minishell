@@ -37,6 +37,8 @@ int	cd_command(char **tokens, t_program *program)
 
 	pwd = find_env(program->envar, "PWD");
 	oldpwd = find_env(program->envar, "OLDPWD");
+	if (tokens[1] == 0)
+		return (0);
 	if (chdir(tokens[1]) == 0)
 	{
 		if (getcwd(cwd, sizeof(cwd)) == NULL)
