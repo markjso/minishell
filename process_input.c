@@ -101,6 +101,7 @@ void	copy_into_array(t_token **root, t_program *program)
 		curr = curr->next;
 		i++;
 	}
+	free(program->token[i]);
 	program->token[i] = 0;
 	ll_deallocate(root);
 	j = 0;

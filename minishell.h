@@ -163,6 +163,7 @@ void		error_and_continue(char *message, char *cmd);
 void		ft_exit(int exit_number);
 void		ft_free(t_program *program);
 void		ft_free_envp(t_program *program);
+void		ft_token_free(t_program *program);
 void		error_message_cmd(char *message, int status, t_program *program);
 
 #endif
