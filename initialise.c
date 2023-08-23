@@ -16,17 +16,23 @@ static char	*get_user_prompt(void)
 {
 	char	*prompt;
 	char	*username;
+	char	*ret_value_1;
+	char	*ret_value_2;
 
+	ret_value_1 = NULL;
+	ret_value_2 = NULL;
 	prompt = ft_strdup(T_DEFAULT);
 	username = getenv("USER");
 	if (username)
 	{
-		prompt = ft_strjoin(prompt, username);
-		prompt = ft_strjoin(prompt, "minishell@>>$ ");
+		ret_value_1 = ft_strjoin(prompt, username);
+		ret_value_2 = ft_strjoin(prompt, "minishell@>>$ ");
+		free(prompt);
+		free(ret_value_1);
 	}
 	else
 		printf("username does not exist\n");
-	return (prompt);
+	return (ret_value_2);
 }
 
 /* Stores the user prompt and uses readline to enable
@@ -45,12 +51,14 @@ int	take_input(char *input, t_program *program)
 	user_input = readline(prompt);
 	if (!user_input)
 	{
+		free(prompt);
 		printf("exit\n");
 		ft_free(program);
 		ft_exit(1);
 	}
 	if (ft_strlen(user_input) != 0) 
 	{
+		free(prompt);
 		ft_strlcpy(input, user_input, MAXCOM - 1);
 		add_history(user_input);
 		free(user_input);
@@ -58,6 +66,7 @@ int	take_input(char *input, t_program *program)
 	}
 	else
 	{
+		free(prompt);
 		free(user_input);
 		return (1);
 	}

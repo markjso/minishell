@@ -64,7 +64,22 @@ void	export_path_append(char *value, t_program *program, t_envar *node)
 	temp = ft_strjoin((find_env(program->envar, "PATH")->value), value);
 	free(node->value);
 	node->value = ft_strdup(temp);
+	free(temp);
 	free(value);
+}
+
+
+void	local_free(char **split_env)
+{
+	int	 i;
+
+	i = 0;
+	while (split_env[i])
+	{
+		free(split_env[i]);
+		i++;
+	}
+	free(split_env);
 }
 
 /* If no arguments entered print the env list
@@ -88,8 +103,10 @@ void	export_cmd(char **token, t_program *program)
 		return ;
 	}
 	split_env = ft_split(token[1], '=');
-	name = split_env[0];
-	value = split_env[1];
+	name = ft_strdup(split_env[0]);
+	value = ft_strdup(split_env[1]);
+	local_free(split_env);
+
 	node = find_env(program->envar, name);
 	if (node == NULL)
 	{
@@ -100,6 +117,8 @@ void	export_cmd(char **token, t_program *program)
 		export_path_append(value, program, node);
 	else
 		export_path_overwrite(node, value);
+	free(name);
+	free(value);
 }
 
 /* find the env variable at argument [1] (token[1])

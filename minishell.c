@@ -32,6 +32,7 @@ int	main(int ac, char **av, char **envp)
 			program.redirect_index = 0;
 			process_input(input, &root, &program);
 			check_for_redirect(&root, &program);
+			ft_free(&program);
 		}
 	}
 }

@@ -18,7 +18,7 @@ t_token	*make_new_node(char *value)
 
 	new_node = malloc(sizeof(t_token));
 	if (new_node == NULL)
-		exit(20);
+		ft_exit(20);
 	new_node->data = ft_strdup(value);
 	new_node->next = NULL;
 	return (new_node);
@@ -27,7 +27,7 @@ t_token	*make_new_node(char *value)
 void	replace_node_data(t_token *curr, char *new_data)
 {
 	if (curr == NULL)
-		exit(21);
+		ft_exit(21);
 	free(curr->data);
 	curr->data = ft_strdup(new_data);
 }

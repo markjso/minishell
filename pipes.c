@@ -34,7 +34,7 @@ void	do_pipe(char *exec_path, t_cmd_token *curr, t_program *program)
 	if (pipe(pipe1) == -1)
 	{
 		perror("bad pipe");
-		exit(1);
+		ft_exit(1);
 	}
 	pid = fork();
 	if (pid == 0)

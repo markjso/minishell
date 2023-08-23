@@ -17,7 +17,7 @@ void	ll_insert_end(t_token **root, t_token *new_node)
 	t_token	*curr;
 
 	if (new_node == NULL)
-		exit(21);
+		ft_exit(21);
 	if (*root == NULL)
 	{
 		*root = new_node;
