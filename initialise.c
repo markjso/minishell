@@ -95,6 +95,23 @@ void	init_env_vars(t_program *program)
 	free(oldpwd);
 }
 
+void	init_envp_first_run(t_program *program, char **envp)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (envp[j])
+		j++;
+	program->envp = (char **)malloc(sizeof(char *) * (j + 1));
+	while (i < j)
+	{
+		program->envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+}
+
 /* sets up the t_program structure
 allocates memory to token to hold an array
 of char pointers and sets each element to NULL.
@@ -113,7 +130,8 @@ void	init_program(t_program *program, char **envp)
 		i++;
 	}
 	program->envar = split_env_var(envp);
-	program->envp = envp;
+	init_envp_first_run(program, envp);
+	// program->envp = envp;
 	program->token[i] = NULL;
 	init_env_vars(program);
 }

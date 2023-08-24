@@ -59,10 +59,11 @@ void	rebuild_envp(t_program *program)
 	int			count;
 	int			i;
 
+	rebuild_envp_norm(program);
 	tmp = program->envar;
 	count = count_envars(tmp);
 	i = 0;
-	program->envp = (char **)malloc(sizeof(char *) * count + 1);
+	program->envp = (char **)malloc(sizeof(char *) * (count + 1));
 	if (!program->envp)
 		return ;
 	while (i < count)
@@ -74,7 +75,6 @@ void	rebuild_envp(t_program *program)
 		tmp = tmp->next;
 	}
 	program->envp[i] = NULL;
-	// rebuild_envp_norm(program);
 }
 
 /*prints all the environment variables in the linked list

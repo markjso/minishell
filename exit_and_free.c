@@ -17,6 +17,8 @@ void	ft_free_envp(t_program *program)
 	int	i;
 
 	i = 0;
+	if (program->envp == NULL)
+		return ;
 	if (program->envp != 0)
 	{
 		while (program->envp[i] != 0)
