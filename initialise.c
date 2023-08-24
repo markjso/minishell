@@ -16,13 +16,16 @@ static char	*get_user_prompt(void)
 {
 	char	*prompt;
 	char	*username;
+	char	*temp;
 
 	prompt = ft_strdup(T_DEFAULT);
 	username = getenv("USER");
 	if (username)
 	{
-		prompt = ft_strjoin(prompt, username);
+		temp = ft_strjoin(prompt, username);
+		free(prompt);
 		prompt = ft_strjoin(prompt, "minishell@>>$ ");
+		free(temp);
 	}
 	else
 		printf("username does not exist\n");
@@ -43,6 +46,7 @@ int	take_input(char *input, t_program *program)
 
 	prompt = get_user_prompt();
 	user_input = readline(prompt);
+	free(prompt);
 	if (!user_input)
 	{
 		printf("exit\n");

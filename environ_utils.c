@@ -61,10 +61,7 @@ void	rebuild_envp(t_program *program)
 
 	tmp = program->envar;
 	count = count_envars(tmp);
-	fprintf(stderr, "count %d\n", count);
 	i = 0;
-	for (int j = 0; program->envp[j]; j++)
-		fprintf(stderr, "envp: %d %s\n", j, program->envp[j]);
 	program->envp = (char **)malloc(sizeof(char *) * count + 1);
 	if (!program->envp)
 		return ;

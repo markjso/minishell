@@ -82,8 +82,6 @@ void	export_cmd(char **token, t_program *program)
 	char	*value;
 	t_envar	*node;
 
-	for (int i = 0; token[i]; i++)
-		fprintf(stderr, "export_cmd token[%d] %s\n", i, token[i]);
 	if (token[1] == NULL)
 	{
 		print_env(program);
@@ -112,6 +110,8 @@ environment variables*/
 
 void	unset_cmd(char **token, t_program *program)
 {
+	if (token[1] == NULL)
+		return ;
 	if (ft_strrchr(token[1], '#'))
 		error_message_cmd("invalid parameter name", 1, program);
 	else

@@ -54,7 +54,7 @@ void	ft_token_free(t_program *program)
 	i = 0;
 	if (program->token)
 	{
-		while (i < MAXLIST + 1)
+		while (program->token[i])
 		{
 			free(program->token[i]);
 			i++;

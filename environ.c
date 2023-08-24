@@ -70,7 +70,6 @@ void	add_env_var(t_envar *node, t_program *program)
 	{
 		if (strcmp(tmp->name, node->name) == 0)
 		{
-			fprintf(stderr, "add_env_var_upper %s\n", node->name);
 			free(tmp->value);
 			tmp->value = strdup(node->value);
 			rebuild_envp(program);
@@ -85,17 +84,13 @@ void	add_env_var(t_envar *node, t_program *program)
 		tmp = program->envar;
 		while (tmp->next != NULL)
 		{
-			fprintf(stderr, "while add_env_var lower %s\n", tmp->name);
 			tmp = tmp->next;
 		}
 		tmp->next = node;
 	}
 	tmp = program->envar;
 	while (tmp != NULL)
-	{
-		fprintf(stderr, "while add_env_var bottom %s\n", tmp->name);
 		tmp = tmp->next;
-	}
 	rebuild_envp(program);
 }
 
@@ -114,7 +109,6 @@ t_envar	*find_env(t_envar *envars, char *name)
 			return (temp);
 		temp = temp->next;
 	}
-	fprintf(stderr, "return null\n");
 	return (NULL);
 }
 

@@ -70,19 +70,12 @@ void	execmd(t_program *program)
 	pid_t	pid;
 	int		status;
 
-	fprintf(stderr, "ENVP:\n");
-	for (int k = 0; program->envp[k]; k++)
-		fprintf(stderr, "program->envp[%d]: %s\n", k, program->envp[k]);
-
 	pid = fork();
 	cmds = program->token[0];
 	if (pid == 0)
 	{
 		paths = get_full_path(program);
 		exec_path = get_path_for_cmd(paths, &cmds[0], program);
-		fprintf(stderr, "\n\nEXEC_PATH: %s\n", exec_path);
-		for (int j = 0; program->token[j]; j++)
-			fprintf(stderr, "program->token[%d]: %s\n", j, program->token[j]);
 		if (!paths)
 			error_and_exit("path not found", 127, program);
 		if (!exec_path)
