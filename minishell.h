@@ -166,5 +166,6 @@ void		ft_free_envp(t_program *program);
 void		ft_token_free(t_program *program);
 void		error_message_cmd(char *message, int status, t_program *program);
 // void		rebuild_envp_first_run(t_program *program, char **envp, int count_envp);
+int	ft_is_upper(char c);
 
 #endif
