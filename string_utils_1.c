@@ -85,3 +85,13 @@ void	printpwd(void)
 	printf("%s\n", pwd);
 	g_exit_status = 0;
 }
+
+void	add_env_var_norm(t_program *program, t_envar *tmp, t_envar *node)
+{
+	tmp = program->envar;
+	while (tmp->next != NULL)
+	{
+		tmp = tmp->next;
+	}
+	tmp->next = node;
+}

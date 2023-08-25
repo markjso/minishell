@@ -25,9 +25,6 @@ int	main(int ac, char **av, char **envp)
 	root = NULL;
 	init_program(&program, envp);
 	sig_initialiser();
-	// ft_free_envp(&program);
-	// ft_free(&program);
-	// ft_exit(1);
 	while (1)
 	{
 		if (take_input(input, &program) == 0)

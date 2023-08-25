@@ -81,7 +81,7 @@ void	handle_pipe(t_program *program)
 		if (exec_path)
 			do_pipe(exec_path, curr, program);
 		else
-			error_and_continue("exec_path not found", curr->name);
+			error_and_continue("command not found", curr->name);
 		temp = curr;
 		curr = curr->next;
 		ll_cmd_remove_node(&cmd_root, temp);

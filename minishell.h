@@ -78,6 +78,7 @@ extern int	g_exit_status;
 int			take_input(char *input, t_program *program);
 void		init_program(t_program *program, char **envp);
 t_envar		*init_env(char *name, char *value);
+void		init_envp_first_run(t_program *program, char **envp);
 
 /*execute commands*/
 void		execmd(t_program *program);
@@ -111,6 +112,9 @@ void		printpwd(void);
 int			ft_strcmp(char *s1, char *s2);
 char		*find_append_value(char *str);
 void		export_path_overwrite(t_envar *node, char *value);
+void		export_path_append(char *value, t_program *program, t_envar *node);
+void		export_cmd_norm(t_program *program, char *name, char *value);
+int			export_checker(char *token);
 
 /*redirections*/
 void		check_for_redirect(t_token **root, t_program *program);
@@ -128,6 +132,7 @@ void		add_env_var(t_envar *node, t_program *program);
 void		remove_env_var(char *name, t_program *program);
 void		print_env(t_program *program);
 void		rebuild_envp(t_program *program);
+void		add_env_var_norm(t_program *program, t_envar *tmp, t_envar *node);
 
 /*expand variables*/
 void		expand_variables(t_token **root, t_program *program);
@@ -143,6 +148,7 @@ int			ft_is_quote(int c);
 int			ft_is_not_quote(int c);
 void		copy_into_array(t_token **root, t_program *program);
 int			ft_is_valid_var_char(char c);
+int			ft_is_upper(char c);
 
 /*tokens*/
 t_token		*make_new_node(char *value);
@@ -165,7 +171,5 @@ void		ft_free(t_program *program);
 void		ft_free_envp(t_program *program);
 void		ft_token_free(t_program *program);
 void		error_message_cmd(char *message, int status, t_program *program);
-// void		rebuild_envp_first_run(t_program *program, char **envp, int count_envp);
-int	ft_is_upper(char c);
 
 #endif

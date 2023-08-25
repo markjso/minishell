@@ -64,3 +64,20 @@ int	ft_is_not_quote(int c)
 	else
 		return (1);
 }
+
+void	init_envp_first_run(t_program *program, char **envp)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (envp[j])
+		j++;
+	program->envp = (char **)malloc(sizeof(char *) * (j + 1));
+	while (i < j)
+	{
+		program->envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+}

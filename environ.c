@@ -80,14 +80,7 @@ void	add_env_var(t_envar *node, t_program *program)
 	if (program->envar == NULL)
 		program->envar = node;
 	else
-	{
-		tmp = program->envar;
-		while (tmp->next != NULL)
-		{
-			tmp = tmp->next;
-		}
-		tmp->next = node;
-	}
+		add_env_var_norm(program, tmp, node);
 	tmp = program->envar;
 	while (tmp != NULL)
 		tmp = tmp->next;
