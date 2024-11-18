@@ -1,0 +1,71 @@
+ls
+echo hello
+echo hello world
+echo $HOME $HOME $USER
+ls -l
+ls -la
+echo $?
+bin/ls filethatdoesntexist
+expr $? $?
+echo $?
+ls
+ls -la
+echo 'USER'
+echo $USER
+env | grep USER_ZD
+env | grep USER=
+export | grep USER
+export new
+export | grep new
+export new=HELLO
+export | grep new
+export hello=home/wazaap
+unset new
+export | grep new
+unset home/wazaap
+export | grep hello
+unset hello
+export | grep hello
+export VAR1="Hello"
+export VAR2="World"
+export | grep VAR
+env | grep VAR
+echo $VAR1 | grep VAR1 > file1
+echo $VAR2 | grep VAR2 > file1
+unset VAR1
+export | grep VAR1
+env | grep VAR1
+export VAR1="Hello_Again"
+env | grep VAR1
+cat file1
+cd ls
+cd ..
+cd something
+pwd
+cd minishell
+cd ..
+pwd
+cd minishell
+dsbksdgbksdghsd
+echo $USER
+export USER=NEWUSER
+echo $USER
+echo "Hello World"
+echo Hello World
+echo 'hello world'
+echo 'hello' world
+echo $?
+echo $HOME
+echo $PWD
+echo $USER
+echo $SHELL
+echo "Date is:" $(date) | tee date_file | cut -d ' ' -f 1-3
+rm date_file
+echo $(ls -l) | tee ls_file | wc -l
+ls -la >file1>file2>file3
+cat file1
+cat file2
+cat file3
+rm file1 file2 file3
+ls -la | < file1 cat > file3
+cat file3
